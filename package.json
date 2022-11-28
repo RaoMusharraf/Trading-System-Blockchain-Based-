@@ -1,0 +1,60 @@
+{
+  "name": "nft-minter",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@alch/alchemy-web3": "^1.1.9",
+    "@openzeppelin/contracts": "^4.4.1",
+    "@testing-library/jest-dom": "^5.11.4",
+    "@testing-library/react": "^11.1.0",
+    "@testing-library/user-event": "^12.1.10",
+    "aws-sdk": "^2.1161.0",
+    "axios": "^0.21.1",
+    "browserify-fs": "^1.0.0",
+    "buffer": "^6.0.3",
+    "ethers": "^5.6.4",
+    "file-system": "^2.2.2",
+    "ipfs-http-client": "^55.0.0",
+    "react": "^17.0.2",
+    "react-countdown": "^2.3.2",
+    "react-dom": "^17.0.2",
+    "react-notifications-component": "^3.1.0",
+    "react-redux": "^8.0.2",
+    "react-router-dom": "^5.2.0",
+    "react-s3": "^1.3.1",
+    "react-scripts": "4.0.3",
+    "react-table": "^7.8.0",
+    "react-table-css-unit": "^0.1.1",
+    "web-vitals": "^1.0.1",
+    "write-file-p": "^1.0.8",
+    "write-json-file": "^5.0.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "set \"GENERATE_SOURCEMAP=false\" && react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "babel-plugin-preval": "^5.1.0",
+    "dotenv": "^8.6.0"
+  }
+}
