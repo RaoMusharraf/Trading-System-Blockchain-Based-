@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
 import { connectWallet, getCurrentWalletConnected } from "../utils/interact.js";
 import Web3 from "web3";
-import Countdown from "react-countdown";
 import { Link } from "react-router-dom";
-const { ethers } = require("ethers");
 
 const SeeTender = (props) => {
 
@@ -16,7 +14,6 @@ const SeeTender = (props) => {
     const [walletAddress, setWallet] = useState("");
     const [status, setStatus] = useState("");
     const [auctionDetails, setAuctionDetails] = useState([]);
-    const [bid, setBid] = useState([]);
 
     useEffect(async () => {
         const { address, status } = await getCurrentWalletConnected();
@@ -110,7 +107,7 @@ const SeeTender = (props) => {
             </button>
             <br></br>
 
-            <h1 style={{ textAlign: 'center' }}>Your Requests </h1>
+            <h1 style={{ textAlign: 'left' }}>Requests </h1>
             <table class="table table-striped mtable">
                 <thead>
                     <tr>
@@ -120,23 +117,19 @@ const SeeTender = (props) => {
                         <th scope="col">Hours</th>
                         <th scope="col">Description</th>
                         <th scope="col">Owner</th>
-                        <th scope="col"></th>
                     </tr>
                 </thead>
                 <tbody id="tenders">
                     {auctionDetails.map((item, index) => {
                         return (
                             <>
-
                                 <tr>
-
                                     <td>{item.name}</td>
                                     <td>{item.quantity}</td>
                                     <td>{item.budget}</td>
                                     <td>{item.hours}</td>
                                     <td>{item.description}</td>
                                     <td>{item.Owner}</td>
-                                    <td><Link className="tender-req-btn" to="/Tender_request"> Create</Link></td>
                                 </tr>
 
                             </>

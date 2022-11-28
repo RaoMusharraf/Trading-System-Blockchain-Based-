@@ -25,7 +25,7 @@ function App() {
           <a href="/create-tender">Create Tender</a>
           <a href="/my_items">See Tender</a>
           <a href="/">All Tenders</a>
-          <a href="/Tender_request">Create Vender Request</a>
+          <a href="/Vender_request">Create Vender Request</a>
           <a href="/bundle_auction">Vender Requests</a>
           <a href="/Feedback">Feedback</a>
           <a href="/Payment">Payment</a>
@@ -37,7 +37,7 @@ function App() {
         <Route exact path='/create-tender' component={CreateTender}></Route>
         <Route exact path='/bundle_auction' component={SeeVender}></Route>
         <Route exact path='/my_items' component={seeOwnerTender}></Route>
-        <Route exact path='/Tender_request' component={CreateVender}></Route>
+        <Route exact path='/Vender_request' component={CreateVender}></Route>
         <Route exact path='/Feedback' component={Feedback}></Route>
         <Route exact path='/Payment' component={Payment}></Route>
       </Switch>

@@ -111,9 +111,6 @@ const CreateTender = (props) => {
 
             <h1 style={{ textAlign: 'left' }}>
                 List Request For Items </h1>
-            <p style={{ textAlign: 'left' }}>
-                Simply add details, then press "Submit"
-            </p>
             <form>
                 <h2>Name</h2>
                 <input

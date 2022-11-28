@@ -225,9 +225,7 @@ const SeeVender = (props) => {
                 )}
             </button>
             <br></br>
-            <h1 id="title" style={{ textAlign: 'center' }}>
-                <img src={logo} alt="Logo" /> </h1>
-            <h1 style={{ textAlign: 'center' }}>
+            <h1 style={{ textAlign: 'left' }}>
                 Your Requests For Getting Tenders</h1>
 
             <table class="table table-striped mtable">
