@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 const SeeTender = (props) => {
 
-    const auctionContract = "0x4fe9dA53B6BbD9C7a3755449a3d1BaadAacfD049";
+    const auctionContract = "0x0233319e61551b0c557c104D3BC90F32BE78F545";
     function timeout(delay) {
         return new Promise(res => setTimeout(res, delay));
     }
@@ -48,6 +48,7 @@ const SeeTender = (props) => {
 
             for (var i = 0; i < all_single.length; i++) {
                 const auc_data = {
+                    "TokenId": all_single[i].TokenId,
                     "name": all_single[i].name,
                     "quantity": all_single[i].quantity,
                     "budget": all_single[i].budget,
@@ -109,6 +110,7 @@ const SeeTender = (props) => {
             <table class="table table-striped mtable">
                 <thead>
                     <tr>
+                        <th scope="col">Token</th>
                         <th scope="col">Name</th>
                         <th scope="col">Quantity    </th>
                         <th scope="col">Budget</th>
@@ -123,6 +125,7 @@ const SeeTender = (props) => {
                         return (
                             <>
                                 <tr>
+                                    <td>{item.TokenId}</td>
                                     <td>{item.name}</td>
                                     <td>{item.quantity}</td>
                                     <td>{item.budget}</td>

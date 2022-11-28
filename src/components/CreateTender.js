@@ -5,7 +5,7 @@ import Web3 from "web3";
 const { ethers } = require("ethers");
 
 const CreateTender = (props) => {
-    const auctionContract = "0x4fe9dA53B6BbD9C7a3755449a3d1BaadAacfD049";
+    const auctionContract = "0x0233319e61551b0c557c104D3BC90F32BE78F545";
     function timeout(delay) {
         return new Promise(res => setTimeout(res, delay));
     }

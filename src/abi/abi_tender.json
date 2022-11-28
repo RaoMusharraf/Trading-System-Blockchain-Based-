@@ -44,6 +44,11 @@
 			{
 				"components": [
 					{
+						"internalType": "uint256",
+						"name": "TokenId",
+						"type": "uint256"
+					},
+					{
 						"internalType": "string",
 						"name": "name",
 						"type": "string"
@@ -99,6 +104,11 @@
 		"outputs": [
 			{
 				"components": [
+					{
+						"internalType": "uint256",
+						"name": "TokenId",
+						"type": "uint256"
+					},
 					{
 						"internalType": "string",
 						"name": "name",
@@ -172,6 +182,11 @@
 		],
 		"name": "Total",
 		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "TokenId",
+				"type": "uint256"
+			},
 			{
 				"internalType": "string",
 				"name": "name",

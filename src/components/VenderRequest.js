@@ -6,11 +6,7 @@ const { ethers } = require("ethers");
 
 const CreateVender = (props) => {
 
-    // const auctionContract = "0xB7123e97618a136ba140a5ec1B26737DbBAc6dc9";
-    // const frensContract = "0x2EDD7A51D82220Bb878980ff892380720442D892";
-    const frensContract = "0xFA30f8e110465056af8D2C3cF30b757ae061e9a2";
-    const auctionContract = "0x1F57B1248f4914E3f3dCA35F49498803268aCa44";
-
+    const auctionContract = "0x0233319e61551b0c557c104D3BC90F32BE78F545";
     function timeout(delay) {
         return new Promise(res => setTimeout(res, delay));
     }
@@ -18,12 +14,11 @@ const CreateVender = (props) => {
     //State variables
     const [walletAddress, setWallet] = useState("");
     const [status, setStatus] = useState("");
-    const [nftAddress, setNftAddress] = useState("");
-    const [nftId, setNftId] = useState("");
-    const [bid, setBid] = useState("");
-    const [eDate, setEdate] = useState("");
-    const [count, setCount] = useState("");
-    const [approve, setApprove] = useState("");
+    const [Token, setName] = useState("");
+    const [Price, setQuantity] = useState("");
+    const [Description, setBudget] = useState("");
+    const [hours, setHours] = useState("");
+    const [description, setDescription] = useState("");
 
     useEffect(async () => {
         const { address, status } = await getCurrentWalletConnected();
@@ -39,8 +34,8 @@ const CreateVender = (props) => {
         setWallet(walletResponse.address);
     };
 
-    const onList = async (nftAddress, nftId, bid, eDate) => {
-        if (nftId == '' || nftAddress == '' || bid == '' || eDate == '') {
+    const onList = async (Token, nftId, bid, eDate) => {
+        if (Token == '' || Price == '' || Description == '' || hours == '' || description == '') {
             setStatus("Please fill all values!!!!!!!!!!!");
             alert("Please fill all values!!!!!!!!!!!");
         } else {
@@ -59,7 +54,7 @@ const CreateVender = (props) => {
                 const transactionParameters = {
                     to: auctionContract, // Required except during contract publications.
                     from: window.ethereum.selectedAddress, // must match user's active address.
-                    'data': window.contract.methods.createAuction(nftAddress, frensContract, nftId, price, end_time).encodeABI()//make call to NFT smart contract
+                    'data': window.contract.methods.tender(Token, Price, Description, hours, description).encodeABI()//make call to NFT smart contract
                 };
                 //sign the transaction via Metamask
                 const txHash = await window.ethereum
@@ -74,42 +69,8 @@ const CreateVender = (props) => {
                 console.log(err);
                 setStatus("😢 Something went wrong while listing your NFT for auction");
             }
-
-            // setNftAddress("");
-            // setNftId("");
-            // setBid("");
-            // setEdate("");
-            // setApprove("");
         }
     }
-
-    const onApprove = async (nftAddress, nftId) => {
-        //Contract Interaction
-        const web3 = new Web3(window.ethereum);
-        const contractABI = require('../abi/abi_vender.json');
-
-        try {
-            window.contract = await new web3.eth.Contract(contractABI, nftAddress);
-            //set up your Ethereum transaction
-            const transactionParameters = {
-                to: nftAddress, // Required except during contract publications.
-                from: window.ethereum.selectedAddress, // must match user's active address.
-                'data': window.contract.methods.approve(auctionContract, nftId).encodeABI()//make call to NFT smart contract
-            };
-            //sign the transaction via Metamask
-            const txHash = await window.ethereum
-                .request({
-                    method: 'eth_sendTransaction',
-                    params: [transactionParameters],
-                });
-            await timeout(10000);
-            setApprove("done");
-            // setStatus("✅ Check out your transaction on Etherscan: https://rinkeby.etherscan.io/tx/" + txHash);
-        } catch (err) {
-            console.log(err);
-        }
-    };
-
     function addWalletListener() {
         if (window.ethereum) {
             window.ethereum.on("accountsChanged", (accounts) => {
@@ -136,7 +97,7 @@ const CreateVender = (props) => {
     }
 
     return (
-        <div className="container vender-request">
+        <div className="container createtender">
             <button id="walletButton" onClick={connectWalletPressed}>
                 {walletAddress.length > 0 ? (
                     "Connected: " +
@@ -149,46 +110,29 @@ const CreateVender = (props) => {
             </button>
             <br></br>
 
-            <h1 style={{ textAlign: 'left' }}>
-                List Request For Getting Tender </h1>
-            <p style={{ textAlign: 'left' }}>
-                Simply add details, then press "Submit"
-            </p>
-            <form >
-                <h2>Token ID</h2>
+            <h2 style={{ textAlign: 'left' }}>
+                Submit Request </h2>
+            <form>
+                <h2>Token</h2>
                 <input
                     type="text"
-                    placeholder="Enter ID"
-                    onChange={(event) => setNftAddress(event.target.value)} />
-                <h2>Details of Their Company</h2>
-                <input
-                    type="text"
-                    placeholder="Enter Description"
-                    onChange={(event) => setNftId(event.target.value)} />
+                    placeholder="Enter Token"
+                    onChange={(event) => setName(event.target.value)} />
                 <h2>Price</h2>
                 <input
                     type="text"
-                    placeholder="Enter Price in PKR"
-                    onChange={(event) => setBid(event.target.value)} />
-                <h2>Estimation Date for Completing Tender </h2>
+                    placeholder="Enter Price"
+                    onChange={(event) => setQuantity(event.target.value)} />
+                <h2>Company Details</h2>
                 <input
                     type="text"
-                    placeholder="Enter Date"
-                    onChange={(event) => setEdate(event.target.value)}
-                    onFocus={(e) => (e.currentTarget.type = "date")}
-                    onBlur={(e) => (e.currentTarget.type = "text")}
-                />
+                    placeholder="Enter Description"
+                    onChange={(event) => setBudget(event.target.value)} />
             </form>
             <br />
-            {approve == "" ?
-                <button id="approve" onClick={() => onApprove(nftAddress, nftId)}>
-                    Submit
-                </button>
-                :
-                <button id="list" onClick={() => onList(nftAddress, nftId, bid, eDate)}>
-                    List
-                </button>
-            }
+            <button id="list" onClick={() => onList(Token, Price, Description)}>
+                List
+            </button>
             <p id="status">
                 {status}
             </p>
