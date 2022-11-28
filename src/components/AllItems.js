@@ -37,7 +37,7 @@ const AllItems = (props) => {
     const getData = async () => {
 
         const web3 = new Web3(window.ethereum);
-        
+
         const contractAuctionABI = require('../abi/abi_tender.json');
         var auctionData = [];
 
@@ -45,7 +45,7 @@ const AllItems = (props) => {
             window.contract = await new web3.eth.Contract(contractAuctionABI, auctionContract);
 
             const all_single = await window.contract.methods.AllTender().call();
-            console.log(all_single.length,"total");
+            console.log(all_single.length, "total");
 
             var auctionData = [];
 
@@ -94,7 +94,7 @@ const AllItems = (props) => {
     }
 
     return (
-        <div className="Minter">
+        <div className="container">
             <br />
             <button id="walletButton" onClick={connectWalletPressed}>
                 {walletAddress.length > 0 ? (

@@ -134,7 +134,7 @@ const Payment = (props) => {
     }
 
     return (
-        <div className="Minter">
+        <div className="container">
             <button id="walletButton" onClick={connectWalletPressed}>
                 {walletAddress.length > 0 ? (
                     "Connected: " +
@@ -146,9 +146,8 @@ const Payment = (props) => {
                 )}
             </button>
             <br></br>
-            <h1 id="title" style={{ textAlign: 'center' }}>
-                <img src={logo} alt="Logo" /> </h1>
-            <h1 style={{ textAlign: 'center' }}>
+
+            <h1 style={{ textAlign: 'left' }}>
                 Payment Process </h1>
             <form>
                 <h2>Address</h2>

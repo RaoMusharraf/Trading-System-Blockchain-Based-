@@ -136,7 +136,7 @@ const CreateVender = (props) => {
     }
 
     return (
-        <div className="Minter">
+        <div className="container vender-request">
             <button id="walletButton" onClick={connectWalletPressed}>
                 {walletAddress.length > 0 ? (
                     "Connected: " +
@@ -148,14 +148,13 @@ const CreateVender = (props) => {
                 )}
             </button>
             <br></br>
-            <h1 id="title" style={{ textAlign: 'center' }}>
-                <img src={logo} alt="Logo" /> </h1>
-            <h1 style={{ textAlign: 'center' }}>
+
+            <h1 style={{ textAlign: 'left' }}>
                 List Request For Getting Tender </h1>
-            <p style={{ textAlign: 'center' }}>
+            <p style={{ textAlign: 'left' }}>
                 Simply add details, then press "Submit"
             </p>
-            <form>
+            <form >
                 <h2>Token ID</h2>
                 <input
                     type="text"

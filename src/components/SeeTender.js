@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { connectWallet, getCurrentWalletConnected } from "../utils/interact.js";
-import logo from '../lilfrens-logo.png';
 import Web3 from "web3";
 import Countdown from "react-countdown";
+import { Link } from "react-router-dom";
 const { ethers } = require("ethers");
 
 const SeeTender = (props) => {
@@ -37,7 +37,7 @@ const SeeTender = (props) => {
     const getData = async () => {
 
         const web3 = new Web3(window.ethereum);
-        
+
         const contractAuctionABI = require('../abi/abi_tender.json');
         var auctionData = [];
 
@@ -96,7 +96,7 @@ const SeeTender = (props) => {
     }
 
     return (
-        <div className="Minter">
+        <div className="container">
             <br />
             <button id="walletButton" onClick={connectWalletPressed}>
                 {walletAddress.length > 0 ? (
@@ -109,65 +109,46 @@ const SeeTender = (props) => {
                 )}
             </button>
             <br></br>
-            <h1 id="title" style={{ textAlign: 'center' }}>
-                <img src={logo} alt="Logo" /> </h1>
+
             <h1 style={{ textAlign: 'center' }}>Your Requests </h1>
             <table class="table table-striped mtable">
                 <thead>
                     <tr>
-                        <th scope="col">Token-Id</th>
-                        <th scope="col">Tenders</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Quantity    </th>
+                        <th scope="col">Budget</th>
+                        <th scope="col">Hours</th>
                         <th scope="col">Description</th>
-                        <th scope="col">Status</th>
+                        <th scope="col">Owner</th>
+                        <th scope="col"></th>
                     </tr>
                 </thead>
                 <tbody id="tenders">
-                </tbody>
-            </table>
-            <div class="row">
-                {auctionDetails.length > 0
-                    ? auctionDetails.map((item, index) => {
+                    {auctionDetails.map((item, index) => {
                         return (
-                            <div class="column">
-                                <div class="card">
-                                    <img src={item.image} alt={item.image} style={{ width: '100%' }} />
-                                    <div class="container">
-                                        <h4><b>{item.name}</b></h4>
-                                        <p>{item.description}</p>
-                                        <p>Token ID: {item.currentBidOwner.substring(0, 5)}........{item.currentBidOwner.substring(35)}</p>
-                                        <p>Price: {parseInt(ethers.utils.formatEther(item.currentBidPrice))}</p>
-                                        <p>Request Completing Date: <Countdown
-                                            onComplete={() =>
-                                                window.location.reload(false)
-                                            }
-                                            date={
-                                                new Date(parseInt(item.endAuction) * 1000)
-                                            }
-                                        /></p>
-                                        <input
-                                            type="text"
-                                            placeholder="Enter Price In PKR"
-                                            onChange={(event) => setBid(event.target.value)} />
-                                        <br />
-                                        <br />
-                                        {approve == "" ?
-                                            <button id="approve" onClick={() => onApprove(bid)}>
-                                                Approve
-                                            </button>
-                                            :
-                                            <button id="bidPrice" onClick={() => bidPrice(item.index, bid)}>
-                                                Set Bid
-                                            </button>
-                                        }
-                                    </div>
-                                </div>
-                            </div>
+                            <>
+
+                                <tr>
+
+                                    <td>{item.name}</td>
+                                    <td>{item.quantity}</td>
+                                    <td>{item.budget}</td>
+                                    <td>{item.hours}</td>
+                                    <td>{item.description}</td>
+                                    <td>{item.Owner}</td>
+                                    <td><Link className="tender-req-btn" to="/Tender_request"> Create</Link></td>
+                                </tr>
+
+                            </>
                         )
                     })
-                    :
-                    <div></div>
-                }
-            </div>
+                    }
+                </tbody>
+            </table>
+
+
+
+
             <br />
             <p id="status">
                 {status}

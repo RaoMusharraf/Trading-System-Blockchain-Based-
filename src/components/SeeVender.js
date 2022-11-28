@@ -212,7 +212,7 @@ const SeeVender = (props) => {
     }
 
     return (
-        <div className="Minter">
+        <div className="container">
             <br />
             <button id="walletButton" onClick={connectWalletPressed}>
                 {walletAddress.length > 0 ? (

@@ -14,8 +14,7 @@ code {
 }
 
 .Minter {
-  max-width: 80vh;
-  max-height: 80vh;
+
   padding: 20px 20px;
   margin: 0 auto;
   text-align: left;
@@ -54,9 +53,7 @@ button {
   cursor: pointer;
 }
 
-#title {
-  padding-top: 50px;
-}
+
 
 #status {
   color: red;

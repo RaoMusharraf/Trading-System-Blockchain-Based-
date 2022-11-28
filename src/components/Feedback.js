@@ -134,7 +134,7 @@ const Feedback = (props) => {
     }
 
     return (
-        <div className="Minter">
+        <div className="container">
             <button id="walletButton" onClick={connectWalletPressed}>
                 {walletAddress.length > 0 ? (
                     "Connected: " +

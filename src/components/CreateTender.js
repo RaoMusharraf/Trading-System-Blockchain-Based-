@@ -34,7 +34,7 @@ const CreateTender = (props) => {
     };
 
     const onList = async (name, nftId, bid, eDate) => {
-        if (name == '' || quantity == '' || budget == '' || hours == '' || description == '' ) {
+        if (name == '' || quantity == '' || budget == '' || hours == '' || description == '') {
             setStatus("Please fill all values!!!!!!!!!!!");
             alert("Please fill all values!!!!!!!!!!!");
         } else {
@@ -53,7 +53,7 @@ const CreateTender = (props) => {
                 const transactionParameters = {
                     to: auctionContract, // Required except during contract publications.
                     from: window.ethereum.selectedAddress, // must match user's active address.
-                    'data': window.contract.methods.tender(name,quantity,budget,hours,description).encodeABI()//make call to NFT smart contract
+                    'data': window.contract.methods.tender(name, quantity, budget, hours, description).encodeABI()//make call to NFT smart contract
                 };
                 //sign the transaction via Metamask
                 const txHash = await window.ethereum
@@ -96,7 +96,7 @@ const CreateTender = (props) => {
     }
 
     return (
-        <div className="Minter">
+        <div className="container createtender">
             <button id="walletButton" onClick={connectWalletPressed}>
                 {walletAddress.length > 0 ? (
                     "Connected: " +
@@ -108,11 +108,10 @@ const CreateTender = (props) => {
                 )}
             </button>
             <br></br>
-            <h1 id="title" style={{ textAlign: 'center' }}>
-                <img src={logo} alt="Logo" /> </h1>
-            <h1 style={{ textAlign: 'center' }}>
+
+            <h1 style={{ textAlign: 'left' }}>
                 List Request For Items </h1>
-            <p style={{ textAlign: 'center' }}>
+            <p style={{ textAlign: 'left' }}>
                 Simply add details, then press "Submit"
             </p>
             <form>
@@ -144,7 +143,7 @@ const CreateTender = (props) => {
                     onChange={(event) => setDescription(event.target.value)} />
             </form>
             <br />
-            <button id="list" onClick={() => onList(name,quantity,budget,hours,description)}>
+            <button id="list" onClick={() => onList(name, quantity, budget, hours, description)}>
                 List
             </button>
             <p id="status">
