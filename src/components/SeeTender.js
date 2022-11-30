@@ -44,11 +44,11 @@ const SeeTender = (props) => {
             const total = await window.contract.methods.Size(window.ethereum.selectedAddress).call();
             const all_single = await window.contract.methods.getTender(window.ethereum.selectedAddress).call();
             console.log(all_single);
-            console.log(total);
 
             var auctionData = [];
 
             for (var i = 0; i < total; i++) {
+                const all_sing = await window.contract.methods.SizeVender(all_single[i].TokenId).call();
                 const auc_data = {
                     "TokenId": all_single[i].TokenId,
                     "name": all_single[i].name,
@@ -56,6 +56,8 @@ const SeeTender = (props) => {
                     "budget": all_single[i].budget,
                     "hours": all_single[i].time,
                     "description": all_single[i].description,
+                    "application": all_sing,
+
                 }
                 auctionData.push(auc_data);
             }
@@ -117,6 +119,8 @@ const SeeTender = (props) => {
                         <th scope="col">Budget</th>
                         <th scope="col">Hours</th>
                         <th scope="col">Description</th>
+                        <th scope="col">Requests</th>
+
                     </tr>
                 </thead>
                 <tbody id="tenders">
@@ -130,6 +134,7 @@ const SeeTender = (props) => {
                                     <td>{item.budget}</td>
                                     <td>{item.hours}</td>
                                     <td>{item.description}</td>
+                                    <td>{item.application}</td>
                                 </tr>
 
                             </>
