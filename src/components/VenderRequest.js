@@ -5,7 +5,7 @@ import Web3 from "web3";
 const { ethers } = require("ethers");
 
 const CreateVender = (props) => {
-
+    const [Tokenid, setTokenid] = useState("")
     const auctionContract = "0x0233319e61551b0c557c104D3BC90F32BE78F545";
     function timeout(delay) {
         return new Promise(res => setTimeout(res, delay));
@@ -54,7 +54,7 @@ const CreateVender = (props) => {
                 const transactionParameters = {
                     to: auctionContract, // Required except during contract publications.
                     from: window.ethereum.selectedAddress, // must match user's active address.
-                    'data': window.contract.methods.tender(Token, Price, Description, hours, description).encodeABI()//make call to NFT smart contract
+                    'data': window.contract.methods.tender(localStorage.lToken, Price, Description, hours, description).encodeABI()//make call to NFT smart contract
                 };
                 //sign the transaction via Metamask
                 const txHash = await window.ethereum
@@ -95,6 +95,14 @@ const CreateVender = (props) => {
             );
         }
     }
+
+    useEffect(() => {
+        let temp;
+        temp = localStorage.lToken
+        setTokenid(temp)
+        console.log(localStorage.lToken);
+
+    }, [])
 
     return (
         <div className="container createtender">

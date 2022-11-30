@@ -2,10 +2,13 @@ import { useEffect, useState } from "react";
 import { connectWallet, getCurrentWalletConnected } from "../utils/interact.js";
 import Web3 from "web3";
 import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
+
 
 const SeeTender = (props) => {
 
     const auctionContract = "0x0233319e61551b0c557c104D3BC90F32BE78F545";
+    let history = useHistory();
     function timeout(delay) {
         return new Promise(res => setTimeout(res, delay));
     }
@@ -125,14 +128,21 @@ const SeeTender = (props) => {
                         return (
                             <>
                                 <tr>
-                                    <td>{item.TokenId}</td>
+                                    <td id={item.TokenId}>{item.TokenId}</td>
+
                                     <td>{item.name}</td>
                                     <td>{item.quantity}</td>
                                     <td>{item.budget}</td>
                                     <td>{item.hours}</td>
                                     <td>{item.description}</td>
                                     <td>{item.Owner}</td>
-                                    <td><Link className="tender-req-btn" to="/Vender_request"> Create</Link></td>
+                                    {/* <td><Link className="tender-req-btn" to="/Vender_request"> Create</Link></td> */}
+                                    <td><button id={item.TokenId} className="tender-req-btn" onClick={(e) => {
+                                        localStorage.lToken = e.target.id
+                                        history.push("/Vender_request");
+
+                                    }} > Create</button></td>
+
                                 </tr>
 
                             </>
