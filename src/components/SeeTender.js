@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 const SeeTender = (props) => {
 
-    const auctionContract = "0x0233319e61551b0c557c104D3BC90F32BE78F545";
+    const auctionContract = "0xe5513E2C3C8a56099785F2adBe075Ea0A0653eC0";
 
     function timeout(delay) {
         return new Promise(res => setTimeout(res, delay));
@@ -56,7 +56,6 @@ const SeeTender = (props) => {
                     "budget": all_single[i].budget,
                     "hours": all_single[i].time,
                     "description": all_single[i].description,
-                    "Owner": all_single[i].Owner,
                 }
                 auctionData.push(auc_data);
             }
@@ -118,7 +117,6 @@ const SeeTender = (props) => {
                         <th scope="col">Budget</th>
                         <th scope="col">Hours</th>
                         <th scope="col">Description</th>
-                        <th scope="col">Owner</th>
                     </tr>
                 </thead>
                 <tbody id="tenders">
@@ -132,7 +130,6 @@ const SeeTender = (props) => {
                                     <td>{item.budget}</td>
                                     <td>{item.hours}</td>
                                     <td>{item.description}</td>
-                                    <td>{item.Owner}</td>
                                 </tr>
 
                             </>

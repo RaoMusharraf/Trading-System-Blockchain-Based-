@@ -6,7 +6,7 @@ const { ethers } = require("ethers");
 
 const CreateTender = (props) => {
 
-    const auctionContract = "0x0233319e61551b0c557c104D3BC90F32BE78F545";
+    const auctionContract = "0xe5513E2C3C8a56099785F2adBe075Ea0A0653eC0";
     function timeout(delay) {
         return new Promise(res => setTimeout(res, delay));
     }
@@ -76,7 +76,6 @@ const CreateTender = (props) => {
             window.ethereum.on("accountsChanged", (accounts) => {
                 if (accounts.length > 0) {
                     setWallet(accounts[0]);
-                    setStatus("👆🏽 Write a message in the text-field above.");
                 } else {
                     setWallet("");
                     setStatus("🦊 Connect to Metamask using the top right button.");

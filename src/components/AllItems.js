@@ -7,7 +7,7 @@ import { useHistory } from "react-router-dom";
 
 const SeeTender = (props) => {
 
-    const auctionContract = "0x0233319e61551b0c557c104D3BC90F32BE78F545";
+    const auctionContract = "0xe5513E2C3C8a56099785F2adBe075Ea0A0653eC0";
     let history = useHistory();
     function timeout(delay) {
         return new Promise(res => setTimeout(res, delay));
@@ -44,7 +44,7 @@ const SeeTender = (props) => {
             console.log(window.ethereum.selectedAddress);
             //.const total = await window.contract.methods.Size(window.ethereum.selectedAddress).call();
             const all_single = await window.contract.methods.AllTender().call();
-            console.log(all_single);
+            console.log(all_single, "all_single");
             //console.log(total);
 
             var auctionData = [];
@@ -57,11 +57,11 @@ const SeeTender = (props) => {
                     "budget": all_single[i].budget,
                     "hours": all_single[i].time,
                     "description": all_single[i].description,
-                    "Owner": all_single[i].Owner,
+                    "Owner": all_single[i].owner,
                 }
                 auctionData.push(auc_data);
             }
-            console.log(auctionData)
+            console.log(auctionData, "auctionData")
 
             setAuctionDetails(auctionData);
         } catch (err) {
@@ -136,11 +136,9 @@ const SeeTender = (props) => {
                                     <td>{item.hours}</td>
                                     <td>{item.description}</td>
                                     <td>{item.Owner}</td>
-                                    {/* <td><Link className="tender-req-btn" to="/Vender_request"> Create</Link></td> */}
                                     <td><button id={item.TokenId} className="tender-req-btn" onClick={(e) => {
                                         localStorage.lToken = e.target.id
                                         history.push("/Vender_request");
-
                                     }} > Create</button></td>
 
                                 </tr>
@@ -160,3 +158,6 @@ const SeeTender = (props) => {
 };
 
 export default SeeTender;
+
+
+

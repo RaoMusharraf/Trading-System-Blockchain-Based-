@@ -5,8 +5,9 @@ import Web3 from "web3";
 const { ethers } = require("ethers");
 
 const CreateVender = (props) => {
-    const [Tokenid, setTokenid] = useState("")
-    const auctionContract = "0x0233319e61551b0c557c104D3BC90F32BE78F545";
+
+    const [Tokenid, setTokenid] = useState("");
+    const auctionContract = "0xe5513E2C3C8a56099785F2adBe075Ea0A0653eC0";
     function timeout(delay) {
         return new Promise(res => setTimeout(res, delay));
     }
@@ -14,9 +15,9 @@ const CreateVender = (props) => {
     //State variables
     const [walletAddress, setWallet] = useState("");
     const [status, setStatus] = useState("");
-    const [Token, setName] = useState("");
-    const [Price, setQuantity] = useState("");
-    const [Description, setBudget] = useState("");
+    const [name, setName] = useState("");
+    const [quantity, setQuantity] = useState("");
+    const [budget, setBudget] = useState("");
     const [hours, setHours] = useState("");
     const [description, setDescription] = useState("");
 
@@ -34,27 +35,22 @@ const CreateVender = (props) => {
         setWallet(walletResponse.address);
     };
 
-    const onList = async (Token, nftId, bid, eDate) => {
-        if (Token == '' || Price == '' || Description == '' || hours == '' || description == '') {
+    const onList = async (budget, description) => {
+        if (budget == '' || description == '') {
             setStatus("Please fill all values!!!!!!!!!!!");
             alert("Please fill all values!!!!!!!!!!!");
         } else {
-            // const id = nftId.substring(10);
-            const end_time = Math.floor(new Date(eDate).getTime() / 1000);
-            // const ini_bid = initialBid;
 
             //Contract Interaction
             const web3 = new Web3(window.ethereum);
             const auction_contractABI = require('../abi/abi_tender.json');
-            const price = ethers.utils.parseEther(bid);
-
             try {
                 window.contract = await new web3.eth.Contract(auction_contractABI, auctionContract);
                 //set up your Ethereum transaction
                 const transactionParameters = {
                     to: auctionContract, // Required except during contract publications.
                     from: window.ethereum.selectedAddress, // must match user's active address.
-                    'data': window.contract.methods.tender(localStorage.lToken, Price, Description, hours, description).encodeABI()//make call to NFT smart contract
+                    'data': window.contract.methods.vender(localStorage.lToken, budget, description).encodeABI()//make call to NFT smart contract
                 };
                 //sign the transaction via Metamask
                 const txHash = await window.ethereum
@@ -95,7 +91,6 @@ const CreateVender = (props) => {
             );
         }
     }
-
     useEffect(() => {
         let temp;
         temp = localStorage.lToken
@@ -118,27 +113,22 @@ const CreateVender = (props) => {
             </button>
             <br></br>
 
-            <h2 style={{ textAlign: 'left' }}>
-                Submit Request </h2>
+            <h1 style={{ textAlign: 'left' }}>
+                List Request For Items </h1>
             <form>
-                <h2>Token</h2>
-                <input
-                    type="text"
-                    placeholder="Enter Token"
-                    onChange={(event) => setName(event.target.value)} />
                 <h2>Price</h2>
                 <input
                     type="text"
                     placeholder="Enter Price"
-                    onChange={(event) => setQuantity(event.target.value)} />
-                <h2>Company Details</h2>
+                    onChange={(event) => setBudget(event.target.value)} />
+                <h2>Description</h2>
                 <input
                     type="text"
                     placeholder="Enter Description"
-                    onChange={(event) => setBudget(event.target.value)} />
+                    onChange={(event) => setDescription(event.target.value)} />
             </form>
             <br />
-            <button id="list" onClick={() => onList(Token, Price, Description)}>
+            <button id="list" onClick={() => onList(budget, description)}>
                 List
             </button>
             <p id="status">
