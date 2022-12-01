@@ -25,7 +25,7 @@ function App() {
           <a href="/create-tender">Create Tender</a>
           <a href="/my_items">See Tender</a>
           <a href="/">All Tenders</a>
-          <a href="/Vender_request">Create Vender Request</a>
+          {/* <a href="/Vender_request">Create Vender Request</a> */}
           <a href="/bundle_auction">Vender Requests</a>
           <a href="/Feedback">Feedback</a>
           <a href="/Payment">Payment</a>

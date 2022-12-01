@@ -132,6 +132,7 @@ const SeeTender = (props) => {
                                 <th scope="col">Price</th>
                                 <th scope="col">Description    </th>
                                 <th scope="col">Owner</th>
+                                <th scope="col">Approve</th>
 
 
                             </tr>
@@ -145,7 +146,7 @@ const SeeTender = (props) => {
                                         <td>{item.Price}</td>
                                         <td>{item.Description}</td>
                                         <td>{item.owner}</td>
-                                        <td><button>Approve</button></td>
+                                        <td><button>Accept</button></td>
 
 
 
@@ -179,7 +180,7 @@ const SeeTender = (props) => {
                 </button>
                 <br></br>
 
-                <h1 style={{ textAlign: 'left' }}>Requests </h1>
+                <h1 style={{ textAlign: 'left' }}>Tenders </h1>
                 <table className="table table-striped mtable">
                     <thead>
                         <tr>
@@ -190,7 +191,6 @@ const SeeTender = (props) => {
                             <th scope="col">Hours</th>
                             <th scope="col">Description</th>
                             <th scope="col">Requests</th>
-
                         </tr>
                     </thead>
                     <tbody id="tenders">
@@ -204,7 +204,7 @@ const SeeTender = (props) => {
                                         <td>{item.budget}</td>
                                         <td>{item.hours}</td>
                                         <td>{item.description}</td>
-                                        <td>{item.application} <button onClick={handleShow}>Show Requests </button></td>
+                                        <td><button onClick={handleShow}>{item.application} Requests </button></td>
 
                                     </tr>
 
@@ -214,10 +214,6 @@ const SeeTender = (props) => {
                         }
                     </tbody>
                 </table>
-
-
-
-
                 <br />
                 <p id="status">
                     {status}

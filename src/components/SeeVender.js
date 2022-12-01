@@ -32,7 +32,6 @@ const SeeVender = (props) => {
         setStatus(walletResponse.status);
         setWallet(walletResponse.address);
     };
-
     const getData = async () => {
 
         const web3 = new Web3(window.ethereum);
@@ -111,7 +110,7 @@ const SeeVender = (props) => {
             <table class="table table-striped mtable">
                 <thead>
                     <tr>
-                        <th scope="col">Id</th>
+                        <th scope="col">Token#</th>
                         <th scope="col">Price</th>
                         <th scope="col">Description</th>
                         <th scope="col">Owner</th>
@@ -134,10 +133,6 @@ const SeeVender = (props) => {
                     }
                 </tbody>
             </table>
-
-
-
-
             <br />
             <p id="status">
                 {status}
