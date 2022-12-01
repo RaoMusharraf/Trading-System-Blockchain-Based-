@@ -136,3 +136,7 @@ a.tender-req-btn {
   text-align: center;
   margin: 0 auto;
 }
+
+.modal-dialog {
+  max-width: 64% !important;
+}
