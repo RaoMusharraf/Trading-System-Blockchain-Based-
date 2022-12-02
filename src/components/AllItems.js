@@ -7,36 +7,35 @@ import { useNavigate } from "react-router-dom";
 
 const SeeTender = (props) => {
 
-    const auctionContract = "0x9088F1f489816984D16c88d699416b4E39068345";
-    let navigate = useNavigate();
-    function timeout(delay) {
-        return new Promise(res => setTimeout(res, delay));
-    }
+    const [Tokentime, setTokentime] = useState({})
     const [walletAddress, setWallet] = useState("");
     const [status, setStatus] = useState("");
     const [auctionDetails, setAuctionDetails] = useState([]);
+    const [timer, setmushi] = useState("")
+    const web3 = new Web3(window.ethereum);
 
+    const contractAuctionABI = require('../abi/abi_tender.json');
+    const auctionContract = "0x141dba95F2d6A0D181ba7A8706568Fe63ADdBF49";
+    let navigate = useNavigate();
+
+    function timeout(delay) {
+        return new Promise(res => setTimeout(res, delay));
+    }
     useEffect(async () => {
         const { address, status } = await getCurrentWalletConnected();
         setWallet(address);
         setStatus(status);
-
         getData();
-
         addWalletListener();
     }, []);
-
     const connectWalletPressed = async () => {
         const walletResponse = await connectWallet();
         setStatus(walletResponse.status);
         setWallet(walletResponse.address);
     };
-
     const getData = async () => {
 
-        const web3 = new Web3(window.ethereum);
 
-        const contractAuctionABI = require('../abi/abi_tender.json');
         var auctionData = [];
 
         try {
@@ -46,6 +45,8 @@ const SeeTender = (props) => {
             const all_single = await window.contract.methods.AllTender().call();
             console.log(all_single, "all_single");
             //console.log(total);
+
+
 
             var auctionData = [];
 
@@ -68,7 +69,6 @@ const SeeTender = (props) => {
             console.log(err);
         }
     };
-
     function addWalletListener() {
         if (window.ethereum) {
             window.ethereum.on("accountsChanged", (accounts) => {
@@ -93,6 +93,22 @@ const SeeTender = (props) => {
             );
         }
     }
+    const getTime = async () => {
+
+        console.log(auctionDetails);
+        window.contract = await new web3.eth.Contract(contractAuctionABI, auctionContract);
+        auctionDetails.map(async (item, index) => {
+            let all_s = await window.contract.methods.CheckTime(item.TokenId).call();
+            console.log(all_s);
+            setTokentime(existingValues => ({
+                ...existingValues,
+                [item.TokenId]: all_s,
+            }))
+        })
+    }
+    useEffect(() => {
+        getTime()
+    }, [auctionDetails])
 
     return (
         <div className="container">
@@ -129,17 +145,20 @@ const SeeTender = (props) => {
                             <>
                                 <tr>
                                     <td id={item.TokenId}>{item.TokenId}</td>
-
                                     <td>{item.name}</td>
                                     <td>{item.quantity}</td>
                                     <td>{item.budget}</td>
                                     <td>{item.hours}</td>
                                     <td>{item.description}</td>
                                     <td>{item.Owner}</td>
-                                    <td><button id={item.TokenId} className="tender-req-btn" onClick={(e) => {
-                                        localStorage.lToken = e.target.id
-                                        navigate("/Vender_request")
-                                    }} > Create</button></td>
+                                    <td id="button-tds">
+                                        {
+                                            Tokentime[item.TokenId] == true ? <button id={item.TokenId} className="tender-req-btn" onClick={(e) => {
+                                                localStorage.lToken = e.target.id
+                                                navigate("/Vender_request")
+                                            }} > Create</button> : <p>Close</p>
+                                        }
+                                    </td>
 
                                 </tr>
 

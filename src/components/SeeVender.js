@@ -7,15 +7,18 @@ const { ethers } = require("ethers");
 
 const SeeVender = (props) => {
 
-    const auctionContract = "0x9088F1f489816984D16c88d699416b4E39068345";
+    const [walletAddress, setWallet] = useState("");
+    const [status, setStatus] = useState("");
+    const [Tokentime, setTokentime] = useState({})
+    const [auctionDetails, setAuctionDetails] = useState([]);
+
+    const contractAuctionABI = require('../abi/abi_tender.json');
+    const auctionContract = "0x141dba95F2d6A0D181ba7A8706568Fe63ADdBF49";
+    const web3 = new Web3(window.ethereum);
 
     function timeout(delay) {
         return new Promise(res => setTimeout(res, delay));
     }
-
-    const [walletAddress, setWallet] = useState("");
-    const [status, setStatus] = useState("");
-    const [auctionDetails, setAuctionDetails] = useState([]);
 
     useEffect(async () => {
         const { address, status } = await getCurrentWalletConnected();
@@ -30,23 +33,35 @@ const SeeVender = (props) => {
         setStatus(walletResponse.status);
         setWallet(walletResponse.address);
     };
+
+    const onList = async (TokenId) => {
+        window.contract = await new web3.eth.Contract(contractAuctionABI, auctionContract);
+        const transactionParameters = {
+            to: auctionContract, // Required except during contract publications.
+            from: window.ethereum.selectedAddress, // must match user's active address.
+            'data': window.contract.methods.DeleteVRequest(TokenId).encodeABI()//make call to NFT smart contract
+        };
+        //sign the transaction via Metamask
+        const txHash = await window.ethereum
+            .request({
+                method: 'eth_sendTransaction',
+                params: [transactionParameters],
+            });
+        setStatus("✅ Check out your transaction on Etherscan: https://etherscan.io/tx/" + txHash);
+        await timeout(10000);
+        window.location.reload(false);
+    }
+
     const getData = async () => {
 
-        const web3 = new Web3(window.ethereum);
-
-        const contractAuctionABI = require('../abi/abi_tender.json');
         var auctionData = [];
-
         try {
             window.contract = await new web3.eth.Contract(contractAuctionABI, auctionContract);
-            console.log(window.ethereum.selectedAddress);
             const total = await window.contract.methods.Requests(window.ethereum.selectedAddress).call();
             const all_single = await window.contract.methods.getVender(window.ethereum.selectedAddress).call();
-            console.log(all_single, "all");
+
             console.log(total);
-
             var auctionData = [];
-
             for (var i = 0; i < total; i++) {
                 const auc_data = {
                     "TokenId": all_single[i].Token,
@@ -58,12 +73,27 @@ const SeeVender = (props) => {
                 auctionData.push(auc_data);
             }
             console.log(auctionData)
-
             setAuctionDetails(auctionData);
         } catch (err) {
             console.log(err);
         }
     };
+    const getTime = async () => {
+
+        console.log(auctionDetails);
+        window.contract = await new web3.eth.Contract(contractAuctionABI, auctionContract);
+        auctionDetails.map(async (item, index) => {
+            let all_s = await window.contract.methods.CheckTime(item.TokenId).call();
+            console.log(all_s);
+            setTokentime(existingValues => ({
+                ...existingValues,
+                [item.TokenId]: all_s,
+            }))
+        })
+    }
+    useEffect(() => {
+        getTime()
+    }, [auctionDetails])
 
     function addWalletListener() {
         if (window.ethereum) {
@@ -114,6 +144,7 @@ const SeeVender = (props) => {
                         <th scope="col">Delivery Time</th>
                         <th scope="col">Description</th>
                         <th scope="col">Owner</th>
+                        <th scope="col"></th>
                     </tr>
                 </thead>
                 <tbody id="tenders">
@@ -126,8 +157,13 @@ const SeeVender = (props) => {
                                     <td>{item.Delivery}</td>
                                     <td>{item.Description}</td>
                                     <td>{item.Owner}</td>
+                                    <td id="button-tds">
+                                        {
+                                            Tokentime[item.TokenId] == false ? <p>Close</p> :
+                                                <button id={item.TokenId} onClick={(e) => handleShow(e.target.id)}>Cancel</button>
+                                        }
+                                    </td>
                                 </tr>
-
                             </>
                         )
                     })

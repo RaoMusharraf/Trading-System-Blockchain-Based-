@@ -6,15 +6,17 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
 const SeeTender = (props) => {
-    const web3 = new Web3(window.ethereum);
-    const auctionContract = "0x9088F1f489816984D16c88d699416b4E39068345";
-    const contractAuctionABI = require('../abi/abi_tender.json');
+
     const [show, setShow] = useState(false);
     const [walletAddress, setWallet] = useState("");
     const [status, setStatus] = useState("");
     const [auctionDetails, setAuctionDetails] = useState([]);
     const [Allrequests, setAllrequests] = useState([]);
     const [Tokentime, setTokentime] = useState({})
+
+    const web3 = new Web3(window.ethereum);
+    const auctionContract = "0x141dba95F2d6A0D181ba7A8706568Fe63ADdBF49";
+    const contractAuctionABI = require('../abi/abi_tender.json');
 
     const handleClose = () => setShow(false);
     const handleShow = async (TokenId) => {
@@ -26,19 +28,15 @@ const SeeTender = (props) => {
         setAllrequests(clonedArr)
     };
 
-
     function timeout(delay) {
         return new Promise(res => setTimeout(res, delay));
     }
-
 
     useEffect(async () => {
         const { address, status } = await getCurrentWalletConnected();
         setWallet(address);
         setStatus(status);
-
         getData();
-
         addWalletListener();
     }, []);
 
@@ -50,45 +48,16 @@ const SeeTender = (props) => {
 
     const getData = async () => {
 
-
         var auctionData = [];
-
         try {
             window.contract = await new web3.eth.Contract(contractAuctionABI, auctionContract);
             console.log(window.ethereum.selectedAddress);
             const total = await window.contract.methods.Size(window.ethereum.selectedAddress).call();
             const all_single = await window.contract.methods.getTender(window.ethereum.selectedAddress).call();
 
-
-            //console.log(window.contract.methods);
-
             var auctionData = [];
-            var requestD = [];
-            var requestData = [];
-
             for (var i = 0; i < total; i++) {
                 const all_sing = await window.contract.methods.SizeVender(all_single[i].TokenId).call();
-                // console.log(all_s.length, "all_s");
-                // for (var j = 0; j < all_s.length; j++) {
-                //     const ven_data = {
-                //         "Token": all_s[j].Token,
-                //         "Price": all_s[j].Price,
-                //         "DeleveryTime": all_s[j].DeleveryTime,
-                //         "Owner": all_s[j].owner,
-                //     }
-                //     console.log(all_s.length, "hello");
-                //     requestD.push(ven_data)
-                // }
-                // const ven_data = {
-                //     "Token": all_s[i].Token,
-                //     "Price": all_s[i].Price,
-                //     "DeleveryTime": all_s[i].DeleveryTime,
-                //     "Owner": all_s[i].owner,
-                // }
-                // console.log(ven_data, "requestD");
-                // // requestData.push(ven_data)
-                // const clonedArr = [...all_s];
-                // requestData.push(clonedArr);
                 const auc_data = {
                     "TokenId": all_single[i].TokenId,
                     "name": all_single[i].name,
@@ -101,16 +70,13 @@ const SeeTender = (props) => {
                 }
                 auctionData.push(auc_data);
             }
-            // console.log(requestData, "requestData");
-            // setAllrequests(requestData);
-            // console.log(Allrequests, "requestData2");
-            // console.log(auctionData, "auctionData");
             setAuctionDetails(auctionData);
             console.log(auctionDetails, "auctionData2");
         } catch (err) {
             console.log(err);
         }
     };
+
     const getTime = async () => {
 
         console.log(auctionDetails);
@@ -122,35 +88,12 @@ const SeeTender = (props) => {
                 ...existingValues,
                 [item.TokenId]: all_s,
             }))
-
         })
-
-        console.log(window.contract.methods);
-
-
-
-        // if (all_s == true) {
-        //     console.log("enter");
-
-        //     // const myelem = document.getElementById("button-tds");
-        //     // // console.log(myelem.children);
-        //     // myelem.children[0].style.display = "none";
-        //     // const mytext = myelem.children[0].innerHTML;
-        //     // const myp = document.createElement("p")
-        //     // myp.innerHTML = myelem.children[0].innerHTML;
-        //     // myelem.appendChild(myp)
-
-        // }
-        // console.log(all_s);
     }
+
     useEffect(() => {
         getTime()
     }, [auctionDetails])
-
-    useEffect(() => {
-        console.log(Tokentime);
-    }, [Tokentime])
-
 
     function addWalletListener() {
         if (window.ethereum) {
@@ -262,10 +205,8 @@ const SeeTender = (props) => {
                                         <td id="button-tds">
                                             {
                                                 Tokentime[item.TokenId] == true ? <p>{item.application}</p> :
-                                                    <button id={item.TokenId} onClick={(e) => handleShow(e.target.id)}>{item.application} Requests </button>
+                                                    <button id={item.TokenId} onClick={(e) => handleShow(e.target.id)}>{item.application}</button>
                                             }
-
-
                                         </td>
 
                                     </tr>

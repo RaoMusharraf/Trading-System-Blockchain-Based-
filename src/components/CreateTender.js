@@ -6,7 +6,7 @@ const { ethers } = require("ethers");
 
 const CreateTender = (props) => {
 
-    const auctionContract = "0x9088F1f489816984D16c88d699416b4E39068345";
+    const auctionContract = "0x141dba95F2d6A0D181ba7A8706568Fe63ADdBF49";
     function timeout(delay) {
         return new Promise(res => setTimeout(res, delay));
     }
@@ -34,19 +34,18 @@ const CreateTender = (props) => {
         setWallet(walletResponse.address);
     };
 
-    const onList = async (name, nftId, bid, eDate) => {
+    const onList = async (name, quantity, budget, hours, description) => {
         if (name == '' || quantity == '' || budget == '' || hours == '' || description == '') {
             setStatus("Please fill all values!!!!!!!!!!!");
             alert("Please fill all values!!!!!!!!!!!");
         } else {
             // const id = nftId.substring(10);
-            const end_time = Math.floor(new Date(eDate).getTime() / 1000);
+            // const end_time = Math.floor(new Date(eDate).getTime() / 1000);
             // const ini_bid = initialBid;
 
             //Contract Interaction
             const web3 = new Web3(window.ethereum);
             const auction_contractABI = require('../abi/abi_tender.json');
-            const price = ethers.utils.parseEther(bid);
 
             try {
                 window.contract = await new web3.eth.Contract(auction_contractABI, auctionContract);
@@ -62,6 +61,10 @@ const CreateTender = (props) => {
                         method: 'eth_sendTransaction',
                         params: [transactionParameters],
                     });
+
+                // await timeout(5000).then(res => {
+                //     navigate("/")
+                // });
                 setStatus("✅ Check out your transaction on Etherscan: https://etherscan.io/tx/" + txHash);
                 await timeout(5000);
                 window.location.reload(false);
