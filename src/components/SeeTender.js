@@ -6,21 +6,26 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
 const SeeTender = (props) => {
-
+    const web3 = new Web3(window.ethereum);
+    const auctionContract = "0x9088F1f489816984D16c88d699416b4E39068345";
+    const contractAuctionABI = require('../abi/abi_tender.json');
     const [show, setShow] = useState(false);
-
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
-
     const [walletAddress, setWallet] = useState("");
     const [status, setStatus] = useState("");
     const [auctionDetails, setAuctionDetails] = useState([]);
     const [Allrequests, setAllrequests] = useState([]);
+    const [Tokentime, setTokentime] = useState({})
 
+    const handleClose = () => setShow(false);
+    const handleShow = async (TokenId) => {
+        window.contract = await new web3.eth.Contract(contractAuctionABI, auctionContract);
+        setShow(true)
+        const all_s = await window.contract.methods.AllVender(TokenId).call();
+        console.log(all_s);
+        const clonedArr = [...all_s]
+        setAllrequests(clonedArr)
+    };
 
-
-
-    const auctionContract = "0xe5513E2C3C8a56099785F2adBe075Ea0A0653eC0";
 
     function timeout(delay) {
         return new Promise(res => setTimeout(res, delay));
@@ -45,9 +50,7 @@ const SeeTender = (props) => {
 
     const getData = async () => {
 
-        const web3 = new Web3(window.ethereum);
 
-        const contractAuctionABI = require('../abi/abi_tender.json');
         var auctionData = [];
 
         try {
@@ -57,19 +60,35 @@ const SeeTender = (props) => {
             const all_single = await window.contract.methods.getTender(window.ethereum.selectedAddress).call();
 
 
-            console.log(window.contract.methods);
+            //console.log(window.contract.methods);
 
             var auctionData = [];
+            var requestD = [];
             var requestData = [];
 
             for (var i = 0; i < total; i++) {
                 const all_sing = await window.contract.methods.SizeVender(all_single[i].TokenId).call();
-
-
-                const all_s = await window.contract.methods.AllVender(all_single[i].TokenId).call();
-                const clonedArr = [...all_s];
-                setAllrequests(clonedArr)
-                console.log(all_s, "all_s");
+                // console.log(all_s.length, "all_s");
+                // for (var j = 0; j < all_s.length; j++) {
+                //     const ven_data = {
+                //         "Token": all_s[j].Token,
+                //         "Price": all_s[j].Price,
+                //         "DeleveryTime": all_s[j].DeleveryTime,
+                //         "Owner": all_s[j].owner,
+                //     }
+                //     console.log(all_s.length, "hello");
+                //     requestD.push(ven_data)
+                // }
+                // const ven_data = {
+                //     "Token": all_s[i].Token,
+                //     "Price": all_s[i].Price,
+                //     "DeleveryTime": all_s[i].DeleveryTime,
+                //     "Owner": all_s[i].owner,
+                // }
+                // console.log(ven_data, "requestD");
+                // // requestData.push(ven_data)
+                // const clonedArr = [...all_s];
+                // requestData.push(clonedArr);
                 const auc_data = {
                     "TokenId": all_single[i].TokenId,
                     "name": all_single[i].name,
@@ -82,13 +101,56 @@ const SeeTender = (props) => {
                 }
                 auctionData.push(auc_data);
             }
-            console.log(auctionData)
-
+            // console.log(requestData, "requestData");
+            // setAllrequests(requestData);
+            // console.log(Allrequests, "requestData2");
+            // console.log(auctionData, "auctionData");
             setAuctionDetails(auctionData);
+            console.log(auctionDetails, "auctionData2");
         } catch (err) {
             console.log(err);
         }
     };
+    const getTime = async () => {
+
+        console.log(auctionDetails);
+        window.contract = await new web3.eth.Contract(contractAuctionABI, auctionContract);
+        auctionDetails.map(async (item, index) => {
+            let all_s = await window.contract.methods.CheckTime(item.TokenId).call();
+            console.log(all_s);
+            setTokentime(existingValues => ({
+                ...existingValues,
+                [item.TokenId]: all_s,
+            }))
+
+        })
+
+        console.log(window.contract.methods);
+
+
+
+        // if (all_s == true) {
+        //     console.log("enter");
+
+        //     // const myelem = document.getElementById("button-tds");
+        //     // // console.log(myelem.children);
+        //     // myelem.children[0].style.display = "none";
+        //     // const mytext = myelem.children[0].innerHTML;
+        //     // const myp = document.createElement("p")
+        //     // myp.innerHTML = myelem.children[0].innerHTML;
+        //     // myelem.appendChild(myp)
+
+        // }
+        // console.log(all_s);
+    }
+    useEffect(() => {
+        getTime()
+    }, [auctionDetails])
+
+    useEffect(() => {
+        console.log(Tokentime);
+    }, [Tokentime])
+
 
     function addWalletListener() {
         if (window.ethereum) {
@@ -114,9 +176,6 @@ const SeeTender = (props) => {
             );
         }
     }
-
-
-
     return (
         <div>
             <Modal show={show} onHide={handleClose} centered>
@@ -130,29 +189,25 @@ const SeeTender = (props) => {
                             <tr>
                                 <th scope="col">S#</th>
                                 <th scope="col">Price</th>
-                                <th scope="col">Description    </th>
+                                <th scope="col">Deliver Time</th>
+                                <th scope="col">Description </th>
                                 <th scope="col">Owner</th>
                                 <th scope="col">Approve</th>
-
-
                             </tr>
                         </thead>
                         <tbody id="tenders">
                             {Allrequests.map((item, index) => {
                                 return (
-
-                                    <tr key={index}>
-                                        <td>{index + 1}</td>
-                                        <td>{item.Price}</td>
-                                        <td>{item.Description}</td>
-                                        <td>{item.owner}</td>
-                                        <td><button>Accept</button></td>
-
-
-
-                                    </tr>
-
-
+                                    <>
+                                        <tr key={index}>
+                                            <td>{index + 1}</td>
+                                            <td>{item.Price}</td>
+                                            <td>{item.DeleveryTime}</td>
+                                            <td>{item.Description}</td>
+                                            <td>{item.owner}</td>
+                                            <td><button>Accept</button></td>
+                                        </tr>
+                                    </>
                                 )
                             })
                             }
@@ -184,7 +239,7 @@ const SeeTender = (props) => {
                 <table className="table table-striped mtable">
                     <thead>
                         <tr>
-                            <th scope="col">Id</th>
+                            <th scope="col">Token#</th>
                             <th scope="col">Name</th>
                             <th scope="col">Quantity    </th>
                             <th scope="col">Budget</th>
@@ -204,7 +259,14 @@ const SeeTender = (props) => {
                                         <td>{item.budget}</td>
                                         <td>{item.hours}</td>
                                         <td>{item.description}</td>
-                                        <td><button onClick={handleShow}>{item.application} Requests </button></td>
+                                        <td id="button-tds">
+                                            {
+                                                Tokentime[item.TokenId] == true ? <p>{item.application}</p> :
+                                                    <button id={item.TokenId} onClick={(e) => handleShow(e.target.id)}>{item.application} Requests </button>
+                                            }
+
+
+                                        </td>
 
                                     </tr>
 

@@ -7,7 +7,7 @@ const { ethers } = require("ethers");
 
 const SeeVender = (props) => {
 
-    const auctionContract = "0xe5513E2C3C8a56099785F2adBe075Ea0A0653eC0";
+    const auctionContract = "0x9088F1f489816984D16c88d699416b4E39068345";
 
     function timeout(delay) {
         return new Promise(res => setTimeout(res, delay));
@@ -21,9 +21,7 @@ const SeeVender = (props) => {
         const { address, status } = await getCurrentWalletConnected();
         setWallet(address);
         setStatus(status);
-
         getData();
-
         addWalletListener();
     }, []);
 
@@ -44,7 +42,7 @@ const SeeVender = (props) => {
             console.log(window.ethereum.selectedAddress);
             const total = await window.contract.methods.Requests(window.ethereum.selectedAddress).call();
             const all_single = await window.contract.methods.getVender(window.ethereum.selectedAddress).call();
-            console.log(all_single);
+            console.log(all_single, "all");
             console.log(total);
 
             var auctionData = [];
@@ -53,6 +51,7 @@ const SeeVender = (props) => {
                 const auc_data = {
                     "TokenId": all_single[i].Token,
                     "Price": all_single[i].Price,
+                    "Delivery": all_single[i].DeleveryTime,
                     "Description": all_single[i].Description,
                     "Owner": all_single[i].owner,
                 }
@@ -112,6 +111,7 @@ const SeeVender = (props) => {
                     <tr>
                         <th scope="col">Token#</th>
                         <th scope="col">Price</th>
+                        <th scope="col">Delivery Time</th>
                         <th scope="col">Description</th>
                         <th scope="col">Owner</th>
                     </tr>
@@ -123,6 +123,7 @@ const SeeVender = (props) => {
                                 <tr>
                                     <td>{item.TokenId}</td>
                                     <td>{item.Price}</td>
+                                    <td>{item.Delivery}</td>
                                     <td>{item.Description}</td>
                                     <td>{item.Owner}</td>
                                 </tr>

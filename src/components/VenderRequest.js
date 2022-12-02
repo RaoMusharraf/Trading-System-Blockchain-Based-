@@ -2,31 +2,37 @@ import { useEffect, useState } from "react";
 import { connectWallet, getCurrentWalletConnected, createBox } from "../utils/interact.js";
 import logo from '../lilfrens-logo.png';
 import Web3 from "web3";
+import { useNavigate } from "react-router-dom";
+
 const { ethers } = require("ethers");
 
 const CreateVender = (props) => {
 
-    const [Tokenid, setTokenid] = useState("");
-    const auctionContract = "0xe5513E2C3C8a56099785F2adBe075Ea0A0653eC0";
+    const [Token, setTokenid] = useState("");
+    const [delivery, setDelivey] = useState("");
+    const [walletAddress, setWallet] = useState("");
+    const [status, setStatus] = useState("");
+    const [statusLink, setLink] = useState("");
+
+    const [budget, setBudget] = useState("");
+    const [description, setDescription] = useState("");
+    const auctionContract = "0x9088F1f489816984D16c88d699416b4E39068345";
+
+
+    const navigate = useNavigate()
     function timeout(delay) {
         return new Promise(res => setTimeout(res, delay));
     }
 
     //State variables
-    const [walletAddress, setWallet] = useState("");
-    const [status, setStatus] = useState("");
-    const [name, setName] = useState("");
-    const [quantity, setQuantity] = useState("");
-    const [budget, setBudget] = useState("");
-    const [hours, setHours] = useState("");
-    const [description, setDescription] = useState("");
+
 
     useEffect(async () => {
         const { address, status } = await getCurrentWalletConnected();
         setWallet(address);
         setStatus(status);
-
         addWalletListener();
+
     }, []);
 
     const connectWalletPressed = async () => {
@@ -35,8 +41,8 @@ const CreateVender = (props) => {
         setWallet(walletResponse.address);
     };
 
-    const onList = async (budget, description) => {
-        if (budget == '' || description == '') {
+    const onList = async (budget, description, delivery) => {
+        if (budget == '' || delivery == '' || description == '') {
             setStatus("Please fill all values!!!!!!!!!!!");
             alert("Please fill all values!!!!!!!!!!!");
         } else {
@@ -50,7 +56,7 @@ const CreateVender = (props) => {
                 const transactionParameters = {
                     to: auctionContract, // Required except during contract publications.
                     from: window.ethereum.selectedAddress, // must match user's active address.
-                    'data': window.contract.methods.vender(localStorage.lToken, budget, description).encodeABI()//make call to NFT smart contract
+                    'data': window.contract.methods.vender(localStorage.lToken, budget, description, delivery).encodeABI()//make call to NFT smart contract
                 };
                 //sign the transaction via Metamask
                 const txHash = await window.ethereum
@@ -58,9 +64,12 @@ const CreateVender = (props) => {
                         method: 'eth_sendTransaction',
                         params: [transactionParameters],
                     });
-                setStatus("✅ Check out your transaction on Etherscan: https://etherscan.io/tx/" + txHash);
-                await timeout(5000);
-                window.location.reload(false);
+
+
+                await timeout(5000).then(res => {
+                    navigate("/")
+                });
+
             } catch (err) {
                 console.log(err);
                 setStatus("😢 Something went wrong while listing your NFT for auction");
@@ -121,6 +130,11 @@ const CreateVender = (props) => {
                     type="text"
                     placeholder="Enter Price"
                     onChange={(event) => setBudget(event.target.value)} />
+                <h2>Delivery</h2>
+                <input
+                    type="text"
+                    placeholder="Enter Days"
+                    onChange={(event) => setDelivey(event.target.value)} />
                 <h2>Description</h2>
                 <input
                     type="text"
@@ -128,11 +142,16 @@ const CreateVender = (props) => {
                     onChange={(event) => setDescription(event.target.value)} />
             </form>
             <br />
-            <button id="list" onClick={() => onList(budget, description)}>
+            <button id="list" onClick={() => onList(budget, description, delivery)}>
                 List
             </button>
+
             <p id="status">
                 {status}
+            </p>
+
+            <p id="linkTx">
+
             </p>
         </div>
     );

@@ -1,12 +1,12 @@
 import './App.css';
 import CreateTender from './components/CreateTender';
 import SeeVender from './components/SeeVender';
-import seeOwnerTender from './components/SeeTender';
+import SeeTender from './components/SeeTender';
 import AllItems from './components/AllItems';
 import CreateVender from './components/VenderRequest';
 import Feedback from './components/Feedback';
 import Payment from './components/Payment';
-import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Route, Link, Switch, NavLink, Routes } from "react-router-dom";
 import logo from './lilfrens-logo.png';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -14,7 +14,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   return (
-    <Router>
+
+    <>
       <div class="topnav">
         <div>
           <h1 id="title" style={{ textAlign: 'center' }}>
@@ -22,26 +23,27 @@ function App() {
               <img src={logo} alt="Logo" /></a> </h1>
         </div>
         <div className='my-navigation'>
-          <a href="/create-tender">Create Tender</a>
-          <a href="/my_items">See Tender</a>
-          <a href="/">All Tenders</a>
+          <NavLink to="/create-tender">Create Tender</NavLink>
+          <NavLink to="/see-tender">See Tender</NavLink>
+          <NavLink to="/">All Tenders</NavLink>
           {/* <a href="/Vender_request">Create Vender Request</a> */}
-          <a href="/bundle_auction">Vender Requests</a>
-          <a href="/Feedback">Feedback</a>
-          <a href="/Payment">Payment</a>
+          <NavLink to="/bundle_auction">Vender Requests</NavLink>
+          <NavLink to="/Feedback">Feedback</NavLink>
+          <NavLink to="/Payment">Payment</NavLink>
         </div>
 
       </div>
-      <Switch>
-        <Route exact path='/' component={AllItems}></Route>
-        <Route exact path='/create-tender' component={CreateTender}></Route>
-        <Route exact path='/bundle_auction' component={SeeVender}></Route>
-        <Route exact path='/my_items' component={seeOwnerTender}></Route>
-        <Route exact path='/Vender_request' component={CreateVender}></Route>
-        <Route exact path='/Feedback' component={Feedback}></Route>
-        <Route exact path='/Payment' component={Payment}></Route>
-      </Switch>
-    </Router>
+      <Routes>
+        <Route path='/' element={<AllItems />}></Route>
+        <Route path='/create-tender' element={<CreateTender />}></Route>
+        <Route path='/bundle_auction' element={<SeeVender />}></Route>
+        <Route path='/see-tender' element={<SeeTender />}></Route>
+        <Route path='/Vender_request' element={<CreateVender />}></Route>
+        <Route path='/Feedback' element={<Feedback />}></Route>
+        <Route path='/Payment' element={<Payment />}></Route>
+      </Routes>
+
+    </>
   );
 }
 

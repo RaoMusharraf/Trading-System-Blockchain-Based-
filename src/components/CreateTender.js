@@ -6,7 +6,7 @@ const { ethers } = require("ethers");
 
 const CreateTender = (props) => {
 
-    const auctionContract = "0xe5513E2C3C8a56099785F2adBe075Ea0A0653eC0";
+    const auctionContract = "0x9088F1f489816984D16c88d699416b4E39068345";
     function timeout(delay) {
         return new Promise(res => setTimeout(res, delay));
     }
@@ -94,9 +94,6 @@ const CreateTender = (props) => {
             );
         }
     }
-
-
-
     return (
         <div className="container createtender">
             <button id="walletButton" onClick={connectWalletPressed}>

@@ -2,13 +2,13 @@ import { useEffect, useState } from "react";
 import { connectWallet, getCurrentWalletConnected } from "../utils/interact.js";
 import Web3 from "web3";
 import { Link } from "react-router-dom";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 
 const SeeTender = (props) => {
 
-    const auctionContract = "0xe5513E2C3C8a56099785F2adBe075Ea0A0653eC0";
-    let history = useHistory();
+    const auctionContract = "0x9088F1f489816984D16c88d699416b4E39068345";
+    let navigate = useNavigate();
     function timeout(delay) {
         return new Promise(res => setTimeout(res, delay));
     }
@@ -113,7 +113,7 @@ const SeeTender = (props) => {
             <table class="table table-striped mtable">
                 <thead>
                     <tr>
-                        <th scope="col">Token</th>
+                        <th scope="col">Token#</th>
                         <th scope="col">Name</th>
                         <th scope="col">Quantity    </th>
                         <th scope="col">Budget</th>
@@ -138,7 +138,7 @@ const SeeTender = (props) => {
                                     <td>{item.Owner}</td>
                                     <td><button id={item.TokenId} className="tender-req-btn" onClick={(e) => {
                                         localStorage.lToken = e.target.id
-                                        history.push("/Vender_request");
+                                        navigate("/Vender_request")
                                     }} > Create</button></td>
 
                                 </tr>
