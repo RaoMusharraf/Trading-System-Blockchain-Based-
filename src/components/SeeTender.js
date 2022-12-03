@@ -15,7 +15,7 @@ const SeeTender = (props) => {
     const [Tokentime, setTokentime] = useState({})
 
     const web3 = new Web3(window.ethereum);
-    const auctionContract = "0x141dba95F2d6A0D181ba7A8706568Fe63ADdBF49";
+    const auctionContract = "0xAB1fe05a5a5fe7BB6dBA1830f66295726C2db837";
     const contractAuctionABI = require('../abi/abi_tender.json');
 
     const handleClose = () => setShow(false);
@@ -64,6 +64,7 @@ const SeeTender = (props) => {
                     "quantity": all_single[i].quantity,
                     "budget": all_single[i].budget,
                     "hours": all_single[i].time,
+                    "Address": all_single[i]._address,
                     "description": all_single[i].description,
                     "application": all_sing,
 
@@ -76,6 +77,42 @@ const SeeTender = (props) => {
             console.log(err);
         }
     };
+
+    const invitation = async (_token) => {
+
+        var Arr = _token.split(',');
+
+        const token = Arr[0];
+        const receiver = Arr[3];
+
+        console.log(token);
+        console.log(receiver);
+        try {
+            window.contract = await new web3.eth.Contract(contractAuctionABI, auctionContract);
+            //set up your Ethereum transaction
+            const transactionParameters = {
+                to: auctionContract, // Required except during contract publications.
+                from: window.ethereum.selectedAddress, // must match user's active address.
+                'data': window.contract.methods.AcceptInvitation(token, receiver, window.ethereum.selectedAddress).encodeABI()//make call to NFT smart contract
+            };
+            //sign the transaction via Metamask
+            const txHash = await window.ethereum
+                .request({
+                    method: 'eth_sendTransaction',
+                    params: [transactionParameters],
+                });
+
+            // await timeout(5000).then(res => {
+            //     navigate("/")
+            // });
+            setStatus("✅ Check out your transaction on Etherscan: https://etherscan.io/tx/" + txHash);
+            await timeout(5000);
+            window.location.reload(false);
+        } catch (err) {
+            console.log(err);
+            setStatus("😢 Something went wrong while listing your NFT for auction");
+        }
+    }
 
     const getTime = async () => {
 
@@ -148,7 +185,11 @@ const SeeTender = (props) => {
                                             <td>{item.DeleveryTime}</td>
                                             <td>{item.Description}</td>
                                             <td>{item.owner}</td>
-                                            <td><button>Accept</button></td>
+                                            <td>
+                                                <button id={item} onClick={(e) => invitation(e.target.id)}>
+                                                    Accept
+                                                </button>
+                                            </td>
                                         </tr>
                                     </>
                                 )
@@ -187,6 +228,7 @@ const SeeTender = (props) => {
                             <th scope="col">Quantity    </th>
                             <th scope="col">Budget</th>
                             <th scope="col">Hours</th>
+                            <th scope="col">Address</th>
                             <th scope="col">Description</th>
                             <th scope="col">Requests</th>
                         </tr>
@@ -201,6 +243,7 @@ const SeeTender = (props) => {
                                         <td>{item.quantity}</td>
                                         <td>{item.budget}</td>
                                         <td>{item.hours}</td>
+                                        <td>{item.Address}</td>
                                         <td>{item.description}</td>
                                         <td id="button-tds">
                                             {

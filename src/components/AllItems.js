@@ -15,7 +15,7 @@ const SeeTender = (props) => {
     const web3 = new Web3(window.ethereum);
 
     const contractAuctionABI = require('../abi/abi_tender.json');
-    const auctionContract = "0x141dba95F2d6A0D181ba7A8706568Fe63ADdBF49";
+    const auctionContract = "0xAB1fe05a5a5fe7BB6dBA1830f66295726C2db837";
     let navigate = useNavigate();
 
     function timeout(delay) {
@@ -57,6 +57,7 @@ const SeeTender = (props) => {
                     "quantity": all_single[i].quantity,
                     "budget": all_single[i].budget,
                     "hours": all_single[i].time,
+                    "Address": all_single[i]._address,
                     "description": all_single[i].description,
                     "Owner": all_single[i].owner,
                 }
@@ -134,6 +135,7 @@ const SeeTender = (props) => {
                         <th scope="col">Quantity    </th>
                         <th scope="col">Budget</th>
                         <th scope="col">Hours</th>
+                        <th scope="col">Address</th>
                         <th scope="col">Description</th>
                         <th scope="col">Owner</th>
                         <th scope="col"></th>
@@ -149,6 +151,7 @@ const SeeTender = (props) => {
                                     <td>{item.quantity}</td>
                                     <td>{item.budget}</td>
                                     <td>{item.hours}</td>
+                                    <td>{item.Address}</td>
                                     <td>{item.description}</td>
                                     <td>{item.Owner}</td>
                                     <td id="button-tds">

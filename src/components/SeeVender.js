@@ -9,12 +9,14 @@ const SeeVender = (props) => {
 
     const [walletAddress, setWallet] = useState("");
     const [status, setStatus] = useState("");
-    const [Tokentime, setTokentime] = useState({})
+    const [Tokentime, setTokentime] = useState({});
+    const [Invitation, setInvitation] = useState({});
     const [auctionDetails, setAuctionDetails] = useState([]);
 
     const contractAuctionABI = require('../abi/abi_tender.json');
-    const auctionContract = "0x141dba95F2d6A0D181ba7A8706568Fe63ADdBF49";
+    const auctionContract = "0xAB1fe05a5a5fe7BB6dBA1830f66295726C2db837";
     const web3 = new Web3(window.ethereum);
+
 
     function timeout(delay) {
         return new Promise(res => setTimeout(res, delay));
@@ -91,7 +93,28 @@ const SeeVender = (props) => {
             }))
         })
     }
+    const getInvitation = async () => {
+        window.contract = await new web3.eth.Contract(contractAuctionABI, auctionContract);
+
+        console.log(auctionDetails);
+
+
+        console.log(auctionDetails);
+
+        auctionDetails.map(async (item, index) => {
+            let all_ten = await window.contract.methods.Total(item.TokenId).call();
+            console.log(all_ten, "all_ten");
+            let all_s = await window.contract.methods.Accepted(item.TokenId, item.Owner, all_ten.owner).call();
+
+            console.log(all_s);
+            setInvitation(existingValues => ({
+                ...existingValues,
+                [item.TokenId]: all_s,
+            }))
+        })
+    }
     useEffect(() => {
+        getInvitation()
         getTime()
     }, [auctionDetails])
 
@@ -157,9 +180,15 @@ const SeeVender = (props) => {
                                     <td>{item.Delivery}</td>
                                     <td>{item.Description}</td>
                                     <td>{item.Owner}</td>
+                                    {/* <td id="button-tds">
+                                        {
+                                            Tokentime[item.TokenId] == false ? <p>Accepted</p> :
+                                                <button id={item.TokenId} onClick={(e) => handleShow(e.target.id)}>Cancel</button>
+                                        }
+                                    </td> */}
                                     <td id="button-tds">
                                         {
-                                            Tokentime[item.TokenId] == false ? <p>Close</p> :
+                                            Tokentime[item.TokenId] == false ? Invitation[item.TokenId] == false ? <p>Pending</p> : <p>Accepted</p> :
                                                 <button id={item.TokenId} onClick={(e) => handleShow(e.target.id)}>Cancel</button>
                                         }
                                     </td>

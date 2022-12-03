@@ -6,7 +6,7 @@ const { ethers } = require("ethers");
 
 const CreateTender = (props) => {
 
-    const auctionContract = "0x141dba95F2d6A0D181ba7A8706568Fe63ADdBF49";
+    const auctionContract = "0xAB1fe05a5a5fe7BB6dBA1830f66295726C2db837";
     function timeout(delay) {
         return new Promise(res => setTimeout(res, delay));
     }
@@ -19,6 +19,7 @@ const CreateTender = (props) => {
     const [budget, setBudget] = useState("");
     const [hours, setHours] = useState("");
     const [description, setDescription] = useState("");
+    const [addr, setAddress] = useState("");
 
     useEffect(async () => {
         const { address, status } = await getCurrentWalletConnected();
@@ -33,9 +34,37 @@ const CreateTender = (props) => {
         setStatus(walletResponse.status);
         setWallet(walletResponse.address);
     };
+    // const invitation = async (_token,_receiver) => {
+
+    //     try {
+    //         window.contract = await new web3.eth.Contract(auction_contractABI, auctionContract);
+    //         //set up your Ethereum transaction
+    //         const transactionParameters = {
+    //             to: auctionContract, // Required except during contract publications.
+    //             from: window.ethereum.selectedAddress, // must match user's active address.
+    //             'data': window.contract.methods.AcceptInvitation(window.ethereum.selectedAddress,_token,_receiver).encodeABI()//make call to NFT smart contract
+    //         };
+    //         //sign the transaction via Metamask
+    //         const txHash = await window.ethereum
+    //             .request({
+    //                 method: 'eth_sendTransaction',
+    //                 params: [transactionParameters],
+    //             });
+
+    //         // await timeout(5000).then(res => {
+    //         //     navigate("/")
+    //         // });
+    //         setStatus("✅ Check out your transaction on Etherscan: https://etherscan.io/tx/" + txHash);
+    //         await timeout(5000);
+    //         window.location.reload(false);
+    //     } catch (err) {
+    //         console.log(err);
+    //         setStatus("😢 Something went wrong while listing your NFT for auction");
+    //     }
+    // }
 
     const onList = async (name, quantity, budget, hours, description) => {
-        if (name == '' || quantity == '' || budget == '' || hours == '' || description == '') {
+        if (name == '' || quantity == '' || budget == '' || hours == '' || addr == '' || description == '') {
             setStatus("Please fill all values!!!!!!!!!!!");
             alert("Please fill all values!!!!!!!!!!!");
         } else {
@@ -53,7 +82,7 @@ const CreateTender = (props) => {
                 const transactionParameters = {
                     to: auctionContract, // Required except during contract publications.
                     from: window.ethereum.selectedAddress, // must match user's active address.
-                    'data': window.contract.methods.tender(name, quantity, budget, hours, description).encodeABI()//make call to NFT smart contract
+                    'data': window.contract.methods.tender(name, quantity, budget, hours, addr, description).encodeABI()//make call to NFT smart contract
                 };
                 //sign the transaction via Metamask
                 const txHash = await window.ethereum
@@ -135,6 +164,11 @@ const CreateTender = (props) => {
                     placeholder="Enter Ending Hours"
                     onChange={(event) => setHours(event.target.value)}
                 />
+                <h2>Address</h2>
+                <input
+                    type="text"
+                    placeholder="Enter Address"
+                    onChange={(event) => setAddress(event.target.value)} />
                 <h2>Description of Item</h2>
                 <input
                     type="text"

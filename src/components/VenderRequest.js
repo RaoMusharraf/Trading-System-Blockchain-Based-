@@ -15,7 +15,7 @@ const CreateVender = (props) => {
     const [statusLink, setLink] = useState("");
     const [budget, setBudget] = useState("");
     const [description, setDescription] = useState("");
-    const auctionContract = "0x141dba95F2d6A0D181ba7A8706568Fe63ADdBF49";
+    const auctionContract = "0xAB1fe05a5a5fe7BB6dBA1830f66295726C2db837";
 
 
     const navigate = useNavigate()

@@ -5,6 +5,29 @@
 				"internalType": "uint256",
 				"name": "_token",
 				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "receiver",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "_to",
+				"type": "address"
+			}
+		],
+		"name": "AcceptInvitation",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_token",
+				"type": "uint256"
 			}
 		],
 		"name": "DeleteVRequest",
@@ -33,6 +56,11 @@
 				"internalType": "uint256",
 				"name": "_time",
 				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "Address",
+				"type": "string"
 			},
 			{
 				"internalType": "string",
@@ -107,6 +135,35 @@
 		"type": "function"
 	},
 	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_token",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "receiver",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "_to",
+				"type": "address"
+			}
+		],
+		"name": "Accepted",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
 		"inputs": [],
 		"name": "AllTender",
 		"outputs": [
@@ -141,6 +198,11 @@
 						"internalType": "uint256",
 						"name": "start",
 						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "_address",
+						"type": "string"
 					},
 					{
 						"internalType": "string",
@@ -318,6 +380,11 @@
 					},
 					{
 						"internalType": "string",
+						"name": "_address",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
 						"name": "description",
 						"type": "string"
 					},
@@ -376,6 +443,54 @@
 				"internalType": "struct Storage.Vender[]",
 				"name": "",
 				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "Invite",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "Ratting",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
 			}
 		],
 		"stateMutability": "view",
@@ -477,6 +592,11 @@
 				"internalType": "uint256",
 				"name": "start",
 				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "_address",
+				"type": "string"
 			},
 			{
 				"internalType": "string",
