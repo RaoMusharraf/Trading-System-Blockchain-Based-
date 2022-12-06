@@ -34,44 +34,12 @@ const CreateTender = (props) => {
         setStatus(walletResponse.status);
         setWallet(walletResponse.address);
     };
-    // const invitation = async (_token,_receiver) => {
-
-    //     try {
-    //         window.contract = await new web3.eth.Contract(auction_contractABI, auctionContract);
-    //         //set up your Ethereum transaction
-    //         const transactionParameters = {
-    //             to: auctionContract, // Required except during contract publications.
-    //             from: window.ethereum.selectedAddress, // must match user's active address.
-    //             'data': window.contract.methods.AcceptInvitation(window.ethereum.selectedAddress,_token,_receiver).encodeABI()//make call to NFT smart contract
-    //         };
-    //         //sign the transaction via Metamask
-    //         const txHash = await window.ethereum
-    //             .request({
-    //                 method: 'eth_sendTransaction',
-    //                 params: [transactionParameters],
-    //             });
-
-    //         // await timeout(5000).then(res => {
-    //         //     navigate("/")
-    //         // });
-    //         setStatus("✅ Check out your transaction on Etherscan: https://etherscan.io/tx/" + txHash);
-    //         await timeout(5000);
-    //         window.location.reload(false);
-    //     } catch (err) {
-    //         console.log(err);
-    //         setStatus("😢 Something went wrong while listing your NFT for auction");
-    //     }
-    // }
 
     const onList = async (name, quantity, budget, hours, description) => {
         if (name == '' || quantity == '' || budget == '' || hours == '' || addr == '' || description == '') {
             setStatus("Please fill all values!!!!!!!!!!!");
             alert("Please fill all values!!!!!!!!!!!");
         } else {
-            // const id = nftId.substring(10);
-            // const end_time = Math.floor(new Date(eDate).getTime() / 1000);
-            // const ini_bid = initialBid;
-
             //Contract Interaction
             const web3 = new Web3(window.ethereum);
             const auction_contractABI = require('../abi/abi_tender.json');

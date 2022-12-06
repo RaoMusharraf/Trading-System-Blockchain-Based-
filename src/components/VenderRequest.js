@@ -17,15 +17,11 @@ const CreateVender = (props) => {
     const [description, setDescription] = useState("");
     const auctionContract = process.env.REACT_APP_CONTRACT;
 
-
     const navigate = useNavigate()
     function timeout(delay) {
         return new Promise(res => setTimeout(res, delay));
     }
-
     //State variables
-
-
     useEffect(async () => {
         const { address, status } = await getCurrentWalletConnected();
         setWallet(address);

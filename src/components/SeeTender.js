@@ -17,7 +17,6 @@ const SeeTender = (props) => {
 
     const web3 = new Web3(window.ethereum);
     const auctionContract = process.env.REACT_APP_CONTRACT;
-
     const contractAuctionABI = require('../abi/abi_tender.json');
 
     const handleClose = () => setShow(false);
@@ -83,23 +82,18 @@ const SeeTender = (props) => {
     const invitation = async (_token) => {
 
         var Arr = _token.split(',');
-
         const token = Arr[0];
         const price = Arr[1];
         const receiver = Arr[3];
-        // const newVal = web3.utils.toHex(price);
-
-        console.log(Arr, "Arr");
-        console.log(token);
-        console.log(receiver);
+        console.log(_token, "price");
+        console.log(receiver, "receiver");
         try {
             window.contract = await new web3.eth.Contract(contractAuctionABI, auctionContract);
             //set up your Ethereum transaction
             const transactionParameters = {
                 to: auctionContract, // Required except during contract publications.
                 from: window.ethereum.selectedAddress, // must match user's active address.
-                value: web3.utils.toHex(price),
-                'data': window.contract.methods.AcceptInvitation(token, receiver, window.ethereum.selectedAddress).encodeABI()//make call to NFT smart contract
+                'data': window.contract.methods.AcceptInvitation(token, receiver, window.ethereum.selectedAddress, price).encodeABI()//make call to NFT smart contract
             };
             //sign the transaction via Metamask
             const txHash = await window.ethereum
@@ -108,9 +102,6 @@ const SeeTender = (props) => {
                     params: [transactionParameters],
                 });
 
-            // await timeout(5000).then(res => {
-            //     navigate("/")
-            // });
             setStatus("✅ Check out your transaction on Etherscan: https://etherscan.io/tx/" + txHash);
             await timeout(5000);
             window.location.reload(false);
@@ -122,22 +113,25 @@ const SeeTender = (props) => {
 
     const DonePay = async (_token) => {
 
-        var Arr = _token.split(',');
 
-        const token = Arr[0];
-        const price = Arr[1];
-        const receiver = Arr[3];
 
-        console.log(Arr, "Arr");
-        console.log(token);
-        console.log(receiver);
+        console.log(_token, "_token");
+        // var Arr = _token.split(',');
+        // const token = Arr[0];
+        // const price = Arr[1];
+        // // console.log(_token, "price");
+        // const receiver = Arr[3];
+
         try {
             window.contract = await new web3.eth.Contract(contractAuctionABI, auctionContract);
+            let comm = await window.contract.methods.Communication(_token, window.ethereum.selectedAddress).call();
+            console.log(comm.price, "comm123");
             //set up your Ethereum transaction
             const transactionParameters = {
                 to: auctionContract, // Required except during contract publications.
                 from: window.ethereum.selectedAddress, // must match user's active address.
-                'data': window.contract.methods.Done(token, receiver, window.ethereum.selectedAddress, price).encodeABI()//make call to NFT smart contract
+                value: web3.utils.toHex(comm.price),
+                'data': window.contract.methods.Done(comm.receiver, window.ethereum.selectedAddress, _token).encodeABI()//make call to NFT smart contract
             };
             //sign the transaction via Metamask
             const txHash = await window.ethereum
@@ -163,12 +157,11 @@ const SeeTender = (props) => {
             let all_ten = await window.contract.methods.Total(item.TokenId).call();
             console.log(all_ten, "item owner");
             let comm = await window.contract.methods.Communication(item.TokenId, all_ten.owner).call();
-            console.log(comm, "comm");
-            console.log(item.Owner, "item owner");
+            console.log(comm.receiver, "comm");
             console.log(all_ten.owner, "al ten owner");
 
-            await window.contract.methods.Accepted(item.TokenId, comm, all_ten.owner).call().then(res => {
-                console.log(res);
+            await window.contract.methods.Accepted(item.TokenId, comm.receiver, all_ten.owner).call().then(res => {
+                console.log(res, "setInvitation");
                 setInvitation(existingValues => ({
                     ...existingValues,
                     [item.TokenId]: res,
@@ -185,7 +178,7 @@ const SeeTender = (props) => {
         window.contract = await new web3.eth.Contract(contractAuctionABI, auctionContract);
         auctionDetails.map(async (item, index) => {
             let all_s = await window.contract.methods.CheckTime(item.TokenId).call();
-            console.log(all_s);
+            console.log(all_s, "all_s");
             setTokentime(existingValues => ({
                 ...existingValues,
                 [item.TokenId]: all_s,
@@ -195,11 +188,12 @@ const SeeTender = (props) => {
 
     useEffect(() => {
         getTime()
+        // console.log(auctionDetails);
     }, [auctionDetails])
 
     useEffect(() => {
         getInvitation()
-        console.log(Invitation);
+        console.log(setInvitation, "setInvitation")
     }, [auctionDetails])
 
     function addWalletListener() {
@@ -317,7 +311,7 @@ const SeeTender = (props) => {
                                         <td>{item.description}</td>
                                         <td id="button-tds">
                                             {
-                                                Tokentime[item.TokenId] == false ? Invitation[item.TokenId] == true ? <button id={item} onClick={(e) => DonePay(e.target.id)}>Payment</button> :
+                                                Tokentime[item.TokenId] == false ? Invitation[item.TokenId] == true ? <button id={item.TokenId} onClick={(e) => DonePay(e.target.id)}>Payment</button> :
                                                     <button id={item.TokenId} onClick={(e) => handleShow(e.target.id)}>{item.application}</button> : <p>{item.application}</p>
                                             }
                                         </td>

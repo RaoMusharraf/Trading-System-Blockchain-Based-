@@ -15,11 +15,16 @@
 				"internalType": "address",
 				"name": "_to",
 				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_price",
+				"type": "uint256"
 			}
 		],
 		"name": "AcceptInvitation",
 		"outputs": [],
-		"stateMutability": "payable",
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{

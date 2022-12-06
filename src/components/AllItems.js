@@ -33,23 +33,14 @@ const SeeTender = (props) => {
         setStatus(walletResponse.status);
         setWallet(walletResponse.address);
     };
+
     const getData = async () => {
 
-
         var auctionData = [];
-
         try {
             window.contract = await new web3.eth.Contract(contractAuctionABI, auctionContract);
-            console.log(window.ethereum.selectedAddress);
-            //.const total = await window.contract.methods.Size(window.ethereum.selectedAddress).call();
             const all_single = await window.contract.methods.AllTender().call();
-            console.log(all_single, "all_single");
-            //console.log(total);
-
-
-
             var auctionData = [];
-
             for (var i = 0; i < all_single.length; i++) {
                 const auc_data = {
                     "TokenId": all_single[i].TokenId,

@@ -9,6 +9,7 @@ import Payment from './components/Payment';
 import { BrowserRouter as Router, Route, Link, Switch, NavLink, Routes } from "react-router-dom";
 import logo from './lilfrens-logo.png';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import AllRequests from './components/Allrequests';
 
 
 
@@ -41,6 +42,7 @@ function App() {
         <Route path='/Vender_request' element={<CreateVender />}></Route>
         <Route path='/Feedback' element={<Feedback />}></Route>
         <Route path='/Payment' element={<Payment />}></Route>
+        <Route path='/all-requests' element={<AllRequests />}></Route>
       </Routes>
 
     </>
