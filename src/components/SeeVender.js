@@ -14,7 +14,7 @@ const SeeVender = (props) => {
     const [auctionDetails, setAuctionDetails] = useState([]);
 
     const contractAuctionABI = require('../abi/abi_tender.json');
-    const auctionContract = "0xAB1fe05a5a5fe7BB6dBA1830f66295726C2db837";
+    const auctionContract = process.env.REACT_APP_CONTRACT;
     const web3 = new Web3(window.ethereum);
 
 
@@ -180,16 +180,10 @@ const SeeVender = (props) => {
                                     <td>{item.Delivery}</td>
                                     <td>{item.Description}</td>
                                     <td>{item.Owner}</td>
-                                    {/* <td id="button-tds">
-                                        {
-                                            Tokentime[item.TokenId] == false ? <p>Accepted</p> :
-                                                <button id={item.TokenId} onClick={(e) => handleShow(e.target.id)}>Cancel</button>
-                                        }
-                                    </td> */}
                                     <td id="button-tds">
                                         {
                                             Tokentime[item.TokenId] == false ? Invitation[item.TokenId] == false ? <p>Pending</p> : <p>Accepted</p> :
-                                                <button id={item.TokenId} onClick={(e) => handleShow(e.target.id)}>Cancel</button>
+                                                <button id={item.TokenId} onClick={(e) => onList(e.target.id)}>Cancel</button>
                                         }
                                     </td>
                                 </tr>

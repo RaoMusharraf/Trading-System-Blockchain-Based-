@@ -15,7 +15,7 @@ const SeeTender = (props) => {
     const web3 = new Web3(window.ethereum);
 
     const contractAuctionABI = require('../abi/abi_tender.json');
-    const auctionContract = "0xAB1fe05a5a5fe7BB6dBA1830f66295726C2db837";
+    const auctionContract = process.env.REACT_APP_CONTRACT;
     let navigate = useNavigate();
 
     function timeout(delay) {

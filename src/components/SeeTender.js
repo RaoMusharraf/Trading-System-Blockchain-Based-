@@ -12,10 +12,12 @@ const SeeTender = (props) => {
     const [status, setStatus] = useState("");
     const [auctionDetails, setAuctionDetails] = useState([]);
     const [Allrequests, setAllrequests] = useState([]);
-    const [Tokentime, setTokentime] = useState({})
+    const [Tokentime, setTokentime] = useState({});
+    const [Invitation, setInvitation] = useState({});
 
     const web3 = new Web3(window.ethereum);
-    const auctionContract = "0xAB1fe05a5a5fe7BB6dBA1830f66295726C2db837";
+    const auctionContract = process.env.REACT_APP_CONTRACT;
+
     const contractAuctionABI = require('../abi/abi_tender.json');
 
     const handleClose = () => setShow(false);
@@ -83,8 +85,11 @@ const SeeTender = (props) => {
         var Arr = _token.split(',');
 
         const token = Arr[0];
+        const price = Arr[1];
         const receiver = Arr[3];
+        // const newVal = web3.utils.toHex(price);
 
+        console.log(Arr, "Arr");
         console.log(token);
         console.log(receiver);
         try {
@@ -93,6 +98,7 @@ const SeeTender = (props) => {
             const transactionParameters = {
                 to: auctionContract, // Required except during contract publications.
                 from: window.ethereum.selectedAddress, // must match user's active address.
+                value: web3.utils.toHex(price),
                 'data': window.contract.methods.AcceptInvitation(token, receiver, window.ethereum.selectedAddress).encodeABI()//make call to NFT smart contract
             };
             //sign the transaction via Metamask
@@ -114,6 +120,65 @@ const SeeTender = (props) => {
         }
     }
 
+    const DonePay = async (_token) => {
+
+        var Arr = _token.split(',');
+
+        const token = Arr[0];
+        const price = Arr[1];
+        const receiver = Arr[3];
+
+        console.log(Arr, "Arr");
+        console.log(token);
+        console.log(receiver);
+        try {
+            window.contract = await new web3.eth.Contract(contractAuctionABI, auctionContract);
+            //set up your Ethereum transaction
+            const transactionParameters = {
+                to: auctionContract, // Required except during contract publications.
+                from: window.ethereum.selectedAddress, // must match user's active address.
+                'data': window.contract.methods.Done(token, receiver, window.ethereum.selectedAddress, price).encodeABI()//make call to NFT smart contract
+            };
+            //sign the transaction via Metamask
+            const txHash = await window.ethereum
+                .request({
+                    method: 'eth_sendTransaction',
+                    params: [transactionParameters],
+                });
+
+            setStatus("✅ Check out your transaction on Etherscan: https://etherscan.io/tx/" + txHash);
+            await timeout(5000);
+            window.location.reload(false);
+        } catch (err) {
+            console.log(err);
+            setStatus("😢 Something went wrong while listing your NFT for auction");
+        }
+    }
+
+    const getInvitation = async () => {
+        window.contract = await new web3.eth.Contract(contractAuctionABI, auctionContract);
+        console.log(auctionDetails);
+        auctionDetails.map(async (item, index) => {
+
+            let all_ten = await window.contract.methods.Total(item.TokenId).call();
+            console.log(all_ten, "item owner");
+            let comm = await window.contract.methods.Communication(item.TokenId, all_ten.owner).call();
+            console.log(comm, "comm");
+            console.log(item.Owner, "item owner");
+            console.log(all_ten.owner, "al ten owner");
+
+            await window.contract.methods.Accepted(item.TokenId, comm, all_ten.owner).call().then(res => {
+                console.log(res);
+                setInvitation(existingValues => ({
+                    ...existingValues,
+                    [item.TokenId]: res,
+                }))
+            });
+
+
+        })
+    }
+
     const getTime = async () => {
 
         console.log(auctionDetails);
@@ -130,6 +195,11 @@ const SeeTender = (props) => {
 
     useEffect(() => {
         getTime()
+    }, [auctionDetails])
+
+    useEffect(() => {
+        getInvitation()
+        console.log(Invitation);
     }, [auctionDetails])
 
     function addWalletListener() {
@@ -247,8 +317,8 @@ const SeeTender = (props) => {
                                         <td>{item.description}</td>
                                         <td id="button-tds">
                                             {
-                                                Tokentime[item.TokenId] == true ? <p>{item.application}</p> :
-                                                    <button id={item.TokenId} onClick={(e) => handleShow(e.target.id)}>{item.application}</button>
+                                                Tokentime[item.TokenId] == false ? Invitation[item.TokenId] == true ? <button id={item} onClick={(e) => DonePay(e.target.id)}>Payment</button> :
+                                                    <button id={item.TokenId} onClick={(e) => handleShow(e.target.id)}>{item.application}</button> : <p>{item.application}</p>
                                             }
                                         </td>
 

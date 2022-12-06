@@ -6,7 +6,7 @@ const { ethers } = require("ethers");
 
 const CreateTender = (props) => {
 
-    const auctionContract = "0xAB1fe05a5a5fe7BB6dBA1830f66295726C2db837";
+    const auctionContract = process.env.REACT_APP_CONTRACT;
     function timeout(delay) {
         return new Promise(res => setTimeout(res, delay));
     }
