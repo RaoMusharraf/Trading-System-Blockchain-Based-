@@ -14,6 +14,7 @@ const SeeTender = (props) => {
     const [Allrequests, setAllrequests] = useState([]);
     const [Tokentime, setTokentime] = useState({});
     const [Invitation, setInvitation] = useState({});
+    const [DoneP, setDone] = useState({});
 
     const web3 = new Web3(window.ethereum);
     const auctionContract = process.env.REACT_APP_CONTRACT;
@@ -186,9 +187,28 @@ const SeeTender = (props) => {
         })
     }
 
+    const Done = async () => {
+
+        console.log(auctionDetails);
+        window.contract = await new web3.eth.Contract(contractAuctionABI, auctionContract);
+        auctionDetails.map(async (item, index) => {
+            let all_s = await window.contract.methods.Communication(item.TokenId, window.ethereum.selectedAddress).call();
+            console.log(all_s.done, "Done");
+            setDone(existingValues => ({
+                ...existingValues,
+                [item.TokenId]: all_s.done,
+            }))
+        })
+    }
+
     useEffect(() => {
         getTime()
         // console.log(auctionDetails);
+    }, [auctionDetails])
+
+    useEffect(() => {
+        Done()
+        console.log(auctionDetails);
     }, [auctionDetails])
 
     useEffect(() => {
@@ -221,7 +241,9 @@ const SeeTender = (props) => {
         }
     }
     return (
+
         <div>
+
             <Modal show={show} onHide={handleClose} centered>
                 <Modal.Header closeButton>
                     <Modal.Title>{console.log(Allrequests)} Requests</Modal.Title>
@@ -270,6 +292,7 @@ const SeeTender = (props) => {
                 </Modal.Footer>
             </Modal>
             <div className="container">
+
                 <br />
                 <button id="walletButton" onClick={connectWalletPressed}>
                     {walletAddress.length > 0 ? (
@@ -311,7 +334,7 @@ const SeeTender = (props) => {
                                         <td>{item.description}</td>
                                         <td id="button-tds">
                                             {
-                                                Tokentime[item.TokenId] == false ? Invitation[item.TokenId] == true ? <button id={item.TokenId} onClick={(e) => DonePay(e.target.id)}>Payment</button> :
+                                                Tokentime[item.TokenId] == false ? Invitation[item.TokenId] == true ? DoneP[item.TokenId] == true ? <button id={item.TokenId} onClick={(e) => DonePay(e.target.id)}>Payment</button> : <p>Done</p> :
                                                     <button id={item.TokenId} onClick={(e) => handleShow(e.target.id)}>{item.application}</button> : <p>{item.application}</p>
                                             }
                                         </td>

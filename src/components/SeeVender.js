@@ -16,6 +16,7 @@ const AllRequests = (props) => {
     const [auctionDetails, setAuctionDetails] = useState([]);
     const [auctionDetails1, setAuctionDetails1] = useState([]);
     const [auctionDetails2, setAuctionDetails2] = useState([]);
+    const [auction, setAuction] = useState([]);
 
 
     const contractAuctionABI = require('../abi/abi_tender.json');
@@ -119,43 +120,39 @@ const AllRequests = (props) => {
             console.log(err);
         }
     };
-    // const getTime = async () => {
+    const getTime = async () => {
+        window.contract = await new web3.eth.Contract(contractAuctionABI, auctionContract);
+        let all_com = await window.contract.methods.getVender(window.ethereum.selectedAddress).call();
+        for (var i = 0; i < all_com.length; i++) {
+            let all_ten = await window.contract.methods.Total(all_com[i].Token).call();
+            let all_comm = await window.contract.methods.Communication(all_com[i].Token, all_ten.owner).call();
+            console.log(all_comm.done, "getTime");
+            setTokentime(existingValues => ({
+                ...existingValues,
+                [all_com[i].Token]: all_comm.done,
+            }))
+        }
+    }
+    const getInvitation = async () => {
+        window.contract = await new web3.eth.Contract(contractAuctionABI, auctionContract);
+        let all_com = await window.contract.methods.getVender(window.ethereum.selectedAddress).call();
+        for (var i = 0; i < all_com.length; i++) {
+            let all_ten = await window.contract.methods.Total(all_com[i].Token).call();
+            let all_comm = await window.contract.methods.Pending(all_ten.owner, all_com[i].Token).call();
+            console.log(all_comm, "all_comm");
+            setInvitation(existingValues => ({
+                ...existingValues,
+                [all_com[i].Token]: all_comm,
+            }))
+        }
 
-    //     console.log(auctionDetails);
-    //     window.contract = await new web3.eth.Contract(contractAuctionABI, auctionContract);
-    //     auctionDetails.map(async (item, index) => {
-    //         let all_s = await window.contract.methods.CheckTime(item.TokenId).call();
-    //         console.log(all_s);
-    //         setTokentime(existingValues => ({
-    //             ...existingValues,
-    //             [item.TokenId]: all_s,
-    //         }))
-    //     })
-    // }
-    // const getInvitation = async () => {
-    //     window.contract = await new web3.eth.Contract(contractAuctionABI, auctionContract);
-
-    //     console.log(auctionDetails);
-
-
-    //     console.log(auctionDetails);
-
-    //     auctionDetails.map(async (item, index) => {
-    //         let all_ten = await window.contract.methods.Total(item.TokenId).call();
-    //         console.log(all_ten, "all_ten");
-    //         let all_s = await window.contract.methods.Accepted(item.TokenId, item.Owner, all_ten.owner).call();
-
-    //         console.log(all_s);
-    //         setInvitation(existingValues => ({
-    //             ...existingValues,
-    //             [item.TokenId]: all_s,
-    //         }))
-    //     })
-    // }
-    // useEffect(() => {
-    //     // getInvitation()
-    //     // getTime()
-    // }, [auctionDetails])
+    }
+    useEffect(() => {
+        getInvitation()
+    }, [])
+    useEffect(() => {
+        getTime()
+    }, [auction])
 
     function addWalletListener() {
         if (window.ethereum) {
@@ -184,6 +181,16 @@ const AllRequests = (props) => {
 
     return (
         <div className="container">
+            <button id="walletButton" onClick={connectWalletPressed}>
+                {walletAddress.length > 0 ? (
+                    "Connected: " +
+                    String(walletAddress).substring(0, 6) +
+                    "..." +
+                    String(walletAddress).substring(38)
+                ) : (
+                    <span>Connect Wallet</span>
+                )}
+            </button>
             <Tabs
                 defaultActiveKey="profile"
                 id="uncontrolled-tab-example"
@@ -213,7 +220,10 @@ const AllRequests = (props) => {
                                             <td>{item.Description}</td>
                                             <td>{item.Owner}</td>
                                             <td id="button-tds">
-                                                <p>Accepted</p>
+                                                {
+                                                    Tokentime[item.TokenId] == true ? <p>Accepted</p> : <p>Done</p>
+                                                }
+
                                             </td>
                                         </tr>
                                     </>
@@ -248,7 +258,9 @@ const AllRequests = (props) => {
                                             <td>{item.Description}</td>
                                             <td>{item.Owner}</td>
                                             <td id="button-tds">
-                                                <p>Pending</p>
+                                                {
+                                                    Invitation[item.TokenId] == false ? <p>Pending</p> : <p>Close</p>
+                                                }
                                             </td>
                                         </tr>
                                     </>
@@ -295,16 +307,7 @@ const AllRequests = (props) => {
                 </Tab>
             </Tabs>
             <br />
-            <button id="walletButton" onClick={connectWalletPressed}>
-                {walletAddress.length > 0 ? (
-                    "Connected: " +
-                    String(walletAddress).substring(0, 6) +
-                    "..." +
-                    String(walletAddress).substring(38)
-                ) : (
-                    <span>Connect Wallet</span>
-                )}
-            </button>
+
             <br></br>
 
 
