@@ -303,7 +303,6 @@ const AllRequests = (props) => {
                             }
                         </tbody>
                     </table>
-                    {/* AllRequests */}
                 </Tab>
             </Tabs>
             <br />

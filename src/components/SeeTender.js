@@ -4,6 +4,8 @@ import Web3 from "web3";
 import { Link } from "react-router-dom";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import Tab from 'react-bootstrap/Tab';
+import Tabs from 'react-bootstrap/Tabs';
 
 const SeeTender = (props) => {
 
@@ -244,6 +246,8 @@ const SeeTender = (props) => {
 
         <div>
 
+
+
             <Modal show={show} onHide={handleClose} centered>
                 <Modal.Header closeButton>
                     <Modal.Title>{console.log(Allrequests)} Requests</Modal.Title>
@@ -288,12 +292,9 @@ const SeeTender = (props) => {
                     <Button variant="secondary" onClick={handleClose}>
                         Close
                     </Button>
-
                 </Modal.Footer>
             </Modal>
             <div className="container">
-
-                <br />
                 <button id="walletButton" onClick={connectWalletPressed}>
                     {walletAddress.length > 0 ? (
                         "Connected: " +
@@ -304,9 +305,142 @@ const SeeTender = (props) => {
                         <span>Connect Wallet</span>
                     )}
                 </button>
-                <br></br>
+                <Tabs
+                    defaultActiveKey="profile"
+                    id="uncontrolled-tab-example"
+                    className="mb-3"
+                >
+                    <Tab eventKey="home" title="Payment">
+                        <h1 style={{ textAlign: 'left' }}></h1>
+                        <table class="table table-striped mtable">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Token#</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Quantity    </th>
+                                    <th scope="col">Budget</th>
+                                    <th scope="col">Hours</th>
+                                    <th scope="col">Address</th>
+                                    <th scope="col">Description</th>
+                                    <th scope="col">Requests</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tenders">
+                                {auctionDetails.map((item, index) => {
+                                    return (
+                                        <>
+                                            <tr>
+                                                <td>{item.TokenId}</td>
+                                                <td>{item.name}</td>
+                                                <td>{item.quantity}</td>
+                                                <td>{item.budget}</td>
+                                                <td>{item.hours}</td>
+                                                <td>{item.Address}</td>
+                                                <td>{item.description}</td>
+                                                <td id="button-tds">
+                                                    {
+                                                        Tokentime[item.TokenId] == false ? Invitation[item.TokenId] == true ? DoneP[item.TokenId] == true ? <button id={item.TokenId} onClick={(e) => DonePay(e.target.id)}>Payment</button> : <p>Done</p> :
+                                                            <button id={item.TokenId} onClick={(e) => handleShow(e.target.id)}>{item.application}</button> : <p>{item.application}</p>
+                                                    }
+                                                </td>
 
-                <h1 style={{ textAlign: 'left' }}>Tenders </h1>
+                                            </tr>
+                                        </>
+                                    )
+                                })
+                                }
+                            </tbody>
+                        </table>
+                    </Tab>
+                    <Tab eventKey="profile" title="Requests">
+                        <h1 style={{ textAlign: 'left' }}></h1>
+                    </Tab>
+                    {/* <Tab eventKey="profile" title="Pending">
+                        <h1 style={{ textAlign: 'left' }}></h1>
+                        <table class="table table-striped mtable">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Token#</th>
+                                    <th scope="col">Price</th>
+                                    <th scope="col">Delivery Time</th>
+                                    <th scope="col">Description</th>
+                                    <th scope="col">Owner</th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tenders">
+                                {auctionDetails.map((item, index) => {
+                                    return (
+                                        <>
+                                            <tr>
+                                                <td>{item.TokenId}</td>
+                                                <td>{item.Price}</td>
+                                                <td>{item.Delivery}</td>
+                                                <td>{item.Description}</td>
+                                                <td>{item.Owner}</td>
+                                                <td id="button-tds">
+                                                    {
+                                                        Invitation[item.TokenId] == false ? <p>Pending</p> : <p>Close</p>
+                                                    }
+                                                </td>
+                                            </tr>
+                                        </>
+                                    )
+                                })
+                                }
+                            </tbody>
+                        </table>
+                    </Tab>
+                    <Tab eventKey="contact" title="New">
+                        <h1 style={{ textAlign: 'left' }}></h1>
+                        <table class="table table-striped mtable">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Token#</th>
+                                    <th scope="col">Price</th>
+                                    <th scope="col">Delivery Time</th>
+                                    <th scope="col">Description</th>
+                                    <th scope="col">Owner</th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tenders">
+                                {auctionDetails.map((item, index) => {
+                                    return (
+                                        <>
+                                            <tr>
+                                                <td>{item.TokenId}</td>
+                                                <td>{item.Price}</td>
+                                                <td>{item.Delivery}</td>
+                                                <td>{item.Description}</td>
+                                                <td>{item.Owner}</td>
+                                                <td id="button-tds">
+                                                    <button id={item.TokenId} onClick={(e) => onList(e.target.id)}>Cancel</button>
+                                                </td>
+                                            </tr>
+                                        </>
+                                    )
+                                })
+                                }
+                            </tbody>
+                        </table>
+                    </Tab> */}
+                </Tabs>
+
+                {/* <br />
+                <button id="walletButton" onClick={connectWalletPressed}>
+                    {walletAddress.length > 0 ? (
+                        "Connected: " +
+                        String(walletAddress).substring(0, 6) +
+                        "..." +
+                        String(walletAddress).substring(38)
+                    ) : (
+                        <span>Connect Wallet</span>
+                    )}
+                </button>
+                <br></br> */}
+
+                {/* <h1 style={{ textAlign: 'left' }}>Tenders </h1>
                 <table className="table table-striped mtable">
                     <thead>
                         <tr>
@@ -346,7 +480,7 @@ const SeeTender = (props) => {
                         })
                         }
                     </tbody>
-                </table>
+                </table> */}
                 <br />
                 <p id="status">
                     {status}
