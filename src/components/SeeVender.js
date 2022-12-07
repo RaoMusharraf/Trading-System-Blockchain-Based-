@@ -127,7 +127,7 @@ const AllRequests = (props) => {
         for (var i = 0; i < all_com.length; i++) {
             let all_ten = await window.contract.methods.Total(all_com[i].Token).call();
             let all_comm = await window.contract.methods.Communication(all_com[i].Token, all_ten.owner).call();
-            console.log(all_comm.done, "getTime");
+            console.log(all_comm.done, "all_comm");
             setTokentime(existingValues => ({
                 ...existingValues,
                 [all_com[i].Token]: all_comm.done,
@@ -271,7 +271,7 @@ const AllRequests = (props) => {
                         </tbody>
                     </table>
                 </Tab>
-                <Tab eventKey="contact" title="New">
+                <Tab eventKey="contact" title="Cancel">
                     <h1 style={{ textAlign: 'left' }}></h1>
                     <table class="table table-striped mtable">
                         <thead>
@@ -306,12 +306,7 @@ const AllRequests = (props) => {
                     </table>
                 </Tab>
             </Tabs>
-            <br />
 
-            <br></br>
-
-
-            <br />
             <p id="status">
                 {status}
             </p>

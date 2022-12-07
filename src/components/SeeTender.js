@@ -13,6 +13,9 @@ const SeeTender = (props) => {
     const [walletAddress, setWallet] = useState("");
     const [status, setStatus] = useState("");
     const [auctionDetails, setAuctionDetails] = useState([]);
+    const [auctionDet, setAuctionDet] = useState([]);
+    const [auctionDetails2, setAuctionDetails2] = useState([]);
+    const [auctionDetails3, setAuctionDetails3] = useState([]);
     const [Allrequests, setAllrequests] = useState([]);
     const [Tokentime, setTokentime] = useState({});
     const [Invitation, setInvitation] = useState({});
@@ -60,27 +63,57 @@ const SeeTender = (props) => {
             const all_single = await window.contract.methods.getTender(window.ethereum.selectedAddress).call();
 
             var auctionData = [];
+            var auctionData1 = [];
+            var auctionData2 = [];
+            var auctionData3 = [];
             for (var i = 0; i < total; i++) {
                 const all_sing = await window.contract.methods.SizeVender(all_single[i].TokenId).call();
-                const auc_data = {
-                    "TokenId": all_single[i].TokenId,
-                    "name": all_single[i].name,
-                    "quantity": all_single[i].quantity,
-                    "budget": all_single[i].budget,
-                    "hours": all_single[i].time,
-                    "Address": all_single[i]._address,
-                    "description": all_single[i].description,
-                    "application": all_sing,
-
+                let comm = await window.contract.methods.Communication(all_single[i].TokenId, window.ethereum.selectedAddress).call();
+                let Accpt = await window.contract.methods.Invite(window.ethereum.selectedAddress, all_single[i].TokenId, comm.receiver).call()
+                console.log(Accpt, "comAccptm");
+                console.log(comm.done, "comm.done");
+                if (Accpt == false) {
+                    const auc_data = {
+                        "TokenId": all_single[i].TokenId,
+                        "name": all_single[i].name,
+                        "quantity": all_single[i].quantity,
+                        "budget": all_single[i].budget,
+                        "hours": all_single[i].time,
+                        "Address": all_single[i]._address,
+                        "description": all_single[i].description,
+                        "application": all_sing,
+                    }
+                    auctionData.push(auc_data);
                 }
-                auctionData.push(auc_data);
+                if (Accpt == true) {
+                    const auc_data1 = {
+                        "TokenId": all_single[i].TokenId,
+                        "name": all_single[i].name,
+                        "quantity": all_single[i].quantity,
+                        "budget": all_single[i].budget,
+                        "hours": all_single[i].time,
+                        "Address": all_single[i]._address,
+                        "description": all_single[i].description,
+                        "application": all_sing,
+                    }
+                    auctionData1.push(auc_data1);
+                }
             }
+            console.log(auctionData, "auctionData");
+            console.log(auctionData1, "auctionData1");
+            console.log(auctionData2, "auctionData2");
+
             setAuctionDetails(auctionData);
-            console.log(auctionDetails, "auctionData2");
+            setAuctionDet(auctionData1);
+            setAuctionDetails2(auctionData2);
         } catch (err) {
             console.log(err);
         }
     };
+
+    useEffect(() => {
+        console.log(auctionDet, "auctionDet12345667");
+    }, [auctionDet])
 
     const invitation = async (_token) => {
 
@@ -191,9 +224,9 @@ const SeeTender = (props) => {
 
     const Done = async () => {
 
-        console.log(auctionDetails);
+        console.log(auctionDet, "auctionDet");
         window.contract = await new web3.eth.Contract(contractAuctionABI, auctionContract);
-        auctionDetails.map(async (item, index) => {
+        auctionDet.map(async (item, index) => {
             let all_s = await window.contract.methods.Communication(item.TokenId, window.ethereum.selectedAddress).call();
             console.log(all_s.done, "Done");
             setDone(existingValues => ({
@@ -245,9 +278,6 @@ const SeeTender = (props) => {
     return (
 
         <div>
-
-
-
             <Modal show={show} onHide={handleClose} centered>
                 <Modal.Header closeButton>
                     <Modal.Title>{console.log(Allrequests)} Requests</Modal.Title>
@@ -310,7 +340,7 @@ const SeeTender = (props) => {
                     id="uncontrolled-tab-example"
                     className="mb-3"
                 >
-                    <Tab eventKey="home" title="Payment">
+                    <Tab eventKey="home" title="Requests">
                         <h1 style={{ textAlign: 'left' }}></h1>
                         <table class="table table-striped mtable">
                             <thead>
@@ -339,8 +369,7 @@ const SeeTender = (props) => {
                                                 <td>{item.description}</td>
                                                 <td id="button-tds">
                                                     {
-                                                        Tokentime[item.TokenId] == false ? Invitation[item.TokenId] == true ? DoneP[item.TokenId] == true ? <button id={item.TokenId} onClick={(e) => DonePay(e.target.id)}>Payment</button> : <p>Done</p> :
-                                                            <button id={item.TokenId} onClick={(e) => handleShow(e.target.id)}>{item.application}</button> : <p>{item.application}</p>
+                                                        Tokentime[item.TokenId] == false ? <button id={item.TokenId} onClick={(e) => handleShow(e.target.id)}>{item.application}</button> : <p>{item.application}</p>
                                                     }
                                                 </td>
 
@@ -352,37 +381,39 @@ const SeeTender = (props) => {
                             </tbody>
                         </table>
                     </Tab>
-                    <Tab eventKey="profile" title="Requests">
-                        <h1 style={{ textAlign: 'left' }}></h1>
-                    </Tab>
-                    {/* <Tab eventKey="profile" title="Pending">
+                    <Tab eventKey="profile" title="Payment">
                         <h1 style={{ textAlign: 'left' }}></h1>
                         <table class="table table-striped mtable">
                             <thead>
                                 <tr>
                                     <th scope="col">Token#</th>
-                                    <th scope="col">Price</th>
-                                    <th scope="col">Delivery Time</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Quantity    </th>
+                                    <th scope="col">Budget</th>
+                                    <th scope="col">Hours</th>
+                                    <th scope="col">Address</th>
                                     <th scope="col">Description</th>
-                                    <th scope="col">Owner</th>
-                                    <th scope="col"></th>
+                                    <th scope="col">Requests</th>
                                 </tr>
                             </thead>
                             <tbody id="tenders">
-                                {auctionDetails.map((item, index) => {
+                                {auctionDet.map((item, index) => {
                                     return (
                                         <>
                                             <tr>
                                                 <td>{item.TokenId}</td>
-                                                <td>{item.Price}</td>
-                                                <td>{item.Delivery}</td>
-                                                <td>{item.Description}</td>
-                                                <td>{item.Owner}</td>
+                                                <td>{item.name}</td>
+                                                <td>{item.quantity}</td>
+                                                <td>{item.budget}</td>
+                                                <td>{item.hours}</td>
+                                                <td>{item.Address}</td>
+                                                <td>{item.description}</td>
                                                 <td id="button-tds">
                                                     {
-                                                        Invitation[item.TokenId] == false ? <p>Pending</p> : <p>Close</p>
+                                                        DoneP[item.TokenId] == true ? <button id={item.TokenId} onClick={(e) => DonePay(e.target.id)}>Payment</button> : <p>Done</p>
                                                     }
                                                 </td>
+
                                             </tr>
                                         </>
                                     )
@@ -391,96 +422,7 @@ const SeeTender = (props) => {
                             </tbody>
                         </table>
                     </Tab>
-                    <Tab eventKey="contact" title="New">
-                        <h1 style={{ textAlign: 'left' }}></h1>
-                        <table class="table table-striped mtable">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Token#</th>
-                                    <th scope="col">Price</th>
-                                    <th scope="col">Delivery Time</th>
-                                    <th scope="col">Description</th>
-                                    <th scope="col">Owner</th>
-                                    <th scope="col"></th>
-                                </tr>
-                            </thead>
-                            <tbody id="tenders">
-                                {auctionDetails.map((item, index) => {
-                                    return (
-                                        <>
-                                            <tr>
-                                                <td>{item.TokenId}</td>
-                                                <td>{item.Price}</td>
-                                                <td>{item.Delivery}</td>
-                                                <td>{item.Description}</td>
-                                                <td>{item.Owner}</td>
-                                                <td id="button-tds">
-                                                    <button id={item.TokenId} onClick={(e) => onList(e.target.id)}>Cancel</button>
-                                                </td>
-                                            </tr>
-                                        </>
-                                    )
-                                })
-                                }
-                            </tbody>
-                        </table>
-                    </Tab> */}
                 </Tabs>
-
-                {/* <br />
-                <button id="walletButton" onClick={connectWalletPressed}>
-                    {walletAddress.length > 0 ? (
-                        "Connected: " +
-                        String(walletAddress).substring(0, 6) +
-                        "..." +
-                        String(walletAddress).substring(38)
-                    ) : (
-                        <span>Connect Wallet</span>
-                    )}
-                </button>
-                <br></br> */}
-
-                {/* <h1 style={{ textAlign: 'left' }}>Tenders </h1>
-                <table className="table table-striped mtable">
-                    <thead>
-                        <tr>
-                            <th scope="col">Token#</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Quantity    </th>
-                            <th scope="col">Budget</th>
-                            <th scope="col">Hours</th>
-                            <th scope="col">Address</th>
-                            <th scope="col">Description</th>
-                            <th scope="col">Requests</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tenders">
-                        {auctionDetails.map((item, index) => {
-                            return (
-                                <>
-                                    <tr>
-                                        <td>{item.TokenId}</td>
-                                        <td>{item.name}</td>
-                                        <td>{item.quantity}</td>
-                                        <td>{item.budget}</td>
-                                        <td>{item.hours}</td>
-                                        <td>{item.Address}</td>
-                                        <td>{item.description}</td>
-                                        <td id="button-tds">
-                                            {
-                                                Tokentime[item.TokenId] == false ? Invitation[item.TokenId] == true ? DoneP[item.TokenId] == true ? <button id={item.TokenId} onClick={(e) => DonePay(e.target.id)}>Payment</button> : <p>Done</p> :
-                                                    <button id={item.TokenId} onClick={(e) => handleShow(e.target.id)}>{item.application}</button> : <p>{item.application}</p>
-                                            }
-                                        </td>
-
-                                    </tr>
-
-                                </>
-                            )
-                        })
-                        }
-                    </tbody>
-                </table> */}
                 <br />
                 <p id="status">
                     {status}
