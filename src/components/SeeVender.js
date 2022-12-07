@@ -3,9 +3,10 @@ import { connectWallet, getCurrentWalletConnected } from "../utils/interact.js";
 import logo from '../lilfrens-logo.png';
 import Web3 from "web3";
 import Countdown from "react-countdown";
-const { ethers } = require("ethers");
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
+
+const { ethers } = require("ethers");
 
 const AllRequests = (props) => {
 
