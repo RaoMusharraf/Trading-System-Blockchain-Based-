@@ -195,8 +195,8 @@ const SeeTender = (props) => {
             let comm = await window.contract.methods.Communication(item.TokenId, all_ten.owner).call();
             console.log(comm.receiver, "comm");
             console.log(all_ten.owner, "al ten owner");
-
-            await window.contract.methods.Accepted(item.TokenId, comm.receiver, all_ten.owner).call().then(res => {
+            await window.contract.methods.Invite(window.ethereum.selectedAddress, item.TokenId, comm.receiver).call().then(res => {
+                //await window.contract.methods.Invite(item.TokenId, comm.receiver, all_ten.owner).call().then(res => {
                 console.log(res, "setInvitation");
                 setInvitation(existingValues => ({
                     ...existingValues,
@@ -224,7 +224,7 @@ const SeeTender = (props) => {
 
     const Done = async () => {
 
-        console.log(auctionDet, "auctionDet");
+        console.log(auctionDet, "auctionDet1");
         window.contract = await new web3.eth.Contract(contractAuctionABI, auctionContract);
         auctionDet.map(async (item, index) => {
             let all_s = await window.contract.methods.Communication(item.TokenId, window.ethereum.selectedAddress).call();
@@ -238,13 +238,12 @@ const SeeTender = (props) => {
 
     useEffect(() => {
         getTime()
-        // console.log(auctionDetails);
     }, [auctionDetails])
 
     useEffect(() => {
         Done()
-        console.log(auctionDetails);
-    }, [auctionDetails])
+        console.log(auctionDet);
+    }, [auctionDet])
 
     useEffect(() => {
         getInvitation()

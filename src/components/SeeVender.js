@@ -78,7 +78,8 @@ const AllRequests = (props) => {
                 let all_ten = await window.contract.methods.Total(all_single[i].Token).call();
                 let all_time = await window.contract.methods.CheckTime(all_single[i].Token).call();
                 console.log(all_time, "all_time", i);
-                let all_s = await window.contract.methods.Accepted(all_single[i].Token, all_single[i].owner, all_ten.owner).call();
+                let all_s = await window.contract.methods.Invite(all_ten.owner, all_single[i].Token, window.ethereum.selectedAddress).call()
+                //let all_s = await window.contract.methods.Accepted(all_single[i].Token, all_single[i].owner, all_ten.owner).call();
                 if (!all_time && all_s) {
                     const auc_data = {
                         "TokenId": all_single[i].Token,
@@ -150,10 +151,13 @@ const AllRequests = (props) => {
     }
     useEffect(() => {
         getInvitation()
-    }, [])
+    }, [auctionDetails1])
     useEffect(() => {
         getTime()
-    }, [auction])
+    }, [auctionDetails])
+    // useEffect(() => {
+    //     getData()
+    // }, [auctionDetails2])
 
     function addWalletListener() {
         if (window.ethereum) {
