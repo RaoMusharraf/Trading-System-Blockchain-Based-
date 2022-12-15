@@ -30,8 +30,9 @@ const SeeTender = (props) => {
         window.contract = await new web3.eth.Contract(contractAuctionABI, auctionContract);
         setShow(true)
         const all_s = await window.contract.methods.AllVender(TokenId).call();
-        console.log(all_s);
-        const clonedArr = [...all_s]
+        console.log(all_s, "all_s");
+        const clonedArr = [...all_s].sort((a, b) => b.rating - a.rating);
+        console.log(clonedArr, "all_ssss");
         setAllrequests(clonedArr)
     };
 
@@ -149,14 +150,7 @@ const SeeTender = (props) => {
 
     const DonePay = async (_token) => {
 
-
-
         console.log(_token, "_token");
-        // var Arr = _token.split(',');
-        // const token = Arr[0];
-        // const price = Arr[1];
-        // // console.log(_token, "price");
-        // const receiver = Arr[3];
 
         try {
             window.contract = await new web3.eth.Contract(contractAuctionABI, auctionContract);

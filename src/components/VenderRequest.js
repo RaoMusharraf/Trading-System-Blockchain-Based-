@@ -116,9 +116,9 @@ const CreateVender = (props) => {
                 )}
             </button>
             <br></br>
+            <br></br>
 
-            <h1 style={{ textAlign: 'left' }}>
-                List Request For Items </h1>
+
             <form>
                 <h2>Price</h2>
                 <input

@@ -28,7 +28,6 @@ const AllRequests = (props) => {
     function timeout(delay) {
         return new Promise(res => setTimeout(res, delay));
     }
-
     useEffect(async () => {
         const { address, status } = await getCurrentWalletConnected();
         setWallet(address);
@@ -36,13 +35,11 @@ const AllRequests = (props) => {
         getData();
         addWalletListener();
     }, []);
-
     const connectWalletPressed = async () => {
         const walletResponse = await connectWallet();
         setStatus(walletResponse.status);
         setWallet(walletResponse.address);
     };
-
     const onList = async (TokenId) => {
         window.contract = await new web3.eth.Contract(contractAuctionABI, auctionContract);
         const transactionParameters = {
@@ -57,10 +54,11 @@ const AllRequests = (props) => {
                 params: [transactionParameters],
             });
         setStatus("✅ Check out your transaction on Etherscan: https://etherscan.io/tx/" + txHash);
+        var receipt = web3.eth.getTransactionReceipt(txHash)
+            .then(console.log);
         await timeout(10000);
         window.location.reload(false);
     }
-
     const getData = async () => {
 
         var auctionData = [];
@@ -155,9 +153,6 @@ const AllRequests = (props) => {
     useEffect(() => {
         getTime()
     }, [auctionDetails])
-    // useEffect(() => {
-    //     getData()
-    // }, [auctionDetails2])
 
     function addWalletListener() {
         if (window.ethereum) {

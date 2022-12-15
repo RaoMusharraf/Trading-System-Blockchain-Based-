@@ -33,7 +33,6 @@ const SeeTender = (props) => {
         setStatus(walletResponse.status);
         setWallet(walletResponse.address);
     };
-
     const getData = async () => {
 
         var auctionData = [];

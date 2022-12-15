@@ -20,6 +20,7 @@ const CreateTender = (props) => {
     const [hours, setHours] = useState("");
     const [description, setDescription] = useState("");
     const [addr, setAddress] = useState("");
+    const [trans, setTransec] = useState("");
 
     useEffect(async () => {
         const { address, status } = await getCurrentWalletConnected();
@@ -28,6 +29,10 @@ const CreateTender = (props) => {
 
         addWalletListener();
     }, []);
+
+    useEffect(async () => {
+        console.log(trans, "Transection");
+    }, [trans]);
 
     const connectWalletPressed = async () => {
         const walletResponse = await connectWallet();
@@ -63,8 +68,13 @@ const CreateTender = (props) => {
                 //     navigate("/")
                 // });
                 setStatus("✅ Check out your transaction on Etherscan: https://etherscan.io/tx/" + txHash);
-                await timeout(5000);
-                window.location.reload(false);
+
+
+                await timeout(30000);
+                var receipt = await web3.eth.getTransactionReceipt(txHash)
+                    .then(console.log("hello"));
+                setTransec(receipt);
+                // window.location.reload(false);
             } catch (err) {
                 console.log(err);
                 setStatus("😢 Something went wrong while listing your NFT for auction");
@@ -107,14 +117,13 @@ const CreateTender = (props) => {
                 )}
             </button>
             <br></br>
-
-            <h1 style={{ textAlign: 'left' }}>
-                List Request For Items </h1>
+            <br></br>
+            <br></br>
             <form>
                 <h2>Name</h2>
                 <input
                     type="text"
-                    placeholder="Enter Item Name"
+                    placeholder="Enter Tender Name"
                     onChange={(event) => setName(event.target.value)} />
                 <h2>Quantity</h2>
                 <input
