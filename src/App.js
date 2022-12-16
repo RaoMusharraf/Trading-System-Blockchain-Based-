@@ -4,12 +4,12 @@ import SeeVender from './components/SeeVender';
 import SeeTender from './components/SeeTender';
 import AllItems from './components/AllItems';
 import CreateVender from './components/VenderRequest';
-import Feedback from './components/Feedback';
-import Payment from './components/Payment';
+// import Feedback from './components/Feedback';
+// import Payment from './components/Payment';
 import { BrowserRouter as Router, Route, Link, Switch, NavLink, Routes } from "react-router-dom";
 import logo from './lilfrens-logo.png';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import AllRequests from './components/Allrequests';
+// import AllRequests from './components/Allrequests';
 import { connectWallet, getCurrentWalletConnected } from "./utils/interact";
 import { useEffect, useState } from 'react';
 
@@ -71,9 +71,7 @@ function App() {
           <NavLink to="/create-tender">Create Tender</NavLink>
           <NavLink to="/see-tender">See Tender</NavLink>
           <NavLink to="/">All Tenders</NavLink>
-          {/* <a href="/Vender_request">Create Vender Request</a> */}
           <NavLink to="/bundle_auction">Vender Requests</NavLink>
-
           <button id="walletButton" onClick={connectWalletPressed}>
             {walletAddress.length > 0 ? (
               "Connected: " +
@@ -94,9 +92,8 @@ function App() {
         <Route path='/bundle_auction' element={<SeeVender />}></Route>
         <Route path='/see-tender' element={<SeeTender />}></Route>
         <Route path='/Vender_request' element={<CreateVender />}></Route>
-        <Route path='/Feedback' element={<Feedback />}></Route>
-        <Route path='/Payment' element={<Payment />}></Route>
-        <Route path='/all-requests' element={<AllRequests />}></Route>
+        {/* <Route path='/Feedback' element={<Feedback />}></Route>
+        <Route path='/Payment' element={<Payment />}></Route> */}
       </Routes>
 
     </>

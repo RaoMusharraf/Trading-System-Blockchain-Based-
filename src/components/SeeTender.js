@@ -14,25 +14,24 @@ const SeeTender = (props) => {
     const [status, setStatus] = useState("");
     const [auctionDetails, setAuctionDetails] = useState([]);
     const [auctionDet, setAuctionDet] = useState([]);
-    const [auctionDetails2, setAuctionDetails2] = useState([]);
-    const [auctionDetails3, setAuctionDetails3] = useState([]);
     const [Allrequests, setAllrequests] = useState([]);
     const [Tokentime, setTokentime] = useState({});
-    const [Invitation, setInvitation] = useState({});
+    const [transection, setTransection] = useState({});
+    const [trans, setTransec] = useState("");
     const [DoneP, setDone] = useState({});
 
     const web3 = new Web3(window.ethereum);
     const auctionContract = process.env.REACT_APP_CONTRACT;
     const contractAuctionABI = require('../abi/abi_tender.json');
+    window.contract = new web3.eth.Contract(contractAuctionABI, auctionContract);
 
     const handleClose = () => setShow(false);
     const handleShow = async (TokenId) => {
         window.contract = await new web3.eth.Contract(contractAuctionABI, auctionContract);
         setShow(true)
         const all_s = await window.contract.methods.AllVender(TokenId).call();
-        console.log(all_s, "all_s");
         const clonedArr = [...all_s].sort((a, b) => b.rating - a.rating);
-        console.log(clonedArr, "all_ssss");
+        console.log(clonedArr, "ssss");
         setAllrequests(clonedArr)
     };
 
@@ -42,79 +41,39 @@ const SeeTender = (props) => {
 
     useEffect(async () => {
         const { address, status } = await getCurrentWalletConnected();
-        setWallet(address);
         setStatus(status);
         getData();
-        addWalletListener();
     }, []);
-
-    const connectWalletPressed = async () => {
-        const walletResponse = await connectWallet();
-        setStatus(walletResponse.status);
-        setWallet(walletResponse.address);
-    };
 
     const getData = async () => {
 
         var auctionData = [];
         try {
-            window.contract = await new web3.eth.Contract(contractAuctionABI, auctionContract);
+            await timeout(626);
             console.log(window.ethereum.selectedAddress);
-            const total = await window.contract.methods.Size(window.ethereum.selectedAddress).call();
             const all_single = await window.contract.methods.getTender(window.ethereum.selectedAddress).call();
-
             var auctionData = [];
             var auctionData1 = [];
-            var auctionData2 = [];
-            var auctionData3 = [];
-            for (var i = 0; i < total; i++) {
-                const all_sing = await window.contract.methods.SizeVender(all_single[i].TokenId).call();
-                let comm = await window.contract.methods.Communication(all_single[i].TokenId, window.ethereum.selectedAddress).call();
-                let Accpt = await window.contract.methods.Invite(window.ethereum.selectedAddress, all_single[i].TokenId, comm.receiver).call()
+            for (var i = 0; i < all_single.length; i++) {
+                let Accpt = await window.contract.methods.Pending(window.ethereum.selectedAddress, all_single[i].TokenId).call()
                 console.log(Accpt, "comAccptm");
-                console.log(comm.done, "comm.done");
                 if (Accpt == false) {
-                    const auc_data = {
-                        "TokenId": all_single[i].TokenId,
-                        "name": all_single[i].name,
-                        "quantity": all_single[i].quantity,
-                        "budget": all_single[i].budget,
-                        "hours": all_single[i].time,
-                        "Address": all_single[i]._address,
-                        "description": all_single[i].description,
-                        "application": all_sing,
-                    }
-                    auctionData.push(auc_data);
+                    auctionData.push(all_single[i]);
                 }
-                if (Accpt == true) {
-                    const auc_data1 = {
-                        "TokenId": all_single[i].TokenId,
-                        "name": all_single[i].name,
-                        "quantity": all_single[i].quantity,
-                        "budget": all_single[i].budget,
-                        "hours": all_single[i].time,
-                        "Address": all_single[i]._address,
-                        "description": all_single[i].description,
-                        "application": all_sing,
-                    }
-                    auctionData1.push(auc_data1);
+                else {
+                    auctionData1.push(all_single[i]);
                 }
             }
-            console.log(auctionData, "auctionData");
-            console.log(auctionData1, "auctionData1");
-            console.log(auctionData2, "auctionData2");
-
             setAuctionDetails(auctionData);
             setAuctionDet(auctionData1);
-            setAuctionDetails2(auctionData2);
+
         } catch (err) {
             console.log(err);
         }
     };
-
     useEffect(() => {
-        console.log(auctionDet, "auctionDet12345667");
-    }, [auctionDet])
+        getData();
+    }, [trans, transection])
 
     const invitation = async (_token) => {
 
@@ -122,8 +81,7 @@ const SeeTender = (props) => {
         const token = Arr[0];
         const price = Arr[1];
         const receiver = Arr[3];
-        console.log(_token, "price");
-        console.log(receiver, "receiver");
+        console.log(_token);
         try {
             window.contract = await new web3.eth.Contract(contractAuctionABI, auctionContract);
             //set up your Ethereum transaction
@@ -138,24 +96,28 @@ const SeeTender = (props) => {
                     method: 'eth_sendTransaction',
                     params: [transactionParameters],
                 });
-
-            setStatus("✅ Check out your transaction on Etherscan: https://etherscan.io/tx/" + txHash);
-            await timeout(5000);
-            window.location.reload(false);
+            for (let index = 0; index > -1; index++) {
+                var receipt = await web3.eth.getTransactionReceipt(txHash)
+                if (receipt != null) {
+                    setTransec(receipt);
+                    break;
+                }
+                await timeout(1000);
+                console.log("Hello");
+            }
+            //setStatus("✅ Check out your transaction on Etherscan: https://etherscan.io/tx/" + txHash);
         } catch (err) {
             console.log(err);
-            setStatus("😢 Something went wrong while listing your NFT for auction");
+            //setStatus("😢 Something went wrong while listing your NFT for auction");
         }
     }
 
     const DonePay = async (_token) => {
 
         console.log(_token, "_token");
-
         try {
             window.contract = await new web3.eth.Contract(contractAuctionABI, auctionContract);
             let comm = await window.contract.methods.Communication(_token, window.ethereum.selectedAddress).call();
-            console.log(comm.price, "comm123");
             //set up your Ethereum transaction
             const transactionParameters = {
                 to: auctionContract, // Required except during contract publications.
@@ -170,55 +132,38 @@ const SeeTender = (props) => {
                     params: [transactionParameters],
                 });
 
-            setStatus("✅ Check out your transaction on Etherscan: https://etherscan.io/tx/" + txHash);
-            await timeout(5000);
-            window.location.reload(false);
+            for (let index = 0; index > -1; index++) {
+                var receipt = await web3.eth.getTransactionReceipt(txHash)
+                if (receipt != null) {
+                    setTransection(receipt);
+                    break;
+                }
+                await timeout(1000);
+                console.log("Hello");
+            }
+            //setStatus("✅ Check out your transaction on Etherscan: https://etherscan.io/tx/" + txHash);
         } catch (err) {
             console.log(err);
-            setStatus("😢 Something went wrong while listing your NFT for auction");
+            //setStatus("😢 Something went wrong while listing your NFT for auction");
         }
     }
-
-    const getInvitation = async () => {
-        window.contract = await new web3.eth.Contract(contractAuctionABI, auctionContract);
-        console.log(auctionDetails);
-        auctionDetails.map(async (item, index) => {
-
-            let all_ten = await window.contract.methods.Total(item.TokenId).call();
-            console.log(all_ten, "item owner");
-            let comm = await window.contract.methods.Communication(item.TokenId, all_ten.owner).call();
-            console.log(comm.receiver, "comm");
-            console.log(all_ten.owner, "al ten owner");
-            await window.contract.methods.Invite(window.ethereum.selectedAddress, item.TokenId, comm.receiver).call().then(res => {
-                //await window.contract.methods.Invite(item.TokenId, comm.receiver, all_ten.owner).call().then(res => {
-                console.log(res, "setInvitation");
-                setInvitation(existingValues => ({
-                    ...existingValues,
-                    [item.TokenId]: res,
-                }))
-            });
-
-
-        })
-    }
-
     const getTime = async () => {
 
-        console.log(auctionDetails);
         window.contract = await new web3.eth.Contract(contractAuctionABI, auctionContract);
         auctionDetails.map(async (item, index) => {
             let all_s = await window.contract.methods.CheckTime(item.TokenId).call();
-            console.log(all_s, "all_s");
+            console.log(all_s, "getTime");
             setTokentime(existingValues => ({
                 ...existingValues,
                 [item.TokenId]: all_s,
             }))
         })
     }
-
+    useEffect(() => {
+        getTime()
+    }, [auctionDetails])
     const Done = async () => {
 
-        console.log(auctionDet, "auctionDet1");
         window.contract = await new web3.eth.Contract(contractAuctionABI, auctionContract);
         auctionDet.map(async (item, index) => {
             let all_s = await window.contract.methods.Communication(item.TokenId, window.ethereum.selectedAddress).call();
@@ -229,55 +174,21 @@ const SeeTender = (props) => {
             }))
         })
     }
-
-    useEffect(() => {
-        getTime()
-    }, [auctionDetails])
-
     useEffect(() => {
         Done()
-        console.log(auctionDet);
     }, [auctionDet])
 
-    useEffect(() => {
-        getInvitation()
-        console.log(setInvitation, "setInvitation")
-    }, [auctionDetails])
-
-    function addWalletListener() {
-        if (window.ethereum) {
-            window.ethereum.on("accountsChanged", (accounts) => {
-                if (accounts.length > 0) {
-                    setWallet(accounts[0]);
-                    //setStatus("👆🏽 Write a message in the text-field above.");
-                } else {
-                    setWallet("");
-                    setStatus("🦊 Connect to Metamask using the top right button.");
-                }
-            });
-        } else {
-            setStatus(
-                <p>
-                    {" "}
-                    🦊{" "}
-                    <a target="_blank" href={`https://metamask.io/download.html`}>
-                        You must install Metamask, a virtual Ethereum wallet, in your
-                        browser.
-                    </a>
-                </p>
-            );
-        }
-    }
     return (
 
         <div>
             <Modal show={show} onHide={handleClose} centered>
                 <Modal.Header closeButton>
-                    <Modal.Title>{console.log(Allrequests)} Requests</Modal.Title>
+                    <Modal.Title>Requests</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
 
                     <table className="table table-striped mtable">
+
                         <thead>
                             <tr>
                                 <th scope="col">S#</th>
@@ -318,11 +229,9 @@ const SeeTender = (props) => {
                 </Modal.Footer>
             </Modal>
             <div className="container">
-
                 <Tabs
                     defaultActiveKey="home"
                     id="uncontrolled-tab-example"
-
                 >
                     <Tab eventKey="home" title="Requests">
                         <h1 style={{ textAlign: 'left' }}></h1>
@@ -348,12 +257,12 @@ const SeeTender = (props) => {
                                                 <td>{item.name}</td>
                                                 <td>{item.quantity}</td>
                                                 <td>{item.budget}</td>
-                                                <td>{item.hours}</td>
-                                                <td>{item.Address}</td>
+                                                <td>{item.time}</td>
+                                                <td>{item._address}</td>
                                                 <td>{item.description}</td>
                                                 <td id="button-tds">
                                                     {
-                                                        Tokentime[item.TokenId] == false ? <button id={item.TokenId} onClick={(e) => handleShow(e.target.id)}>{item.application}</button> : <p>{item.application}</p>
+                                                        Tokentime[item.TokenId] == false ? <button id={item.TokenId} onClick={(e) => handleShow(e.target.id)}>Requests</button> : <button>TIME</button>
                                                     }
                                                 </td>
 
@@ -389,8 +298,8 @@ const SeeTender = (props) => {
                                                 <td>{item.name}</td>
                                                 <td>{item.quantity}</td>
                                                 <td>{item.budget}</td>
-                                                <td>{item.hours}</td>
-                                                <td>{item.Address}</td>
+                                                <td>{item.time}</td>
+                                                <td>{item._address}</td>
                                                 <td>{item.description}</td>
                                                 <td id="button-tds">
                                                     {

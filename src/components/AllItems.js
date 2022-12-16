@@ -18,49 +18,25 @@ const SeeTender = (props) => {
     const auctionContract = process.env.REACT_APP_CONTRACT;
     let navigate = useNavigate();
 
-    function timeout(delay) {
-        return new Promise(res => setTimeout(res, delay));
-    }
+    // function timeout(delay) {
+    //     return new Promise(res => setTimeout(res, delay));
+    // }
     useEffect(async () => {
-
         getData();
-
     }, []);
-    const connectWalletPressed = async () => {
-        const walletResponse = await connectWallet();
-        setStatus(walletResponse.status);
-        setWallet(walletResponse.address);
-    };
-    const getData = async () => {
 
-        var auctionData = [];
+    const getData = async () => {
         try {
             window.contract = await new web3.eth.Contract(contractAuctionABI, auctionContract);
             const all_single = await window.contract.methods.AllTender().call();
-            var auctionData = [];
-            for (var i = 0; i < all_single.length; i++) {
-                const auc_data = {
-                    "TokenId": all_single[i].TokenId,
-                    "name": all_single[i].name,
-                    "quantity": all_single[i].quantity,
-                    "budget": all_single[i].budget,
-                    "hours": all_single[i].time,
-                    "Address": all_single[i]._address,
-                    "description": all_single[i].description,
-                    "Owner": all_single[i].owner,
-                }
-                auctionData.push(auc_data);
-            }
-            console.log(auctionData, "auctionData")
-
-            setAuctionDetails(auctionData);
+            const clonedArr = [...all_single].sort((a, b) => b.TokenId - a.TokenId);
+            console.log(clonedArr, "ssss");
+            setAuctionDetails(clonedArr);
         } catch (err) {
             console.log(err);
         }
     };
-
     const getTime = async () => {
-
         console.log(auctionDetails);
         window.contract = await new web3.eth.Contract(contractAuctionABI, auctionContract);
         auctionDetails.map(async (item, index) => {
@@ -73,7 +49,7 @@ const SeeTender = (props) => {
         })
     }
     useEffect(() => {
-        getTime()
+        getTime();
     }, [auctionDetails])
 
     return (
@@ -102,10 +78,10 @@ const SeeTender = (props) => {
                                     <td>{item.name}</td>
                                     <td>{item.quantity}</td>
                                     <td>{item.budget}</td>
-                                    <td>{item.hours}</td>
-                                    <td>{item.Address}</td>
+                                    <td>{item.time}</td>
+                                    <td>{item._address}</td>
                                     <td>{item.description}</td>
-                                    <td>{item.Owner}</td>
+                                    <td>{item.owner}</td>
                                     <td id="button-tds">
                                         {
                                             Tokentime[item.TokenId] == true ? <button id={item.TokenId} className="tender-req-btn" onClick={(e) => {

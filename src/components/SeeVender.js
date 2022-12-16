@@ -10,19 +10,19 @@ const { ethers } = require("ethers");
 
 const AllRequests = (props) => {
 
-    const [walletAddress, setWallet] = useState("");
+    const [transection, setTransection] = useState({});
     const [status, setStatus] = useState("");
     const [Tokentime, setTokentime] = useState({});
     const [Invitation, setInvitation] = useState({});
     const [auctionDetails, setAuctionDetails] = useState([]);
     const [auctionDetails1, setAuctionDetails1] = useState([]);
     const [auctionDetails2, setAuctionDetails2] = useState([]);
-    const [auction, setAuction] = useState([]);
 
 
     const contractAuctionABI = require('../abi/abi_tender.json');
     const auctionContract = process.env.REACT_APP_CONTRACT;
     const web3 = new Web3(window.ethereum);
+    window.contract = new web3.eth.Contract(contractAuctionABI, auctionContract);
 
 
     function timeout(delay) {
@@ -30,40 +30,44 @@ const AllRequests = (props) => {
     }
     useEffect(async () => {
         const { address, status } = await getCurrentWalletConnected();
-        setWallet(address);
         setStatus(status);
         getData();
-        addWalletListener();
     }, []);
-    const connectWalletPressed = async () => {
-        const walletResponse = await connectWallet();
-        setStatus(walletResponse.status);
-        setWallet(walletResponse.address);
-    };
     const onList = async (TokenId) => {
-        window.contract = await new web3.eth.Contract(contractAuctionABI, auctionContract);
-        const transactionParameters = {
-            to: auctionContract, // Required except during contract publications.
-            from: window.ethereum.selectedAddress, // must match user's active address.
-            'data': window.contract.methods.DeleteVRequest(TokenId).encodeABI()//make call to NFT smart contract
-        };
-        //sign the transaction via Metamask
-        const txHash = await window.ethereum
-            .request({
-                method: 'eth_sendTransaction',
-                params: [transactionParameters],
-            });
-        setStatus("✅ Check out your transaction on Etherscan: https://etherscan.io/tx/" + txHash);
-        var receipt = web3.eth.getTransactionReceipt(txHash)
-            .then(console.log);
-        await timeout(10000);
-        window.location.reload(false);
+
+        try {
+            const transactionParameters = {
+                to: auctionContract, // Required except during contract publications.
+                from: window.ethereum.selectedAddress, // must match user's active address.
+                'data': window.contract.methods.DeleteVRequest(TokenId).encodeABI()//make call to NFT smart contract
+            };
+            //sign the transaction via Metamask
+            const txHash = await window.ethereum
+                .request({
+                    method: 'eth_sendTransaction',
+                    params: [transactionParameters],
+                });
+            setStatus("✅ Check out your transaction on Etherscan: https://etherscan.io/tx/" + txHash);
+            for (let index = 0; index > -1; index++) {
+                var receipt = await web3.eth.getTransactionReceipt(txHash)
+                if (receipt != null) {
+                    setTransection(receipt);
+                    break;
+                }
+                await timeout(1000);
+                console.log("Hello");
+            }
+
+        } catch (err) {
+            console.log(err);
+            setStatus("😢 Something went wrong while listing your NFT for auction");
+        }
     }
     const getData = async () => {
 
         var auctionData = [];
         try {
-            window.contract = await new web3.eth.Contract(contractAuctionABI, auctionContract);
+
             const total = await window.contract.methods.Requests(window.ethereum.selectedAddress).call();
             const all_single = await window.contract.methods.getVender(window.ethereum.selectedAddress).call();
 
@@ -76,8 +80,7 @@ const AllRequests = (props) => {
                 let all_ten = await window.contract.methods.Total(all_single[i].Token).call();
                 let all_time = await window.contract.methods.CheckTime(all_single[i].Token).call();
                 console.log(all_time, "all_time", i);
-                let all_s = await window.contract.methods.Invite(all_ten.owner, all_single[i].Token, window.ethereum.selectedAddress).call()
-                //let all_s = await window.contract.methods.Accepted(all_single[i].Token, all_single[i].owner, all_ten.owner).call();
+                let all_s = await window.contract.methods.Invite(all_ten.owner, all_single[i].Token, window.ethereum.selectedAddress).call();
                 if (!all_time && all_s) {
                     const auc_data = {
                         "TokenId": all_single[i].Token,
@@ -120,8 +123,15 @@ const AllRequests = (props) => {
             console.log(err);
         }
     };
+    useEffect(async () => {
+        if (transection != null) {
+            if (transection.status) {
+                window.location.reload();
+            }
+        }
+    }, [transection]);
     const getTime = async () => {
-        window.contract = await new web3.eth.Contract(contractAuctionABI, auctionContract);
+
         let all_com = await window.contract.methods.getVender(window.ethereum.selectedAddress).call();
         for (var i = 0; i < all_com.length; i++) {
             let all_ten = await window.contract.methods.Total(all_com[i].Token).call();
@@ -134,7 +144,7 @@ const AllRequests = (props) => {
         }
     }
     const getInvitation = async () => {
-        window.contract = await new web3.eth.Contract(contractAuctionABI, auctionContract);
+
         let all_com = await window.contract.methods.getVender(window.ethereum.selectedAddress).call();
         for (var i = 0; i < all_com.length; i++) {
             let all_ten = await window.contract.methods.Total(all_com[i].Token).call();
@@ -153,32 +163,6 @@ const AllRequests = (props) => {
     useEffect(() => {
         getTime()
     }, [auctionDetails])
-
-    function addWalletListener() {
-        if (window.ethereum) {
-            window.ethereum.on("accountsChanged", (accounts) => {
-                if (accounts.length > 0) {
-                    setWallet(accounts[0]);
-                    //setStatus("👆🏽 Write a message in the text-field above.");
-                } else {
-                    setWallet("");
-                    setStatus("🦊 Connect to Metamask using the top right button.");
-                }
-            });
-        } else {
-            setStatus(
-                <p>
-                    {" "}
-                    🦊{" "}
-                    <a target="_blank" href={`https://metamask.io/download.html`}>
-                        You must install Metamask, a virtual Ethereum wallet, in your
-                        browser.
-                    </a>
-                </p>
-            );
-        }
-    }
-
     return (
         <div className="container">
 

@@ -108,7 +108,7 @@ const CreateTender = (props) => {
                     type="text"
                     placeholder="Enter Your Address"
                     onChange={(event) => setAddress(event.target.value)} />
-                <h2>Description of Item</h2>
+                <h2>Description</h2>
                 <textarea
                     rows={3}
                     type="text"
@@ -123,7 +123,6 @@ const CreateTender = (props) => {
                 List
             </button>
             <p id="status">
-
                 {status}
             </p>
         </div>

@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { connectWallet, getCurrentWalletConnected, createBox } from "../utils/interact.js";
-import logo from '../lilfrens-logo.png';
 import Web3 from "web3";
 import { useNavigate } from "react-router-dom";
 
@@ -10,43 +9,30 @@ const CreateVender = (props) => {
 
     const [Token, setTokenid] = useState("");
     const [delivery, setDelivey] = useState("");
-    const [walletAddress, setWallet] = useState("");
     const [status, setStatus] = useState("");
-    const [statusLink, setLink] = useState("");
+    const [trans, setTransection] = useState("");
     const [budget, setBudget] = useState("");
     const [description, setDescription] = useState("");
+
+    const web3 = new Web3(window.ethereum);
     const auctionContract = process.env.REACT_APP_CONTRACT;
+    const auction_contractABI = require('../abi/abi_tender.json');
+    window.contract = new web3.eth.Contract(auction_contractABI, auctionContract);
 
     const navigate = useNavigate()
     function timeout(delay) {
         return new Promise(res => setTimeout(res, delay));
     }
-    //State variables
     useEffect(async () => {
         const { address, status } = await getCurrentWalletConnected();
-        setWallet(address);
         setStatus(status);
-        addWalletListener();
-
     }, []);
-
-    const connectWalletPressed = async () => {
-        const walletResponse = await connectWallet();
-        setStatus(walletResponse.status);
-        setWallet(walletResponse.address);
-    };
-
     const onList = async (budget, description, delivery) => {
         if (budget == '' || delivery == '' || description == '') {
             setStatus("Please fill all values!!!!!!!!!!!");
             alert("Please fill all values!!!!!!!!!!!");
         } else {
-
-            //Contract Interaction
-            const web3 = new Web3(window.ethereum);
-            const auction_contractABI = require('../abi/abi_tender.json');
             try {
-                window.contract = await new web3.eth.Contract(auction_contractABI, auctionContract);
                 //set up your Ethereum transaction
                 const transactionParameters = {
                     to: auctionContract, // Required except during contract publications.
@@ -59,50 +45,35 @@ const CreateVender = (props) => {
                         method: 'eth_sendTransaction',
                         params: [transactionParameters],
                     });
-
-
-                await timeout(5000).then(res => {
-                    navigate("/")
-                });
-
+                setStatus("✅ Check out your transaction on Etherscan: https://etherscan.io/tx/" + txHash);
+                for (let index = 0; index > -1; index++) {
+                    var receipt = await web3.eth.getTransactionReceipt(txHash)
+                    if (receipt != null) {
+                        setTransection(receipt);
+                        break;
+                    }
+                    await timeout(1000);
+                    console.log("Hello");
+                }
             } catch (err) {
                 console.log(err);
                 setStatus("😢 Something went wrong while listing your NFT for auction");
             }
         }
     }
-    function addWalletListener() {
-        if (window.ethereum) {
-            window.ethereum.on("accountsChanged", (accounts) => {
-                if (accounts.length > 0) {
-                    setWallet(accounts[0]);
-                    setStatus("👆🏽 Write a message in the text-field above.");
-                } else {
-                    setWallet("");
-                    setStatus("🦊 Connect to Metamask using the top right button.");
-                }
-            });
-        } else {
-            setStatus(
-                <p>
-                    {" "}
-                    🦊{" "}
-                    <a target="_blank" href={`https://metamask.io/download.html`}>
-                        You must install Metamask, a virtual Ethereum wallet, in your
-                        browser.
-                    </a>
-                </p>
-            );
+    // useEffect(() => {
+    //     let temp;
+    //     temp = localStorage.lToken
+    //     setTokenid(temp)
+    //     console.log(localStorage.lToken);
+    // }, [])
+    useEffect(async () => {
+        if (trans != null) {
+            if (trans.status) {
+                navigate("/");
+            }
         }
-    }
-    useEffect(() => {
-        let temp;
-        temp = localStorage.lToken
-        setTokenid(temp)
-        console.log(localStorage.lToken);
-
-    }, [])
-
+    }, [trans]);
     return (
         <div className="container createtender">
             <form>
@@ -117,7 +88,8 @@ const CreateVender = (props) => {
                     placeholder="Enter Days"
                     onChange={(event) => setDelivey(event.target.value)} />
                 <h2>Description</h2>
-                <input
+                <textarea
+                    rows={3}
                     type="text"
                     placeholder="Enter Description"
                     onChange={(event) => setDescription(event.target.value)} />
@@ -126,13 +98,8 @@ const CreateVender = (props) => {
             <button id="list" onClick={() => onList(budget, description, delivery)}>
                 List
             </button>
-
             <p id="status">
                 {status}
-            </p>
-
-            <p id="linkTx">
-
             </p>
         </div>
     );
