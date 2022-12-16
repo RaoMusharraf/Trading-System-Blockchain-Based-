@@ -45,7 +45,6 @@
 
 /* Add a black background color to the top navigation */
 .topnav {
-  background-color: #f7f7f7;
   overflow: hidden;
 }
 
@@ -68,7 +67,7 @@
 
 /* Add a color to the active/current link */
 .topnav a.active {
-  background-color: #04AA6D;
+  background-color: #dd6f25;
   color: white;
 }
 
@@ -115,11 +114,11 @@ form h2 {
 }
 
 .topnav {
-  background-color: #f7f7f7;
   overflow: hidden;
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
+  padding: 0px 40px;
 }
 
 .topnav h1#title a:hover {
@@ -139,4 +138,54 @@ a.tender-req-btn {
 
 .modal-dialog {
   max-width: 64% !important;
+}
+
+#walletButton {
+  /* text-align: right; */
+  /* float: right; */
+  margin-bottom: 0px;
+  line-height: 16px;
+  margin-top: 6px;
+  margin-left: 60px;
+}
+
+.container.createtender {
+  max-width: 470px;
+  background: #ffffffb5;
+  padding: 50px;
+}
+
+ul.mb-3.nav.nav-tabs {
+  margin-top: 90px;
+}
+
+.nav-tabs .nav-link.active {
+  color: white !important;
+  background-color: #dd6f25 !important;
+
+}
+
+.nav-tabs .nav-link {
+  background: white !important;
+  color: black !important;
+}
+
+table.table.table-striped.mtable.all-items {
+  margin-top: 90px;
+}
+
+p#status {
+  word-break: break-word;
+}
+
+ul.nav.nav-tabs {
+  margin-top: 90px;
+}
+
+.tab-content {
+  min-height: 360px;
+}
+
+html {
+  height: 100%;
 }

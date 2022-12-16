@@ -1,0 +1,9 @@
+body {
+    background: url(../assets/images/bg.jpg);
+    background-position: center;
+    background-size: cover;
+}
+
+table.table.table-striped.mtable {
+    background: #ffffffd6;
+}

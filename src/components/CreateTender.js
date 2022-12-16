@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { connectWallet, getCurrentWalletConnected, createBox } from "../utils/interact.js";
-import logo from '../lilfrens-logo.png';
 import Web3 from "web3";
 const { ethers } = require("ethers");
 
@@ -12,7 +11,6 @@ const CreateTender = (props) => {
     }
 
     //State variables
-    const [walletAddress, setWallet] = useState("");
     const [status, setStatus] = useState("");
     const [name, setName] = useState("");
     const [quantity, setQuantity] = useState("");
@@ -24,21 +22,16 @@ const CreateTender = (props) => {
 
     useEffect(async () => {
         const { address, status } = await getCurrentWalletConnected();
-        setWallet(address);
         setStatus(status);
-
-        addWalletListener();
     }, []);
 
     useEffect(async () => {
-        console.log(trans, "Transection");
+        if (trans != null) {
+            if (trans.status) {
+                window.location.reload();
+            }
+        }
     }, [trans]);
-
-    const connectWalletPressed = async () => {
-        const walletResponse = await connectWallet();
-        setStatus(walletResponse.status);
-        setWallet(walletResponse.address);
-    };
 
     const onList = async (name, quantity, budget, hours, description) => {
         if (name == '' || quantity == '' || budget == '' || hours == '' || addr == '' || description == '') {
@@ -68,57 +61,26 @@ const CreateTender = (props) => {
                 //     navigate("/")
                 // });
                 setStatus("✅ Check out your transaction on Etherscan: https://etherscan.io/tx/" + txHash);
-
-
-                await timeout(30000);
-                var receipt = await web3.eth.getTransactionReceipt(txHash)
-                    .then(console.log("hello"));
-                setTransec(receipt);
-                // window.location.reload(false);
+                //await timeout(30000);
+                for (let index = 0; index > -1; index++) {
+                    var receipt = await web3.eth.getTransactionReceipt(txHash)
+                    if (receipt != null) {
+                        setTransec(receipt);
+                        break;
+                    }
+                    await timeout(1000);
+                    console.log("Hello");
+                }
             } catch (err) {
                 console.log(err);
                 setStatus("😢 Something went wrong while listing your NFT for auction");
             }
         }
     }
-    function addWalletListener() {
-        if (window.ethereum) {
-            window.ethereum.on("accountsChanged", (accounts) => {
-                if (accounts.length > 0) {
-                    setWallet(accounts[0]);
-                } else {
-                    setWallet("");
-                    setStatus("🦊 Connect to Metamask using the top right button.");
-                }
-            });
-        } else {
-            setStatus(
-                <p>
-                    {" "}
-                    🦊{" "}
-                    <a target="_blank" href={`https://metamask.io/download.html`}>
-                        You must install Metamask, a virtual Ethereum wallet, in your
-                        browser.
-                    </a>
-                </p>
-            );
-        }
-    }
+
     return (
         <div className="container createtender">
-            <button id="walletButton" onClick={connectWalletPressed}>
-                {walletAddress.length > 0 ? (
-                    "Connected: " +
-                    String(walletAddress).substring(0, 6) +
-                    "..." +
-                    String(walletAddress).substring(38)
-                ) : (
-                    <span>Connect Wallet</span>
-                )}
-            </button>
-            <br></br>
-            <br></br>
-            <br></br>
+
             <form>
                 <h2>Name</h2>
                 <input
@@ -133,30 +95,35 @@ const CreateTender = (props) => {
                 <h2>Budget</h2>
                 <input
                     type="text"
-                    placeholder="Enter Budget in PKR"
+                    placeholder="Enter Budget (ETH)"
                     onChange={(event) => setBudget(event.target.value)} />
-                <h2>Total Hours</h2>
+                <h2>Total Time</h2>
                 <input
                     type="text"
-                    placeholder="Enter Ending Hours"
+                    placeholder="Enter Ending Minutes"
                     onChange={(event) => setHours(event.target.value)}
                 />
                 <h2>Address</h2>
                 <input
                     type="text"
-                    placeholder="Enter Address"
+                    placeholder="Enter Your Address"
                     onChange={(event) => setAddress(event.target.value)} />
                 <h2>Description of Item</h2>
-                <input
+                <textarea
+                    rows={3}
                     type="text"
-                    placeholder="Enter Description"
-                    onChange={(event) => setDescription(event.target.value)} />
+                    placeholder="Enter Tender Description"
+                    onChange={(event) => {
+                        setDescription(event.target.value)
+                        // console.log(event.target.value);
+                    }} />
             </form>
             <br />
             <button id="list" onClick={() => onList(name, quantity, budget, hours, description)}>
                 List
             </button>
             <p id="status">
+
                 {status}
             </p>
         </div>

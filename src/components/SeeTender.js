@@ -318,20 +318,11 @@ const SeeTender = (props) => {
                 </Modal.Footer>
             </Modal>
             <div className="container">
-                <button id="walletButton" onClick={connectWalletPressed}>
-                    {walletAddress.length > 0 ? (
-                        "Connected: " +
-                        String(walletAddress).substring(0, 6) +
-                        "..." +
-                        String(walletAddress).substring(38)
-                    ) : (
-                        <span>Connect Wallet</span>
-                    )}
-                </button>
+
                 <Tabs
-                    defaultActiveKey="profile"
+                    defaultActiveKey="home"
                     id="uncontrolled-tab-example"
-                    className="mb-3"
+
                 >
                     <Tab eventKey="home" title="Requests">
                         <h1 style={{ textAlign: 'left' }}></h1>
