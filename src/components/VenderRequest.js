@@ -70,7 +70,7 @@ const CreateVender = (props) => {
     useEffect(async () => {
         if (trans != null) {
             if (trans.status) {
-                navigate("/");
+                navigate("/bundle_auction");
             }
         }
     }, [trans]);
