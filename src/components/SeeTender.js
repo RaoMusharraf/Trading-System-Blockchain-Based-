@@ -6,6 +6,7 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
+import { moment } from "moment";
 
 const SeeTender = (props) => {
 
@@ -19,6 +20,13 @@ const SeeTender = (props) => {
     const [transection, setTransection] = useState({});
     const [trans, setTransec] = useState("");
     const [DoneP, setDone] = useState({});
+    // const [days, setDays] = useState(0);
+    // const [hours, setHours] = useState(0);
+    // const [minutes, setMinutes] = useState(0);
+    // const [seconds, setSeconds] = useState(0);
+
+    // const deadline = 1671368655877 + (1000 * 60);
+    // const deadline = "December , 31, 2022";
 
     const web3 = new Web3(window.ethereum);
     const auctionContract = process.env.REACT_APP_CONTRACT;
@@ -34,17 +42,14 @@ const SeeTender = (props) => {
         console.log(clonedArr, "ssss");
         setAllrequests(clonedArr)
     };
-
     function timeout(delay) {
         return new Promise(res => setTimeout(res, delay));
     }
-
     useEffect(async () => {
         const { address, status } = await getCurrentWalletConnected();
         setStatus(status);
         getData();
     }, []);
-
     const getData = async () => {
 
         var auctionData = [];
@@ -52,11 +57,16 @@ const SeeTender = (props) => {
             await timeout(626);
             console.log(window.ethereum.selectedAddress);
             const all_single = await window.contract.methods.getTender(window.ethereum.selectedAddress).call();
+            console.log("all_single", all_single);
             var auctionData = [];
             var auctionData1 = [];
+            var deadline = [];
             for (var i = 0; i < all_single.length; i++) {
+                deadline.push(all_single[i].start + (all_single[i].time));
+
                 let Accpt = await window.contract.methods.Pending(window.ethereum.selectedAddress, all_single[i].TokenId).call()
                 console.log(Accpt, "comAccptm");
+                console.log();
                 if (Accpt == false) {
                     auctionData.push(all_single[i]);
                 }
@@ -74,7 +84,6 @@ const SeeTender = (props) => {
     useEffect(() => {
         getData();
     }, [trans, transection])
-
     const invitation = async (_token) => {
 
         var Arr = _token.split(',');
@@ -111,7 +120,20 @@ const SeeTender = (props) => {
             //setStatus("😢 Something went wrong while listing your NFT for auction");
         }
     }
+    // const getTimer = () => {
 
+    //     const time = deadline - Date.now();
+    //     setDays(Math.floor(time / (1000 * 60 * 60 * 24)));
+    //     setHours(Math.floor((time / (1000 * 60 * 60)) % 24));
+    //     setMinutes(Math.floor((time / 1000 / 60) % 60));
+    //     setSeconds(Math.floor((time / 1000) % 60));
+    // };
+
+    // useEffect(() => {
+    //     const interval = setInterval(() => getTimer(deadline), 1000);
+
+    //     return () => clearInterval(interval);
+    // }, []);
     const DonePay = async (_token) => {
 
         console.log(_token, "_token");
@@ -233,7 +255,7 @@ const SeeTender = (props) => {
                     defaultActiveKey="home"
                     id="uncontrolled-tab-example"
                 >
-                    <Tab eventKey="home" title="Requests">
+                    <Tab eventKey="home" title="Tenders">
                         <h1 style={{ textAlign: 'left' }}></h1>
                         <table class="table table-striped mtable">
                             <thead>
@@ -242,7 +264,8 @@ const SeeTender = (props) => {
                                     <th scope="col">Name</th>
                                     <th scope="col">Quantity    </th>
                                     <th scope="col">Budget</th>
-                                    <th scope="col">Hours</th>
+                                    <th scope="col">Start Time</th>
+                                    <th scope="col">End Time</th>
                                     <th scope="col">Address</th>
                                     <th scope="col">Description</th>
                                     <th scope="col">Requests</th>
@@ -257,12 +280,16 @@ const SeeTender = (props) => {
                                                 <td>{item.name}</td>
                                                 <td>{item.quantity}</td>
                                                 <td>{item.budget}</td>
-                                                <td>{item.time}</td>
+                                                <td>{new Intl.DateTimeFormat('en-US', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(item.start * 1000)}</td>
+                                                <td>{new Intl.DateTimeFormat('en-US', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(item.time * 1000)}</td>
                                                 <td>{item._address}</td>
                                                 <td>{item.description}</td>
                                                 <td id="button-tds">
                                                     {
-                                                        Tokentime[item.TokenId] == false ? <button id={item.TokenId} onClick={(e) => handleShow(e.target.id)}>Requests</button> : <button>TIME</button>
+                                                        Tokentime[item.TokenId] == false ? <button id={item.TokenId} onClick={(e) => handleShow(e.target.id)}>
+                                                            Request
+                                                        </button> :
+                                                            <button>{new Intl.DateTimeFormat('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' }).format()}</button>
                                                     }
                                                 </td>
 
@@ -283,7 +310,7 @@ const SeeTender = (props) => {
                                     <th scope="col">Name</th>
                                     <th scope="col">Quantity    </th>
                                     <th scope="col">Budget</th>
-                                    <th scope="col">Hours</th>
+                                    <th scope="col">Create</th>
                                     <th scope="col">Address</th>
                                     <th scope="col">Description</th>
                                     <th scope="col">Requests</th>
@@ -298,7 +325,52 @@ const SeeTender = (props) => {
                                                 <td>{item.name}</td>
                                                 <td>{item.quantity}</td>
                                                 <td>{item.budget}</td>
-                                                <td>{item.time}</td>
+                                                {/* <td>{item.time}</td> */}
+                                                <td>{new Intl.DateTimeFormat('en-US', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(item.start * 1000)}</td>
+                                                <td>{new Intl.DateTimeFormat('en-US', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(item.time * 1000)}</td>
+                                                <td>{item._address}</td>
+                                                <td>{item.description}</td>
+                                                <td id="button-tds">
+                                                    {
+                                                        DoneP[item.TokenId] == true ? <button id={item.TokenId} onClick={(e) => DonePay(e.target.id)}>Payment</button> : <p>Done</p>
+                                                    }
+                                                </td>
+
+                                            </tr>
+                                        </>
+                                    )
+                                })
+                                }
+                            </tbody>
+                        </table>
+                    </Tab>
+                    <Tab eventKey="profile" title="Accepted">
+                        <h1 style={{ textAlign: 'left' }}></h1>
+                        <table class="table table-striped mtable">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Token#</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Quantity    </th>
+                                    <th scope="col">Budget</th>
+                                    <th scope="col">Create</th>
+                                    <th scope="col">Address</th>
+                                    <th scope="col">Description</th>
+                                    <th scope="col">Requests</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tenders">
+                                {auctionDet.map((item, index) => {
+                                    return (
+                                        <>
+                                            <tr>
+                                                <td>{item.TokenId}</td>
+                                                <td>{item.name}</td>
+                                                <td>{item.quantity}</td>
+                                                <td>{item.budget}</td>
+                                                {/* <td>{item.time}</td> */}
+                                                <td>{new Intl.DateTimeFormat('en-US', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(item.start * 1000)}</td>
+                                                <td>{new Intl.DateTimeFormat('en-US', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(item.time * 1000)}</td>
                                                 <td>{item._address}</td>
                                                 <td>{item.description}</td>
                                                 <td id="button-tds">

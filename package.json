@@ -16,6 +16,8 @@
     "ethers": "^5.6.4",
     "file-system": "^2.2.2",
     "ipfs-http-client": "^55.0.0",
+    "moment": "^2.29.4",
+    "momentjs": "^2.0.0",
     "react": "^17.0.2",
     "react-bootstrap": "^2.6.0",
     "react-countdown": "^2.3.2",

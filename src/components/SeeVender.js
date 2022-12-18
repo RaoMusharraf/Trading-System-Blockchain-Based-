@@ -176,9 +176,9 @@ const AllRequests = (props) => {
                     <table class="table table-striped mtable">
                         <thead>
                             <tr>
-                                <th scope="col">Token#</th>
+                                <th scope="col">Tender#</th>
                                 <th scope="col">Price</th>
-                                <th scope="col">Delivery Time</th>
+                                {/* <th scope="col">Delivery Time</th> */}
                                 <th scope="col">Description</th>
                                 <th scope="col">Owner</th>
                                 <th scope="col"></th>
@@ -191,7 +191,8 @@ const AllRequests = (props) => {
                                         <tr>
                                             <td>{item.TokenId}</td>
                                             <td>{item.Price}</td>
-                                            <td>{item.Delivery}</td>
+                                            {/* <td>{new Intl.DateTimeFormat('en-US', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(item.Delivery * 1000)}</td> */}
+                                            {/* <td>{}</td> */}
                                             <td>{item.Description}</td>
                                             <td>{item.Owner}</td>
                                             <td id="button-tds">
@@ -214,9 +215,9 @@ const AllRequests = (props) => {
                     <table class="table table-striped mtable">
                         <thead>
                             <tr>
-                                <th scope="col">Token#</th>
+                                <th scope="col">Tender#</th>
                                 <th scope="col">Price</th>
-                                <th scope="col">Delivery Time</th>
+                                {/* <th scope="col">Delivery Time</th> */}
                                 <th scope="col">Description</th>
                                 <th scope="col">Owner</th>
                                 <th scope="col"></th>
@@ -229,7 +230,7 @@ const AllRequests = (props) => {
                                         <tr>
                                             <td>{item.TokenId}</td>
                                             <td>{item.Price}</td>
-                                            <td>{item.Delivery}</td>
+                                            {/* <td>{new Intl.DateTimeFormat('en-US', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(item.Delivery * 1000)}</td> */}
                                             <td>{item.Description}</td>
                                             <td>{item.Owner}</td>
                                             <td id="button-tds">
@@ -250,7 +251,7 @@ const AllRequests = (props) => {
                     <table class="table table-striped mtable">
                         <thead>
                             <tr>
-                                <th scope="col">Token#</th>
+                                <th scope="col">Tender#</th>
                                 <th scope="col">Price</th>
                                 <th scope="col">Delivery Time</th>
                                 <th scope="col">Description</th>
@@ -265,7 +266,7 @@ const AllRequests = (props) => {
                                         <tr>
                                             <td>{item.TokenId}</td>
                                             <td>{item.Price}</td>
-                                            <td>{item.Delivery}</td>
+                                            <td>{new Intl.DateTimeFormat('en-US', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(item.Delivery * 1000)}</td>
                                             <td>{item.Description}</td>
                                             <td>{item.Owner}</td>
                                             <td id="button-tds">

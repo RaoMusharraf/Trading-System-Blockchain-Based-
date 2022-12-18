@@ -62,11 +62,11 @@ const SeeTender = (props) => {
                         <th scope="col">Name</th>
                         <th scope="col">Quantity    </th>
                         <th scope="col">Budget</th>
-                        <th scope="col">Hours</th>
+                        <th scope="col">End Time</th>
                         <th scope="col">Address</th>
                         <th scope="col">Description</th>
                         <th scope="col">Owner</th>
-                        <th scope="col"></th>
+                        <th scope="col">APPLY</th>
                     </tr>
                 </thead>
                 <tbody id="tenders">
@@ -78,7 +78,7 @@ const SeeTender = (props) => {
                                     <td>{item.name}</td>
                                     <td>{item.quantity}</td>
                                     <td>{item.budget}</td>
-                                    <td>{item.time}</td>
+                                    <td>{new Intl.DateTimeFormat('en-US', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(item.time * 1000)}</td>
                                     <td>{item._address}</td>
                                     <td>{item.description}</td>
                                     <td>{item.owner}</td>
