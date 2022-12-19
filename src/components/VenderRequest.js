@@ -33,6 +33,7 @@ const CreateVender = (props) => {
             alert("Please fill all values!!!!!!!!!!!");
         } else {
             try {
+                console.log(localStorage.lToken, "localStorage.lToken", budget, "budget", description, "description", delivery, "delivery");
                 //set up your Ethereum transaction
                 const transactionParameters = {
                     to: auctionContract, // Required except during contract publications.
@@ -57,16 +58,16 @@ const CreateVender = (props) => {
                 }
             } catch (err) {
                 console.log(err);
-                setStatus("😢 Something went wrong while listing your NFT for auction");
+                setStatus("😢 Something went wrong while listing your Details .");
             }
         }
     }
-    // useEffect(() => {
-    //     let temp;
-    //     temp = localStorage.lToken
-    //     setTokenid(temp)
-    //     console.log(localStorage.lToken);
-    // }, [])
+    useEffect(() => {
+        let temp;
+        temp = localStorage.lToken
+        setTokenid(temp)
+        console.log(localStorage.lToken);
+    }, [])
     useEffect(async () => {
         if (trans != null) {
             if (trans.status) {

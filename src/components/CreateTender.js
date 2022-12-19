@@ -73,7 +73,7 @@ const CreateTender = (props) => {
                 }
             } catch (err) {
                 console.log(err);
-                setStatus("😢 Something went wrong while listing your NFT for auction");
+                setStatus("😢 Something went wrong while listing your Details .");
             }
         }
     }

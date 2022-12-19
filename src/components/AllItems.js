@@ -78,7 +78,8 @@ const SeeTender = (props) => {
                                     <td>{item.name}</td>
                                     <td>{item.quantity}</td>
                                     <td>{item.budget}</td>
-                                    <td>{new Intl.DateTimeFormat('en-US', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(item.time * 1000)}</td>
+                                    <td><Countdown date={item.time * 1000} /></td>
+                                    {/* <td>{new Intl.DateTimeFormat('en-US', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(item.time * 1000)}</td> */}
                                     <td>{item._address}</td>
                                     <td>{item.description}</td>
                                     <td>{item.owner}</td>
@@ -87,7 +88,7 @@ const SeeTender = (props) => {
                                             Tokentime[item.TokenId] == true ? <button id={item.TokenId} className="tender-req-btn" onClick={(e) => {
                                                 localStorage.lToken = e.target.id
                                                 navigate("/Vender_request")
-                                            }} > <Countdown date={item.time * 1000} /></button> : <p>END</p>
+                                            }} >APPLY</button> : <p>END</p>
                                         }
                                     </td>
 

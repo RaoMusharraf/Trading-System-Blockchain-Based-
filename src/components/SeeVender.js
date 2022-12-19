@@ -61,7 +61,7 @@ const AllRequests = (props) => {
 
         } catch (err) {
             console.log(err);
-            setStatus("😢 Something went wrong while listing your NFT for auction");
+            setStatus("😢 Something went wrong while Deleting your Details .");
         }
     }
     const getData = async () => {
@@ -87,9 +87,9 @@ const AllRequests = (props) => {
                         "TokenId": all_single[i].Token,
                         "Price": all_single[i].Price,
                         "Delivery": all_single[i].DeleveryTime,
-                        "Description": all_single[i].Description,
-                        "Owner": all_single[i].owner,
-                        "Flag": all_s
+                        "TenderDescription": all_ten.description,
+                        "TenderName": all_ten.name,
+                        "TenderAddress": all_ten._address
                     }
                     auctionData.push(auc_data);
                 } else if (!all_time && !all_s) {
@@ -98,8 +98,8 @@ const AllRequests = (props) => {
                         "Price": all_single[i].Price,
                         "Delivery": all_single[i].DeleveryTime,
                         "Description": all_single[i].Description,
-                        "Owner": all_single[i].owner,
-                        "Flag": all_s
+                        "TenderName": all_ten.name,
+                        "TenderAddress": all_ten._address
                     }
                     auctionData1.push(auc_data1);
                 } else {
@@ -108,9 +108,9 @@ const AllRequests = (props) => {
                         "Price": all_single[i].Price,
                         "Delivery": all_single[i].DeleveryTime,
                         "Description": all_single[i].Description,
-                        "Owner": all_single[i].owner,
-                        "Flag": all_s,
                         "TenderTime": all_ten.time,
+                        "TenderName": all_ten.name,
+                        "TenderAddress": all_ten._address
                     }
                     auctionData2.push(auc_data2);
                 }
@@ -179,11 +179,12 @@ const AllRequests = (props) => {
                         <thead>
                             <tr>
                                 <th scope="col">Tender#</th>
-                                <th scope="col">Price</th>
-                                <th scope="col">Delivery Time</th>
+                                <th scope="col">Tender Name</th>
+                                <th scope="col">Tender Address</th>
                                 <th scope="col">Description</th>
-                                {/* <th scope="col">Owner</th> */}
-                                <th scope="col"></th>
+                                <th scope="col">PRICE</th>
+                                <th scope="col">DELIVERED</th>
+                                <th scope="col">REMANING TIME</th>
                             </tr>
                         </thead>
                         <tbody id="tenders">
@@ -192,11 +193,11 @@ const AllRequests = (props) => {
                                     <>
                                         <tr>
                                             <td>{item.TokenId}</td>
+                                            <td>{item.TenderName}</td>
+                                            <td>{item.TenderAddress}</td>
+                                            <td>{item.TenderDescription}</td>
                                             <td>{item.Price}</td>
-                                            <td>{new Intl.DateTimeFormat('en-US', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(item.Delivery * 1000)}</td>
-                                            {/* <td>{}</td> */}
-                                            <td>{item.Description}</td>
-                                            {/* <td>{item.Owner}</td> */}
+                                            <td>{new Intl.DateTimeFormat('en-US', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(item.Delivery * 1000)}</td>
                                             <td id="button-tds">
                                                 {
                                                     Tokentime[item.TokenId] == true ? <button><Countdown date={item.Delivery * 1000} /></button> : <p>Done</p>
@@ -218,10 +219,10 @@ const AllRequests = (props) => {
                         <thead>
                             <tr>
                                 <th scope="col">Tender#</th>
+                                <th scope="col">Tender Name</th>
+                                <th scope="col">Tender Address</th>
                                 <th scope="col">Price</th>
-                                {/* <th scope="col">Delivery Time</th> */}
                                 <th scope="col">Description</th>
-                                {/* <th scope="col">Owner</th> */}
                                 <th scope="col"></th>
                             </tr>
                         </thead>
@@ -231,11 +232,10 @@ const AllRequests = (props) => {
                                     <>
                                         <tr>
                                             <td>{item.TokenId}</td>
+                                            <td>{item.TenderName}</td>
+                                            <td>{item.TenderAddress}</td>
                                             <td>{item.Price}</td>
-                                            {/* <td>{new Intl.DateTimeFormat('en-US', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(item.Delivery * 1000)}</td> */}
                                             <td>{item.Description}</td>
-
-                                            {/* <td>{item.Owner}</td> */}
                                             <td id="button-tds">
                                                 {
                                                     Invitation[item.TokenId] == false ? <p>Pending</p> : <p>Close</p>
@@ -255,11 +255,12 @@ const AllRequests = (props) => {
                         <thead>
                             <tr>
                                 <th scope="col">Tender#</th>
+                                <th scope="col">Tender Name</th>
+                                <th scope="col">Tender Address</th>
                                 <th scope="col">Price</th>
-                                {/* <th scope="col">Delivery Time</th> */}
                                 <th scope="col">Description</th>
                                 <th scope="col">End Time</th>
-                                <th scope="col"></th>
+                                <th scope="col">CANCEL!</th>
                             </tr>
                         </thead>
                         <tbody id="tenders">
@@ -268,8 +269,9 @@ const AllRequests = (props) => {
                                     <>
                                         <tr>
                                             <td>{item.TokenId}</td>
+                                            <td>{item.TenderName}</td>
+                                            <td>{item.TenderAddress}</td>
                                             <td>{item.Price}</td>
-                                            {/* <td>{new Intl.DateTimeFormat('en-US', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(item.Delivery * 1000)}</td> */}
                                             <td>{item.Description}</td>
                                             <td><Countdown date={item.TenderTime * 1000} /></td>
                                             <td id="button-tds">

@@ -221,9 +221,7 @@ const SeeTender = (props) => {
                                         <tr key={index}>
                                             <td>{index + 1}</td>
                                             <td>{item.Price}</td>
-                                            {/* console.log((Date.now() + (item.start * 60 * 1000))); */}
                                             <td>{new Intl.DateTimeFormat('en-US', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(Date.now())}</td>
-                                            {/* <td>{Date.now() + (item.DeleveryTime*1000)}</td> */}
                                             <td>{item.Description}</td>
                                             <td>{item.owner}</td>
                                             <td>
@@ -255,7 +253,7 @@ const SeeTender = (props) => {
                         <table class="table table-striped mtable">
                             <thead>
                                 <tr>
-                                    <th scope="col">Token#</th>
+                                    <th scope="col">TENDER#</th>
                                     <th scope="col">Name</th>
                                     <th scope="col">Quantity    </th>
                                     <th scope="col">Budget</th>
@@ -263,7 +261,7 @@ const SeeTender = (props) => {
                                     <th scope="col">End Time</th>
                                     <th scope="col">Address</th>
                                     <th scope="col">Description</th>
-                                    <th scope="col">Requests</th>
+                                    <th scope="col">REQUESTS!</th>
                                 </tr>
                             </thead>
                             <tbody id="tenders">
@@ -282,7 +280,7 @@ const SeeTender = (props) => {
                                                 <td id="button-tds">
                                                     {
                                                         Tokentime[item.TokenId] == false ? <button id={item.TokenId} onClick={(e) => handleShow(e.target.id)}>
-                                                            REQUESTS!
+                                                            REQUESTS
                                                         </button> :
                                                             <button><Countdown date={item.time * 1000} /></button>
                                                     }
@@ -301,14 +299,15 @@ const SeeTender = (props) => {
                         <table class="table table-striped mtable">
                             <thead>
                                 <tr>
-                                    <th scope="col">Token#</th>
+                                    <th scope="col">TENDER#</th>
                                     <th scope="col">Name</th>
-                                    <th scope="col">Quantity    </th>
-                                    <th scope="col">Budget</th>
-                                    <th scope="col">Create</th>
+                                    <th scope="col">Quantity</th>
+                                    <th scope="col">START</th>
+                                    <th scope="col">END</th>
                                     <th scope="col">Address</th>
                                     <th scope="col">Description</th>
-                                    <th scope="col">Requests</th>
+                                    <th scope="col">PAYMENT!</th>
+
                                 </tr>
                             </thead>
                             <tbody id="tenders">
@@ -319,14 +318,13 @@ const SeeTender = (props) => {
                                                 <td>{item.TokenId}</td>
                                                 <td>{item.name}</td>
                                                 <td>{item.quantity}</td>
-                                                <td>{item.budget}</td>
                                                 <td>{new Intl.DateTimeFormat('en-US', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(item.start * 1000)}</td>
                                                 <td>{new Intl.DateTimeFormat('en-US', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(item.time * 1000)}</td>
                                                 <td>{item._address}</td>
                                                 <td>{item.description}</td>
                                                 <td id="button-tds">
                                                     {
-                                                        DoneP[item.TokenId] == true ? <button id={item.TokenId} onClick={(e) => DonePay(e.target.id)}>Payment</button> : <p>Done</p>
+                                                        DoneP[item.TokenId] == true ? <button id={item.TokenId} onClick={(e) => DonePay(e.target.id)}>PAYMENT</button> : <p>COMPLETE</p>
                                                     }
                                                 </td>
 
@@ -343,12 +341,12 @@ const SeeTender = (props) => {
                         <table class="table table-striped mtable">
                             <thead>
                                 <tr>
-                                    <th scope="col">Tender#</th>
+                                    <th scope="col">TENDER#</th>
                                     <th scope="col">Price</th>
-                                    <th scope="col">Delivery Time</th>
+                                    <th scope="col">DELIVERED</th>
                                     <th scope="col">Description</th>
                                     <th scope="col">Owner</th>
-                                    <th scope="col"></th>
+                                    <th scope="col">SHIPPED!</th>
                                 </tr>
                             </thead>
                             <tbody id="tenders">
@@ -365,7 +363,7 @@ const SeeTender = (props) => {
                                                         <td>{item.owner}</td>
                                                         <td id="button-tds">
                                                             {
-                                                                DoneP[item.Token] == true ? <button><Countdown date={item.DeleveryTime * 1000} /></button> : <p>Done</p>
+                                                                DoneP[item.Token] == true ? <button><Countdown date={item.DeleveryTime * 1000} /></button> : <p>COMPLETE</p>
                                                             }
                                                         </td>
 
