@@ -3,7 +3,7 @@ import { connectWallet, getCurrentWalletConnected } from "../utils/interact.js";
 import Web3 from "web3";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-
+import Countdown from 'react-countdown';
 
 const SeeTender = (props) => {
 
@@ -11,7 +11,7 @@ const SeeTender = (props) => {
     const [walletAddress, setWallet] = useState("");
     const [status, setStatus] = useState("");
     const [auctionDetails, setAuctionDetails] = useState([]);
-    const [timer, setmushi] = useState("")
+    const [timer, setmushi] = useState("");
     const web3 = new Web3(window.ethereum);
 
     const contractAuctionABI = require('../abi/abi_tender.json');
@@ -87,7 +87,7 @@ const SeeTender = (props) => {
                                             Tokentime[item.TokenId] == true ? <button id={item.TokenId} className="tender-req-btn" onClick={(e) => {
                                                 localStorage.lToken = e.target.id
                                                 navigate("/Vender_request")
-                                            }} > Create</button> : <p>Close</p>
+                                            }} > <Countdown date={item.time * 1000} /></button> : <p>END</p>
                                         }
                                     </td>
 

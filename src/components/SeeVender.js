@@ -5,6 +5,7 @@ import Web3 from "web3";
 import Countdown from "react-countdown";
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
+// import Countdown from 'react-countdown';
 
 const { ethers } = require("ethers");
 
@@ -79,7 +80,7 @@ const AllRequests = (props) => {
             for (var i = 0; i < total; i++) {
                 let all_ten = await window.contract.methods.Total(all_single[i].Token).call();
                 let all_time = await window.contract.methods.CheckTime(all_single[i].Token).call();
-                console.log(all_time, "all_time", i);
+                console.log(all_ten, "all_ten");
                 let all_s = await window.contract.methods.Invite(all_ten.owner, all_single[i].Token, window.ethereum.selectedAddress).call();
                 if (!all_time && all_s) {
                     const auc_data = {
@@ -108,7 +109,8 @@ const AllRequests = (props) => {
                         "Delivery": all_single[i].DeleveryTime,
                         "Description": all_single[i].Description,
                         "Owner": all_single[i].owner,
-                        "Flag": all_s
+                        "Flag": all_s,
+                        "TenderTime": all_ten.time,
                     }
                     auctionData2.push(auc_data2);
                 }
@@ -178,9 +180,9 @@ const AllRequests = (props) => {
                             <tr>
                                 <th scope="col">Tender#</th>
                                 <th scope="col">Price</th>
-                                {/* <th scope="col">Delivery Time</th> */}
+                                <th scope="col">Delivery Time</th>
                                 <th scope="col">Description</th>
-                                <th scope="col">Owner</th>
+                                {/* <th scope="col">Owner</th> */}
                                 <th scope="col"></th>
                             </tr>
                         </thead>
@@ -191,13 +193,13 @@ const AllRequests = (props) => {
                                         <tr>
                                             <td>{item.TokenId}</td>
                                             <td>{item.Price}</td>
-                                            {/* <td>{new Intl.DateTimeFormat('en-US', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(item.Delivery * 1000)}</td> */}
+                                            <td>{new Intl.DateTimeFormat('en-US', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(item.Delivery * 1000)}</td>
                                             {/* <td>{}</td> */}
                                             <td>{item.Description}</td>
-                                            <td>{item.Owner}</td>
+                                            {/* <td>{item.Owner}</td> */}
                                             <td id="button-tds">
                                                 {
-                                                    Tokentime[item.TokenId] == true ? <p>Accepted</p> : <p>Done</p>
+                                                    Tokentime[item.TokenId] == true ? <button><Countdown date={item.Delivery * 1000} /></button> : <p>Done</p>
                                                 }
 
                                             </td>
@@ -219,7 +221,7 @@ const AllRequests = (props) => {
                                 <th scope="col">Price</th>
                                 {/* <th scope="col">Delivery Time</th> */}
                                 <th scope="col">Description</th>
-                                <th scope="col">Owner</th>
+                                {/* <th scope="col">Owner</th> */}
                                 <th scope="col"></th>
                             </tr>
                         </thead>
@@ -232,7 +234,8 @@ const AllRequests = (props) => {
                                             <td>{item.Price}</td>
                                             {/* <td>{new Intl.DateTimeFormat('en-US', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(item.Delivery * 1000)}</td> */}
                                             <td>{item.Description}</td>
-                                            <td>{item.Owner}</td>
+
+                                            {/* <td>{item.Owner}</td> */}
                                             <td id="button-tds">
                                                 {
                                                     Invitation[item.TokenId] == false ? <p>Pending</p> : <p>Close</p>
@@ -253,9 +256,9 @@ const AllRequests = (props) => {
                             <tr>
                                 <th scope="col">Tender#</th>
                                 <th scope="col">Price</th>
-                                <th scope="col">Delivery Time</th>
+                                {/* <th scope="col">Delivery Time</th> */}
                                 <th scope="col">Description</th>
-                                <th scope="col">Owner</th>
+                                <th scope="col">End Time</th>
                                 <th scope="col"></th>
                             </tr>
                         </thead>
@@ -266,9 +269,9 @@ const AllRequests = (props) => {
                                         <tr>
                                             <td>{item.TokenId}</td>
                                             <td>{item.Price}</td>
-                                            <td>{new Intl.DateTimeFormat('en-US', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(item.Delivery * 1000)}</td>
+                                            {/* <td>{new Intl.DateTimeFormat('en-US', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(item.Delivery * 1000)}</td> */}
                                             <td>{item.Description}</td>
-                                            <td>{item.Owner}</td>
+                                            <td><Countdown date={item.TenderTime * 1000} /></td>
                                             <td id="button-tds">
                                                 <button id={item.TokenId} onClick={(e) => onList(e.target.id)}>Cancel</button>
                                             </td>
