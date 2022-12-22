@@ -20,7 +20,7 @@ const CreateVender = (props) => {
     const auction_contractABI = require('../abi/abi_tender.json');
     window.contract = new web3.eth.Contract(auction_contractABI, auctionContract);
 
-    const navigate = useNavigate()
+    // const navigate = useNavigate()
     function timeout(delay) {
         return new Promise(res => setTimeout(res, delay));
     }
@@ -49,6 +49,8 @@ const CreateVender = (props) => {
                         method: 'eth_sendTransaction',
                         params: [transactionParameters],
                     });
+
+                localStorage.lToken = "";
                 setStatus("✅ Check out your transaction on Etherscan .");
                 for (let index = 0; index > -1; index++) {
                     var receipt = await web3.eth.getTransactionReceipt(txHash)
@@ -58,6 +60,7 @@ const CreateVender = (props) => {
                     }
                     await timeout(1000);
                     console.log("Hello");
+
                 }
             } catch (err) {
                 console.log(err);
@@ -68,9 +71,8 @@ const CreateVender = (props) => {
     }
     useEffect(() => {
         let temp;
-        temp = localStorage.lToken
-        setTokenid(temp)
-        console.log(localStorage.lToken);
+        temp = localStorage.lToken;
+        setTokenid(temp);
     }, [])
     useEffect(async () => {
         if (trans != null) {
@@ -79,9 +81,9 @@ const CreateVender = (props) => {
                 setTokenid("");
                 setDelivey("");
                 setStatus("");
-                setTransection("");
                 setBudget("");
-                // navigate("/bundle_auction");
+                setDescription("");
+                setTransection("");
             }
         }
     }, [trans]);
