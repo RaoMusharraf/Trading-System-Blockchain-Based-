@@ -178,8 +178,8 @@ const AllRequests = (props) => {
                     <table class="table table-striped mtable">
                         <thead>
                             <tr>
-                                <th scope="col">TENDER#</th>
-                                <th scope="col">TITLE</th>
+                                <th scope="col">TOKEN#</th>
+                                <th scope="col">TENDER</th>
                                 <th scope="col">ADDRESS</th>
                                 <th scope="col">DESCRIPTION</th>
                                 <th scope="col">PRICE</th>
@@ -218,8 +218,8 @@ const AllRequests = (props) => {
                     <table class="table table-striped mtable">
                         <thead>
                             <tr>
-                                <th scope="col">TENDER#</th>
-                                <th scope="col">TITLE</th>
+                                <th scope="col">TOKEN#</th>
+                                <th scope="col">TENDER</th>
                                 <th scope="col">ADDRESS</th>
                                 <th scope="col">PRICE</th>
                                 <th scope="col">DESCRIPTION</th>
@@ -254,8 +254,8 @@ const AllRequests = (props) => {
                     <table class="table table-striped mtable">
                         <thead>
                             <tr>
-                                <th scope="col">TENDER#</th>
-                                <th scope="col">TITLE</th>
+                                <th scope="col">TOKEN#</th>
+                                <th scope="col">TENDER</th>
                                 <th scope="col">ADDRESS</th>
                                 <th scope="col">PRICE</th>
                                 <th scope="col">DESCRIPTION</th>

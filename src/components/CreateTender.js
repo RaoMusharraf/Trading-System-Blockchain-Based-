@@ -100,7 +100,7 @@ const CreateTender = (props) => {
             }
             <div className="container createtender">
                 <form>
-                    <h2>Name</h2>
+                    <h2>TITLE</h2>
                     <input
                         type="text"
                         placeholder="Enter Tender Name"
@@ -118,7 +118,7 @@ const CreateTender = (props) => {
                         placeholder="Enter Budget (ETH)"
                         value={budget}
                         onChange={(event) => setBudget(event.target.value)} />
-                    <h2>Total Time</h2>
+                    <h2>Time</h2>
                     <input
                         type="text"
                         placeholder="Enter Ending Minutes"

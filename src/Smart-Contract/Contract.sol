@@ -3,6 +3,7 @@
 pragma solidity >=0.7.0 <0.9.0;
 
 import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
 
 /**
  * @title Storage
@@ -13,159 +14,283 @@ contract Storage {
     using Counters for Counters.Counter;
     Counters.Counter public TotalTender;
     Counters.Counter public TotalVender;
+    using Strings for uint256;
 
     address public Contract;
-    uint[] arrayName;
-    
+    uint256[] arrayName;
+
     struct Vender {
-        uint Token;
-        uint Price;
+        uint256 Token;
+        uint256 Price;
         string Description;
         address owner;
-        uint DeleveryTime;
-        uint rating;
+        uint256 DeleveryTime;
+        uint256 Delivered;
+        string ratAge;
+        string rating;
     }
     struct Tender {
-        uint TokenId;
+        uint256 TokenId;
         string name;
-        uint quantity;
-        uint budget;
-        uint time;
-        uint start;
+        uint256 quantity;
+        uint256 budget;
+        uint256 time;
+        uint256 start;
         string _address;
         string description;
         address owner;
     }
-    struct Accept{
-        uint tokenId;
+    struct Accept {
+        uint256 tokenId;
         address _address;
         bool check;
     }
-    struct Comm{
+    struct Comm {
         address receiver;
-        uint price;
+        uint256 price;
         bool done;
     }
     struct Days {
-        uint Delivered;
-        uint Total;
-        uint tender;
+        uint256 Delivered;
+        uint256 Total;
+        uint256 tender;
     }
-    mapping (address => uint) public Size;
-    mapping (address => mapping(uint => bool)) public Pending;
-    mapping (uint => uint) public SizeVender;
-    mapping (uint => Tender ) public Total;
-    mapping (uint => mapping(uint => Vender )) public Venders;
-    mapping (address => mapping(uint => bool)) public Ch; 
-    mapping (address => uint) public Requests;
-    mapping (address => Days) public DaysDetails;
-    mapping (uint => mapping(address => uint)) public Finder;
-    mapping (uint => mapping(address => Comm)) public Communication;
-    mapping (address => mapping(uint => mapping(address => bool))) public Invite;
-    mapping (address => mapping(uint => uint)) public RattingDetails;
-    mapping (address => uint) public accceptedReq;
-    
-    
-    constructor(){
+    mapping(address => uint256) public Size;
+    mapping(address => mapping(uint256 => bool)) public Pending;
+    mapping(uint256 => uint256) public SizeVender;
+    mapping(uint256 => Tender) public Total;
+    mapping(uint256 => mapping(uint256 => Vender)) public Venders;
+    mapping(address => mapping(uint256 => bool)) public Ch;
+    mapping(address => uint256) public Requests;
+    mapping(address => Days) public DaysDetails;
+    mapping(uint256 => mapping(address => uint256)) public Finder;
+    mapping(uint256 => mapping(address => Comm)) public Communication;
+    mapping(address => mapping(uint256 => mapping(address => bool)))
+        public Invite;
+    mapping(address => mapping(uint256 => uint256)) public RattingDetails;
+    mapping(address => uint256) public accceptedReq;
+
+    constructor() {
         Contract = address(this);
     }
-    function tender(string memory _name,uint _quantity,uint _budget,uint _time,string memory Address,string memory _description) public {
+
+    function tender(
+        string memory _name,
+        uint256 _quantity,
+        uint256 _budget,
+        uint256 _time,
+        string memory Address,
+        string memory _description
+    ) public {
         TotalTender.increment();
-        Size[msg.sender] += 1; 
-        Total[TotalTender.current()] = Tender(TotalTender.current(),_name,_quantity,_budget,_time,block.timestamp,Address,_description,msg.sender);
+        Size[msg.sender] += 1;
+        Total[TotalTender.current()] = Tender(
+            TotalTender.current(),
+            _name,
+            _quantity,
+            _budget,
+            block.timestamp + (_time * 60),
+            block.timestamp,
+            Address,
+            _description,
+            msg.sender
+        );
     }
-    function getTender(address _to) public view returns (Tender[] memory)  {
+
+    function getTender(address _to) public view returns (Tender[] memory) {
         Tender[] memory memoryArray = new Tender[](Size[_to]);
-        uint counter=0;
-        for(uint i = 1; i <= TotalTender.current(); i++) {
-            if(_to == Total[i].owner){
+        uint256 counter = 0;
+        for (uint256 i = 1; i <= TotalTender.current(); i++) {
+            if (_to == Total[i].owner) {
                 memoryArray[counter] = Total[i];
                 counter++;
-            }        
+            }
         }
         return memoryArray;
     }
-    function AllTender() public view returns (Tender[] memory)  {
+
+    function AllTender() public view returns (Tender[] memory) {
         Tender[] memory memoryArray = new Tender[](TotalTender.current());
-        uint counter=0;
-        for(uint i = 1; i <= TotalTender.current(); i++) {
+        uint256 counter = 0;
+        for (uint256 i = 1; i <= TotalTender.current(); i++) {
             memoryArray[counter] = Total[i];
-            counter++;    
+            counter++;
         }
         return memoryArray;
     }
-    function CheckTime(uint _token) public view returns (bool)  {
-        if(Total[_token].start + (Total[_token].time*60) <= block.timestamp){
+
+    function CheckTime(uint256 _token) public view returns (bool) {
+        if (Total[_token].time <= block.timestamp) {
             return false;
-        }
-        else{
+        } else {
             return true;
         }
     }
-    function vender(uint _token,uint _price,string memory _description,uint _deleveryTime) public {
-        require(!Ch[msg.sender][_token],"You Already Apply for this Request");
-        require(Total[_token].owner != msg.sender,"You are Owner of this Tender");
+
+    function vender(
+        uint256 _token,
+        uint256 _price,
+        string memory _description,
+        uint256 _delevered
+    ) public {
+        require(CheckTime(_token), "Time Out");
+        require(!Ch[msg.sender][_token], "You Already Apply for this Request");
+        require(
+            Total[_token].owner != msg.sender,
+            "You are Owner of this Tender"
+        );
         TotalVender.increment();
         Ch[msg.sender][_token] = true;
-        SizeVender[_token] += 1; 
-        Requests[msg.sender] += 1; 
+        SizeVender[_token] += 1;
+        Requests[msg.sender] += 1;
         Finder[_token][msg.sender] = TotalVender.current();
-        Venders[TotalVender.current()][_token] = Vender(_token,_price,_description,msg.sender,_deleveryTime,calRatting(msg.sender,Total[_token].budget,_price));
+        Venders[TotalVender.current()][_token] = Vender(
+            _token,
+            _price,
+            _description,
+            msg.sender,
+            0,
+            _delevered * 60,
+            calRatting(msg.sender, Total[_token].budget, _price),
+            RatAge(msg.sender)
+        );
     }
-    function AllVender(uint _token) public view returns (Vender[] memory)  {
+
+    function AllVender(uint256 _token) public view returns (Vender[] memory) {
         Vender[] memory memoryArray = new Vender[](SizeVender[_token]);
-        uint counter=0;
-        for(uint i = 1; i <= TotalVender.current(); i++) {
-            if(_token == Venders[i][_token].Token){
+        uint256 counter = 0;
+        for (uint256 i = 1; i <= TotalVender.current(); i++) {
+            if (_token == Venders[i][_token].Token) {
                 memoryArray[counter] = Venders[i][_token];
                 counter++;
-            }        
+            }
         }
         return memoryArray;
     }
-    function getVender(address _address) public view returns (Vender[] memory)  {
+
+    function getVender(address _address) public view returns (Vender[] memory) {
         Vender[] memory memoryArray = new Vender[](Requests[_address]);
-        uint counter=0;
-        for(uint i = 1; i <=   TotalTender.current(); i++) {
-            for(uint j = 1; j <= TotalVender.current(); j++){
-                if(_address == Venders[j][i].owner){
+        uint256 counter = 0;
+        for (uint256 i = 1; i <= TotalTender.current(); i++) {
+            for (uint256 j = 1; j <= TotalVender.current(); j++) {
+                if (_address == Venders[j][i].owner) {
                     memoryArray[counter] = Venders[j][i];
                     counter++;
-                } 
-            } 
+                }
+            }
         }
         return memoryArray;
     }
-    function DeleteVRequest(uint _token) public {
-        require(Ch[msg.sender][_token],"You canNot Delete");
+
+    function DeleteVRequest(uint256 _token) public {
+        require(Ch[msg.sender][_token], "You canNot Delete");
         Requests[msg.sender] -= 1;
-        SizeVender[_token] -= 1; 
+        SizeVender[_token] -= 1;
         Ch[msg.sender][_token] = false;
         delete Venders[Finder[_token][msg.sender]][_token];
         Finder[_token][msg.sender];
     }
-    function AcceptInvitation(uint _token,address _receiver,address _to,uint _price) public {
-        Communication[_token][_to] = Comm(_receiver,_price,true);
+
+    function AcceptInvitation(
+        uint256 _token,
+        address _receiver,
+        address _to,
+        uint256 _price
+    ) public {
+        Communication[_token][_to] = Comm(_receiver, _price, true);
         RattingDetails[_receiver][_token] = block.timestamp;
         Pending[_to][_token] = true;
+        Venders[Finder[_token][_receiver]][_token].DeleveryTime =
+            block.timestamp +
+            (Venders[Finder[_token][_receiver]][_token].Delivered);
         Invite[_to][_token][_receiver] = true;
     }
-    function Done(address _to,address from,uint tokenId) public payable {
-        require(Communication[tokenId][from].receiver == _to,"Please Sellect the correct Recepient");
-        require(Communication[tokenId][from].done,"You already payment");
-        DaysDetails[_to].Total += Venders[Finder[tokenId][_to]][tokenId].DeleveryTime;
-        DaysDetails[_to].Delivered += (block.timestamp - RattingDetails[_to][tokenId])/60;
+
+    function Done(
+        address _to,
+        address from,
+        uint256 tokenId
+    ) public payable {
+        require(
+            Communication[tokenId][from].receiver == _to,
+            "Please Sellect the correct Recepient"
+        );
+        require(Communication[tokenId][from].done, "You already payment");
+        DaysDetails[_to].Total += Venders[Finder[tokenId][_to]][tokenId]
+            .Delivered;
+        DaysDetails[_to].Delivered +=
+            (block.timestamp - RattingDetails[_to][tokenId]) /
+            60;
         DaysDetails[_to].tender += 1;
         accceptedReq[_to] += 1;
         Communication[tokenId][from].done = false;
         payable(_to).transfer(Communication[tokenId][from].price);
     }
-    function calRatting(address _to,uint ExactPrice,uint Price) public view returns(uint)  { 
-        if(accceptedReq[_to] == 0){
-            return (20 + Requests[_to] + ((ExactPrice*40)/Price));
+
+    function RatAge(address _to) public view returns (string memory result) {
+        uint256 factor = 10**1;
+        if (accceptedReq[_to] == 0) {
+            uint256 rating = (20 + Requests[_to]);
+            uint256 numerator = (rating * 5);
+            uint256 quotient = numerator / 100;
+            uint256 remainder = ((numerator * factor) / 100) % factor;
+            return
+                string(
+                    abi.encodePacked(
+                        quotient.toString(),
+                        ".",
+                        remainder.toString()
+                    )
+                );
+        } else {
+            uint256 rating = (((DaysDetails[_to].Total * 60) /
+                DaysDetails[_to].Delivered) +
+                ((accceptedReq[_to] * 40) / Requests[_to]));
+            uint256 numerator = (rating * 5);
+            uint256 quotient = numerator / 100;
+            uint256 remainder = ((numerator * factor) / 100) % factor;
+            return
+                string(
+                    abi.encodePacked(
+                        quotient.toString(),
+                        ".",
+                        remainder.toString()
+                    )
+                );
         }
-        else{
-            return (((DaysDetails[_to].Total*40)/DaysDetails[_to].Delivered) + ((accceptedReq[_to]*20)/Requests[_to]) + ((ExactPrice*40)/Price));
+    }
+
+    function calRatting(
+        address _to,
+        uint256 ExactPrice,
+        uint256 Price
+    ) public view returns (string memory result) {
+        uint256 factor = 10**3;
+        if (accceptedReq[_to] == 0) {
+            uint256 quotient = (20 + Requests[_to]);
+            uint256 remainder = Price % factor;
+            return
+                string(
+                    abi.encodePacked(
+                        quotient.toString(),
+                        ".",
+                        remainder.toString()
+                    )
+                );
+        } else {
+            uint256 quotient = (((DaysDetails[_to].Total * 40) /
+                DaysDetails[_to].Delivered) +
+                ((accceptedReq[_to] * 20) / Requests[_to]) +
+                ((ExactPrice * 40) / Price));
+            uint256 remainder = Price % factor;
+            return
+                string(
+                    abi.encodePacked(
+                        quotient.toString(),
+                        ".",
+                        remainder.toString()
+                    )
+                );
         }
     }
 }

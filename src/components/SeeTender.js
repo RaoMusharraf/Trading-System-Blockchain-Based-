@@ -32,7 +32,7 @@ const SeeTender = (props) => {
     const handleShow = async (TokenId) => {
         setShow(true);
         const all_s = await window.contract.methods.AllVender(TokenId).call();
-        const clonedArr = [...all_s].sort((a, b) => a.ratAge > b.ratAge ? 1 : -1,);
+        const clonedArr = [...all_s].sort((a, b) => a.Price - b.Price);
         console.log(clonedArr, "clonedArr");
         setAllrequests(clonedArr)
     };
@@ -251,8 +251,8 @@ const SeeTender = (props) => {
                         <table class="table table-striped mtable">
                             <thead>
                                 <tr>
-                                    <th scope="col">TENDER#</th>
-                                    <th scope="col">NAME</th>
+                                    <th scope="col">TOKEN#</th>
+                                    <th scope="col">TENDER</th>
                                     <th scope="col">QUANTITY</th>
                                     <th scope="col">BUDGET</th>
                                     <th scope="col">START</th>
@@ -301,8 +301,8 @@ const SeeTender = (props) => {
                         <table class="table table-striped mtable">
                             <thead>
                                 <tr>
-                                    <th scope="col">TENDER#</th>
-                                    <th scope="col">NAME</th>
+                                    <th scope="col">TOKEN#</th>
+                                    <th scope="col">TENDER</th>
                                     <th scope="col">QUANTITY</th>
                                     <th scope="col">START</th>
                                     <th scope="col">END</th>
@@ -343,7 +343,7 @@ const SeeTender = (props) => {
                         <table class="table table-striped mtable">
                             <thead>
                                 <tr>
-                                    <th scope="col">TENDER#</th>
+                                    <th scope="col">TOKEN#</th>
                                     <th scope="col">PRICE</th>
                                     <th scope="col">DELIVERED</th>
                                     <th scope="col">DESCRIPTION</th>

@@ -60,8 +60,8 @@ const SeeTender = (props) => {
             <table class="table table-striped mtable all-items">
                 <thead>
                     <tr>
-                        <th scope="col">TENDER#</th>
-                        <th scope="col">NAME</th>
+                        <th scope="col">TOKEN#</th>
+                        <th scope="col">TENDER</th>
                         <th scope="col">QUANTITY</th>
                         <th scope="col">BUDGET</th>
                         <th scope="col">END</th>

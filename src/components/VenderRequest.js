@@ -76,7 +76,12 @@ const CreateVender = (props) => {
         if (trans != null) {
             if (trans.status) {
                 setLoadingState(false)
-                navigate("/bundle_auction");
+                setTokenid("");
+                setDelivey("");
+                setStatus("");
+                setTransection("");
+                setBudget("");
+                // navigate("/bundle_auction");
             }
         }
     }, [trans]);
@@ -90,21 +95,30 @@ const CreateVender = (props) => {
             }
             <div className="container createtender">
                 <form>
+                    <h2>TOKEN</h2>
+                    <input
+                        type="text"
+                        placeholder="Enter Token"
+                        value={Token}
+                        onChange={(event) => setTokenid(event.target.value)} />
                     <h2>Price</h2>
                     <input
                         type="text"
                         placeholder="Enter Price"
+                        value={budget}
                         onChange={(event) => setBudget(event.target.value)} />
                     <h2>Delivery</h2>
                     <input
                         type="text"
-                        placeholder="Enter Days"
+                        placeholder="Enter Minutes"
+                        value={delivery}
                         onChange={(event) => setDelivey(event.target.value)} />
                     <h2>Description</h2>
                     <textarea
                         rows={3}
                         type="text"
                         placeholder="Enter Description"
+                        value={description}
                         onChange={(event) => setDescription(event.target.value)} />
                 </form>
                 <br />

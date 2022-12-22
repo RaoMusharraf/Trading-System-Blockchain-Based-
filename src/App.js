@@ -6,7 +6,7 @@ import AllItems from './components/AllItems';
 import CreateVender from './components/VenderRequest';
 // import Feedback from './components/Feedback';
 // import Payment from './components/Payment';
-import { BrowserRouter as Router, Route, Link, Switch, NavLink, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Link, Switch, NavLink, Routes, useRouteLoaderData } from "react-router-dom";
 import logo from './lilfrens-logo.png';
 import 'bootstrap/dist/css/bootstrap.min.css';
 // import AllRequests from './components/Allrequests';
@@ -32,6 +32,7 @@ function App() {
       window.ethereum.on("accountsChanged", (accounts) => {
         if (accounts.length > 0) {
           setWallet(accounts[0]);
+          window.location.reload()
           //setStatus("👆🏽 Write a message in the text-field above.");
         } else {
           setWallet("");
@@ -73,6 +74,7 @@ function App() {
           <NavLink to="/see-tender">See Tender</NavLink>
           <NavLink to="/">All Tenders</NavLink>
           <NavLink to="/bundle_auction">Vender Requests</NavLink>
+          <NavLink to="/Vender_request">Create Vender</NavLink>
           <button id="walletButton" onClick={connectWalletPressed}>
             {walletAddress.length > 0 ? (
               "Connected: " +
@@ -93,8 +95,6 @@ function App() {
         <Route path='/bundle_auction' element={<SeeVender />}></Route>
         <Route path='/see-tender' element={<SeeTender />}></Route>
         <Route path='/Vender_request' element={<CreateVender />}></Route>
-        {/* <Route path='/Feedback' element={<Feedback />}></Route>
-        <Route path='/Payment' element={<Payment />}></Route> */}
       </Routes>
 
     </>
