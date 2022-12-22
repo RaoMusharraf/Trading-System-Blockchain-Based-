@@ -125,7 +125,7 @@
 			},
 			{
 				"internalType": "uint256",
-				"name": "_deleveryTime",
+				"name": "_delevered",
 				"type": "uint256"
 			}
 		],
@@ -252,8 +252,18 @@
 					},
 					{
 						"internalType": "uint256",
-						"name": "rating",
+						"name": "Delivered",
 						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "ratAge",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "rating",
+						"type": "string"
 					}
 				],
 				"internalType": "struct Storage.Vender[]",
@@ -285,9 +295,9 @@
 		"name": "calRatting",
 		"outputs": [
 			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
+				"internalType": "string",
+				"name": "result",
+				"type": "string"
 			}
 		],
 		"stateMutability": "view",
@@ -541,8 +551,18 @@
 					},
 					{
 						"internalType": "uint256",
-						"name": "rating",
+						"name": "Delivered",
 						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "ratAge",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "rating",
+						"type": "string"
 					}
 				],
 				"internalType": "struct Storage.Vender[]",
@@ -601,6 +621,25 @@
 				"internalType": "bool",
 				"name": "",
 				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_to",
+				"type": "address"
+			}
+		],
+		"name": "RatAge",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "result",
+				"type": "string"
 			}
 		],
 		"stateMutability": "view",
@@ -814,8 +853,18 @@
 			},
 			{
 				"internalType": "uint256",
-				"name": "rating",
+				"name": "Delivered",
 				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "ratAge",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "rating",
+				"type": "string"
 			}
 		],
 		"stateMutability": "view",

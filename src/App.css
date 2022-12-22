@@ -189,3 +189,49 @@ ul.nav.nav-tabs {
 html {
   height: 100%;
 }
+
+.loader-wrao {
+  align-items: center;
+  background: #0000008c;
+  display: flex;
+  height: 100vh !important;
+  justify-content: center;
+  position: absolute;
+  text-align: center;
+  visibility: hidden;
+  width: 100% !important;
+  z-index: 99999;
+  position: absolute;
+  top: 0 !important;
+  bottom: 0;
+}
+
+.loader {
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+  border: 16px solid #F3F3F3;
+  border-radius: 50%;
+  border-top-color: #3498DB;
+  height: 120px;
+  width: 120px;
+}
+
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}

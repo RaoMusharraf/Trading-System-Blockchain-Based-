@@ -7,6 +7,7 @@ const { ethers } = require("ethers");
 
 const CreateVender = (props) => {
 
+    const [loadingState, setLoadingState] = useState(false);
     const [Token, setTokenid] = useState("");
     const [delivery, setDelivey] = useState("");
     const [status, setStatus] = useState("");
@@ -32,7 +33,9 @@ const CreateVender = (props) => {
             setStatus("Please fill all values!!!!!!!!!!!");
             alert("Please fill all values!!!!!!!!!!!");
         } else {
+
             try {
+                setLoadingState(true)
                 console.log(localStorage.lToken, "localStorage.lToken", budget, "budget", description, "description", delivery, "delivery");
                 //set up your Ethereum transaction
                 const transactionParameters = {
@@ -46,7 +49,7 @@ const CreateVender = (props) => {
                         method: 'eth_sendTransaction',
                         params: [transactionParameters],
                     });
-                setStatus("✅ Check out your transaction on Etherscan: https://etherscan.io/tx/" + txHash);
+                setStatus("✅ Check out your transaction on Etherscan .");
                 for (let index = 0; index > -1; index++) {
                     var receipt = await web3.eth.getTransactionReceipt(txHash)
                     if (receipt != null) {
@@ -59,6 +62,7 @@ const CreateVender = (props) => {
             } catch (err) {
                 console.log(err);
                 setStatus("😢 Something went wrong while listing your Details .");
+                setLoadingState(false)
             }
         }
     }
@@ -71,38 +75,47 @@ const CreateVender = (props) => {
     useEffect(async () => {
         if (trans != null) {
             if (trans.status) {
+                setLoadingState(false)
                 navigate("/bundle_auction");
             }
         }
     }, [trans]);
     return (
-        <div className="container createtender">
-            <form>
-                <h2>Price</h2>
-                <input
-                    type="text"
-                    placeholder="Enter Price"
-                    onChange={(event) => setBudget(event.target.value)} />
-                <h2>Delivery</h2>
-                <input
-                    type="text"
-                    placeholder="Enter Days"
-                    onChange={(event) => setDelivey(event.target.value)} />
-                <h2>Description</h2>
-                <textarea
-                    rows={3}
-                    type="text"
-                    placeholder="Enter Description"
-                    onChange={(event) => setDescription(event.target.value)} />
-            </form>
-            <br />
-            <button id="list" onClick={() => onList(budget, description, delivery)}>
-                List
-            </button>
-            <p id="status">
-                {status}
-            </p>
-        </div>
+        <>
+            {
+                loadingState ? (
+                    <div className="loader-wrao" style={{ visibility: "visible" }} >
+                        <div className="loader"></div>
+                    </div >) : <></>
+            }
+            <div className="container createtender">
+                <form>
+                    <h2>Price</h2>
+                    <input
+                        type="text"
+                        placeholder="Enter Price"
+                        onChange={(event) => setBudget(event.target.value)} />
+                    <h2>Delivery</h2>
+                    <input
+                        type="text"
+                        placeholder="Enter Days"
+                        onChange={(event) => setDelivey(event.target.value)} />
+                    <h2>Description</h2>
+                    <textarea
+                        rows={3}
+                        type="text"
+                        placeholder="Enter Description"
+                        onChange={(event) => setDescription(event.target.value)} />
+                </form>
+                <br />
+                <button id="list" onClick={() => onList(budget, description, delivery)}>
+                    List
+                </button>
+                <p id="status">
+                    {status}
+                </p>
+            </div>
+        </>
     );
 };
 

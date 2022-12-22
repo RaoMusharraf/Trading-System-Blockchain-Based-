@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { connectWallet, getCurrentWalletConnected } from "../utils/interact.js";
 import Web3 from "web3";
-import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import Countdown from 'react-countdown';
 
@@ -26,6 +25,8 @@ const SeeTender = (props) => {
     }, []);
 
     const getData = async () => {
+        console.log("get DATA function call");
+
         try {
             window.contract = await new web3.eth.Contract(contractAuctionABI, auctionContract);
             const all_single = await window.contract.methods.AllTender().call();
@@ -37,6 +38,7 @@ const SeeTender = (props) => {
         }
     };
     const getTime = async () => {
+
         console.log(auctionDetails);
         window.contract = await new web3.eth.Contract(contractAuctionABI, auctionContract);
         auctionDetails.map(async (item, index) => {
@@ -58,19 +60,20 @@ const SeeTender = (props) => {
             <table class="table table-striped mtable all-items">
                 <thead>
                     <tr>
-                        <th scope="col">Token#</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Quantity    </th>
-                        <th scope="col">Budget</th>
-                        <th scope="col">End Time</th>
-                        <th scope="col">Address</th>
-                        <th scope="col">Description</th>
-                        <th scope="col">Owner</th>
-                        <th scope="col">APPLY</th>
+                        <th scope="col">TENDER#</th>
+                        <th scope="col">NAME</th>
+                        <th scope="col">QUANTITY</th>
+                        <th scope="col">BUDGET</th>
+                        <th scope="col">END</th>
+                        <th scope="col">ADDRESS</th>
+                        <th scope="col">DESCRIPTION</th>
+                        <th scope="col">OWNER</th>
+                        <th scope="col">APPLY!</th>
                     </tr>
                 </thead>
                 <tbody id="tenders">
                     {auctionDetails.map((item, index) => {
+                        let updtime = Number(item.time) + 10;
                         return (
                             <>
                                 <tr>
@@ -78,8 +81,10 @@ const SeeTender = (props) => {
                                     <td>{item.name}</td>
                                     <td>{item.quantity}</td>
                                     <td>{item.budget}</td>
-                                    <td><Countdown date={item.time * 1000} /></td>
-                                    {/* <td>{new Intl.DateTimeFormat('en-US', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(item.time * 1000)}</td> */}
+                                    <td><Countdown date={updtime * 1000} onComplete={() => {
+                                        getData()
+                                    }
+                                    } /></td>
                                     <td>{item._address}</td>
                                     <td>{item.description}</td>
                                     <td>{item.owner}</td>

@@ -178,13 +178,13 @@ const AllRequests = (props) => {
                     <table class="table table-striped mtable">
                         <thead>
                             <tr>
-                                <th scope="col">Tender#</th>
-                                <th scope="col">Tender Name</th>
-                                <th scope="col">Tender Address</th>
-                                <th scope="col">Description</th>
+                                <th scope="col">TENDER#</th>
+                                <th scope="col">TITLE</th>
+                                <th scope="col">ADDRESS</th>
+                                <th scope="col">DESCRIPTION</th>
                                 <th scope="col">PRICE</th>
                                 <th scope="col">DELIVERED</th>
-                                <th scope="col">REMANING TIME</th>
+                                <th scope="col">REMANING!</th>
                             </tr>
                         </thead>
                         <tbody id="tenders">
@@ -218,11 +218,11 @@ const AllRequests = (props) => {
                     <table class="table table-striped mtable">
                         <thead>
                             <tr>
-                                <th scope="col">Tender#</th>
-                                <th scope="col">Tender Name</th>
-                                <th scope="col">Tender Address</th>
-                                <th scope="col">Price</th>
-                                <th scope="col">Description</th>
+                                <th scope="col">TENDER#</th>
+                                <th scope="col">TITLE</th>
+                                <th scope="col">ADDRESS</th>
+                                <th scope="col">PRICE</th>
+                                <th scope="col">DESCRIPTION</th>
                                 <th scope="col"></th>
                             </tr>
                         </thead>
@@ -254,12 +254,12 @@ const AllRequests = (props) => {
                     <table class="table table-striped mtable">
                         <thead>
                             <tr>
-                                <th scope="col">Tender#</th>
-                                <th scope="col">Tender Name</th>
-                                <th scope="col">Tender Address</th>
-                                <th scope="col">Price</th>
-                                <th scope="col">Description</th>
-                                <th scope="col">End Time</th>
+                                <th scope="col">TENDER#</th>
+                                <th scope="col">TITLE</th>
+                                <th scope="col">ADDRESS</th>
+                                <th scope="col">PRICE</th>
+                                <th scope="col">DESCRIPTION</th>
+                                <th scope="col">END</th>
                                 <th scope="col">CANCEL!</th>
                             </tr>
                         </thead>

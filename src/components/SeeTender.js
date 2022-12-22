@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react";
 import { connectWallet, getCurrentWalletConnected } from "../utils/interact.js";
 import Web3 from "web3";
-import { Link } from "react-router-dom";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
-import { moment } from "moment";
 import Countdown from 'react-countdown';
 
 //const { Web3Auth } = require("@web3auth/modal")
@@ -33,10 +31,9 @@ const SeeTender = (props) => {
     const handleClose = () => setShow(false);
     const handleShow = async (TokenId) => {
         setShow(true);
-        console.log(TokenId, "TokenId");
         const all_s = await window.contract.methods.AllVender(TokenId).call();
-        console.log(all_s, "alllll");
-        const clonedArr = [...all_s].sort((a, b) => b.rating - a.rating);
+        const clonedArr = [...all_s].sort((a, b) => a.ratAge > b.ratAge ? 1 : -1,);
+        console.log(clonedArr, "clonedArr");
         setAllrequests(clonedArr)
     };
     function timeout(delay) {
@@ -48,8 +45,6 @@ const SeeTender = (props) => {
         getData();
     }, []);
     const getData = async () => {
-
-
         try {
             await timeout(626);
             console.log(window.ethereum.selectedAddress);
@@ -71,9 +66,7 @@ const SeeTender = (props) => {
                 else {
                     auctionData1.push(all_single[i]);
                     const Communication = await window.contract.methods.Communication(all_single[i].TokenId, window.ethereum.selectedAddress).call();
-                    console.log(Communication, "Communication");
                     const Finder = await window.contract.methods.Finder(all_single[i].TokenId, Communication.receiver).call();
-                    console.log(Finder, "Finder");
                     const VenderReq = await window.contract.methods.Venders(Finder, all_single[i].TokenId).call();
                     auctionData2.push(VenderReq);
                 }
@@ -207,23 +200,28 @@ const SeeTender = (props) => {
                         <thead>
                             <tr>
                                 <th scope="col">S#</th>
-                                <th scope="col">Price</th>
-                                <th scope="col">Deliver Time</th>
-                                <th scope="col">Description </th>
-                                <th scope="col">Owner</th>
-                                <th scope="col">Approve</th>
+                                <th scope="col">PRICE</th>
+                                <th scope="col">DELIVERED</th>
+                                <th scope="col">DESCRIPTION</th>
+                                <th scope="col">OWNER</th>
+                                <th scope="col">RATING</th>
+                                <th scope="col">APPROVE!</th>
                             </tr>
                         </thead>
                         <tbody id="tenders">
+                            {console.log(Allrequests, "Allrequests")}
                             {Allrequests.map((item, index) => {
+                                let updtime = Number(Date.now() + (item.Delivered * 1000));
                                 return (
                                     <>
                                         <tr key={index}>
                                             <td>{index + 1}</td>
                                             <td>{item.Price}</td>
-                                            <td>{new Intl.DateTimeFormat('en-US', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(Date.now())}</td>
+                                            <td>{new Intl.DateTimeFormat('en-US', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(updtime)}</td>
                                             <td>{item.Description}</td>
                                             <td>{item.owner}</td>
+                                            <td>{item.rating}</td>
+
                                             <td>
                                                 <button id={item} onClick={(e) => invitation(e.target.id)}>
                                                     Accept
@@ -254,18 +252,19 @@ const SeeTender = (props) => {
                             <thead>
                                 <tr>
                                     <th scope="col">TENDER#</th>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Quantity    </th>
-                                    <th scope="col">Budget</th>
-                                    <th scope="col">Start Time</th>
-                                    <th scope="col">End Time</th>
-                                    <th scope="col">Address</th>
-                                    <th scope="col">Description</th>
+                                    <th scope="col">NAME</th>
+                                    <th scope="col">QUANTITY</th>
+                                    <th scope="col">BUDGET</th>
+                                    <th scope="col">START</th>
+                                    <th scope="col">END</th>
+                                    <th scope="col">ADDRESS</th>
+                                    <th scope="col">DESCRIPTION</th>
                                     <th scope="col">REQUESTS!</th>
                                 </tr>
                             </thead>
                             <tbody id="tenders">
                                 {auctionDetails.map((item, index) => {
+                                    let updt = Number(item.time) + 10;
                                     return (
                                         <>
                                             <tr>
@@ -282,7 +281,10 @@ const SeeTender = (props) => {
                                                         Tokentime[item.TokenId] == false ? <button id={item.TokenId} onClick={(e) => handleShow(e.target.id)}>
                                                             REQUESTS
                                                         </button> :
-                                                            <button><Countdown date={item.time * 1000} /></button>
+                                                            <button><Countdown date={updt * 1000} onComplete={() => {
+                                                                getData()
+                                                            }
+                                                            } /></button>
                                                     }
                                                 </td>
 
@@ -300,12 +302,12 @@ const SeeTender = (props) => {
                             <thead>
                                 <tr>
                                     <th scope="col">TENDER#</th>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Quantity</th>
+                                    <th scope="col">NAME</th>
+                                    <th scope="col">QUANTITY</th>
                                     <th scope="col">START</th>
                                     <th scope="col">END</th>
-                                    <th scope="col">Address</th>
-                                    <th scope="col">Description</th>
+                                    <th scope="col">ADDRESS</th>
+                                    <th scope="col">DESCRIPTION</th>
                                     <th scope="col">PAYMENT!</th>
 
                                 </tr>
@@ -342,10 +344,10 @@ const SeeTender = (props) => {
                             <thead>
                                 <tr>
                                     <th scope="col">TENDER#</th>
-                                    <th scope="col">Price</th>
+                                    <th scope="col">PRICE</th>
                                     <th scope="col">DELIVERED</th>
-                                    <th scope="col">Description</th>
-                                    <th scope="col">Owner</th>
+                                    <th scope="col">DESCRIPTION</th>
+                                    <th scope="col">OWNER</th>
                                     <th scope="col">SHIPPED!</th>
                                 </tr>
                             </thead>
