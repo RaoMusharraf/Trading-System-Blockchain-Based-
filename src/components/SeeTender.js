@@ -7,7 +7,6 @@ import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import Countdown from 'react-countdown';
 
-//const { Web3Auth } = require("@web3auth/modal")
 
 const SeeTender = (props) => {
 

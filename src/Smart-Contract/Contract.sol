@@ -18,7 +18,13 @@ contract Storage {
 
     address public Contract;
     uint256[] arrayName;
-
+    struct Sign {
+        string name;
+        string email;
+        address _address;
+        bool Up;
+        bool InOut;
+    }
     struct Vender {
         uint256 Token;
         uint256 Price;
@@ -69,9 +75,29 @@ contract Storage {
         public Invite;
     mapping(address => mapping(uint256 => uint256)) public RattingDetails;
     mapping(address => uint256) public accceptedReq;
+    mapping(address => Sign) public Signer;
 
     constructor() {
         Contract = address(this);
+    }
+
+    function SignUp(
+        string memory name,
+        string memory email,
+        address _address
+    ) public {
+        Signer[_address] = Sign(name, email, _address, true, false);
+    }
+
+    function SignIn(address _address) public {
+        require(Signer[_address].Up, "Please SignUp First");
+        require(!Signer[_address].InOut, "You Already Sign In");
+        Signer[_address].InOut = true;
+    }
+
+    function SignOut(address _address) public {
+        require(Signer[_address].InOut, "Please You Already Sign Out");
+        Signer[_address].InOut = false;
     }
 
     function tender(

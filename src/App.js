@@ -1,39 +1,40 @@
 import './App.css';
+import Web3 from "web3";
+import Modal from 'react-bootstrap/Modal';
 import CreateTender from './components/CreateTender';
 import SeeVender from './components/SeeVender';
 import SeeTender from './components/SeeTender';
 import AllItems from './components/AllItems';
 import CreateVender from './components/VenderRequest';
-// import Feedback from './components/Feedback';
-// import Payment from './components/Payment';
 import { BrowserRouter as Router, Route, Link, Switch, NavLink, Routes, useRouteLoaderData } from "react-router-dom";
 import logo from './lilfrens-logo.png';
 import 'bootstrap/dist/css/bootstrap.min.css';
-// import AllRequests from './components/Allrequests';
 import { connectWallet, getCurrentWalletConnected } from "./utils/interact";
 import { useEffect, useState } from 'react';
 
-
-
 function App() {
-  const [Tokentime, setTokentime] = useState({})
+
   const [walletAddress, setWallet] = useState("");
+  // const [Tokentime, setTokentime] = useState({});
   const [status, setStatus] = useState("");
-  const [auctionDetails, setAuctionDetails] = useState([]);
-  const [timer, setmushi] = useState("")
+  // const [auctionDetails, setAuctionDetails] = useState([]);
+  // const [timer, setmushi] = useState("");
+  // const web3 = new Web3(window.ethereum);
+  // const auctionContract = process.env.REACT_APP_CONTRACT;
+  // const contractAuctionABI = require('../abi/abi_tender.json');
+  // window.contract = new web3.eth.Contract(contractAuctionABI, auctionContract);
 
   const connectWalletPressed = async () => {
     const walletResponse = await connectWallet();
     setStatus(walletResponse.status);
     setWallet(walletResponse.address);
   };
-  function addWalletListener() {
+  const addWalletListener = async () => {
     if (window.ethereum) {
       window.ethereum.on("accountsChanged", (accounts) => {
         if (accounts.length > 0) {
           setWallet(accounts[0]);
-          window.location.reload()
-          //setStatus("👆🏽 Write a message in the text-field above.");
+          window.location.reload();
         } else {
           setWallet("");
           setStatus("🦊 Connect to Metamask using the top right button.");
@@ -51,18 +52,16 @@ function App() {
         </p>
       );
     }
-  }
+  };
   useEffect(async () => {
     const { address, status } = await getCurrentWalletConnected();
     setWallet(address);
     setStatus(status);
-
     addWalletListener();
   }, []);
   return (
 
     <>
-
       <div class="topnav">
         <div>
           <h1 id="title" style={{ textAlign: 'center' }}>
@@ -96,7 +95,6 @@ function App() {
         <Route path='/see-tender' element={<SeeTender />}></Route>
         <Route path='/Vender_request' element={<CreateVender />}></Route>
       </Routes>
-
     </>
   );
 }

@@ -36,12 +36,12 @@ const CreateVender = (props) => {
 
             try {
                 setLoadingState(true)
-                console.log(localStorage.lToken, "localStorage.lToken", budget, "budget", description, "description", delivery, "delivery");
+                // console.log(Token, "localStorage.lToken", budget, "budget", description, "description", delivery, "delivery");
                 //set up your Ethereum transaction
                 const transactionParameters = {
                     to: auctionContract, // Required except during contract publications.
                     from: window.ethereum.selectedAddress, // must match user's active address.
-                    'data': window.contract.methods.vender(localStorage.lToken, budget, description, delivery).encodeABI()//make call to NFT smart contract
+                    'data': window.contract.methods.vender(Token, budget, description, delivery).encodeABI()//make call to NFT smart contract
                 };
                 //sign the transaction via Metamask
                 const txHash = await window.ethereum
