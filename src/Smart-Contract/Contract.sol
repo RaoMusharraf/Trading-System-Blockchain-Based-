@@ -15,7 +15,6 @@ contract Storage {
     Counters.Counter public TotalTender;
     Counters.Counter public TotalVender;
     using Strings for uint256;
-
     address public Contract;
     uint256[] arrayName;
     struct Sign {
@@ -32,7 +31,6 @@ contract Storage {
         address owner;
         uint256 DeleveryTime;
         uint256 Delivered;
-        string ratAge;
         string rating;
     }
     struct Tender {
@@ -177,7 +175,6 @@ contract Storage {
             msg.sender,
             0,
             _delevered * 60,
-            calRatting(msg.sender, Total[_token].budget, _price),
             RatAge(msg.sender)
         );
     }
@@ -242,8 +239,9 @@ contract Storage {
             "Please Sellect the correct Recepient"
         );
         require(Communication[tokenId][from].done, "You already payment");
-        DaysDetails[_to].Total += Venders[Finder[tokenId][_to]][tokenId]
-            .Delivered;
+        DaysDetails[_to].Total +=
+            Venders[Finder[tokenId][_to]][tokenId].Delivered /
+            60;
         DaysDetails[_to].Delivered +=
             (block.timestamp - RattingDetails[_to][tokenId]) /
             60;
@@ -286,37 +284,19 @@ contract Storage {
         }
     }
 
-    function calRatting(
-        address _to,
-        uint256 ExactPrice,
-        uint256 Price
-    ) public view returns (string memory result) {
-        uint256 factor = 10**3;
-        if (accceptedReq[_to] == 0) {
-            uint256 quotient = (20 + Requests[_to]);
-            uint256 remainder = Price % factor;
-            return
-                string(
-                    abi.encodePacked(
-                        quotient.toString(),
-                        ".",
-                        remainder.toString()
-                    )
-                );
-        } else {
-            uint256 quotient = (((DaysDetails[_to].Total * 40) /
-                DaysDetails[_to].Delivered) +
-                ((accceptedReq[_to] * 20) / Requests[_to]) +
-                ((ExactPrice * 40) / Price));
-            uint256 remainder = Price % factor;
-            return
-                string(
-                    abi.encodePacked(
-                        quotient.toString(),
-                        ".",
-                        remainder.toString()
-                    )
-                );
-        }
-    }
+    // function calRatting(address _to,uint256 ExactPrice,uint256 Price) public view returns (string memory result) {
+    //     uint256 factor = 10**3;
+    //     if (accceptedReq[_to] == 0) {
+    //         uint256 quotient = (20 + Requests[_to]);
+    //         uint256 remainder = Price % factor;
+    //         return string(abi.encodePacked(quotient.toString(),".",remainder.toString()));
+    //     } else {
+    //         uint256 quotient = (((DaysDetails[_to].Total * 40) /
+    //             DaysDetails[_to].Delivered) +
+    //             ((accceptedReq[_to] * 20) / Requests[_to]) +
+    //             ((ExactPrice * 40) / Price));
+    //         uint256 remainder = Price % factor;
+    //         return string(abi.encodePacked(quotient.toString(),".",remainder.toString()));
+    //     }
+    // }
 }

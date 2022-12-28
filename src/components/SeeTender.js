@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { connectWallet, getCurrentWalletConnected } from "../utils/interact.js";
 import Web3 from "web3";
 import Button from 'react-bootstrap/Button';
@@ -6,6 +6,10 @@ import Modal from 'react-bootstrap/Modal';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import Countdown from 'react-countdown';
+import emailjs from '@emailjs/browser';
+// import { Link } from "react-router-dom";
+// import { getDefaultNormalizer } from "@testing-library/react";
+
 
 
 const SeeTender = (props) => {
@@ -21,6 +25,7 @@ const SeeTender = (props) => {
 
     const [trans, setTransec] = useState("");
     const [DoneP, setDone] = useState({});
+    const form = useRef();
 
     const web3 = new Web3(window.ethereum);
     const auctionContract = process.env.REACT_APP_CONTRACT;
@@ -32,7 +37,6 @@ const SeeTender = (props) => {
         setShow(true);
         const all_s = await window.contract.methods.AllVender(TokenId).call();
         const clonedArr = [...all_s].sort((a, b) => a.Price - b.Price);
-        console.log(clonedArr, "clonedArr");
         setAllrequests(clonedArr)
     };
     function timeout(delay) {
@@ -45,20 +49,15 @@ const SeeTender = (props) => {
     }, []);
     const getData = async () => {
         try {
-            await timeout(626);
-            console.log(window.ethereum.selectedAddress);
+            await timeout(800);
             const all_single = await window.contract.methods.getTender(window.ethereum.selectedAddress).call();
-            console.log("all_single", all_single);
             var auctionData = [];
             var auctionData1 = [];
             var auctionData2 = [];
             var deadline = [];
             for (var i = 0; i < all_single.length; i++) {
                 deadline.push(all_single[i].start + (all_single[i].time));
-
-                let Accpt = await window.contract.methods.Pending(window.ethereum.selectedAddress, all_single[i].TokenId).call()
-                console.log(Accpt, "comAccptm");
-                console.log();
+                let Accpt = await window.contract.methods.Pending(window.ethereum.selectedAddress, all_single[i].TokenId).call();
                 if (Accpt == false) {
                     auctionData.push(all_single[i]);
                 }
@@ -69,6 +68,7 @@ const SeeTender = (props) => {
                     const VenderReq = await window.contract.methods.Venders(Finder, all_single[i].TokenId).call();
                     auctionData2.push(VenderReq);
                 }
+                console.log("Hello Broooooooo");
             }
             setAuctionDetails(auctionData);
             setAuctionDet(auctionData1);
@@ -106,6 +106,9 @@ const SeeTender = (props) => {
                 var receipt = await web3.eth.getTransactionReceipt(txHash)
                 if (receipt != null) {
                     setTransec(receipt);
+                    const Ven = await window.contract.methods.Signer(receiver).call();
+                    console.log(Ven.name, "Ven.name", Ven.email, "Ven.email");
+                    sendEmail(Ven.name, token, Ven.email);
                     break;
                 }
                 await timeout(1000);
@@ -118,9 +121,19 @@ const SeeTender = (props) => {
         }
     }
 
-    const DonePay = async (_token) => {
+    const sendEmail = async (nm, msg, rep) => {
+        await emailjs.send("service_gissd2f", "template_mcn9u0j", {
+            name: nm,
+            message: msg,
+            reply_to: rep,
+        }, 'PJNJ_2pp1hOkG50KB').then((response) => {
+            console.log('SUCCESS!', response.status, response.text);
+        }, (err) => {
+            console.log('FAILED...', err);
+        });
+    };
 
-        console.log(_token, "_token");
+    const DonePay = async (_token) => {
         try {
             window.contract = await new web3.eth.Contract(contractAuctionABI, auctionContract);
             let comm = await window.contract.methods.Communication(_token, window.ethereum.selectedAddress).call();
@@ -158,7 +171,6 @@ const SeeTender = (props) => {
         window.contract = await new web3.eth.Contract(contractAuctionABI, auctionContract);
         auctionDetails.map(async (item, index) => {
             let all_s = await window.contract.methods.CheckTime(item.TokenId).call();
-            console.log(all_s, "getTime");
             setTokentime(existingValues => ({
                 ...existingValues,
                 [item.TokenId]: all_s,
@@ -173,7 +185,6 @@ const SeeTender = (props) => {
         window.contract = await new web3.eth.Contract(contractAuctionABI, auctionContract);
         auctionDet.map(async (item, index) => {
             let all_s = await window.contract.methods.Communication(item.TokenId, window.ethereum.selectedAddress).call();
-            console.log(all_s.done, "Done");
             setDone(existingValues => ({
                 ...existingValues,
                 [item.TokenId]: all_s.done,
@@ -184,7 +195,6 @@ const SeeTender = (props) => {
         Done()
     }, [auctionDet])
 
-
     return (
 
         <div>
@@ -193,7 +203,6 @@ const SeeTender = (props) => {
                     <Modal.Title>Requests</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-
                     <table className="table table-striped mtable">
 
                         <thead>
@@ -208,7 +217,6 @@ const SeeTender = (props) => {
                             </tr>
                         </thead>
                         <tbody id="tenders">
-                            {console.log(Allrequests, "Allrequests")}
                             {Allrequests.map((item, index) => {
                                 let updtime = Number(Date.now() + (item.Delivered * 1000));
                                 return (
@@ -380,6 +388,7 @@ const SeeTender = (props) => {
                 <br />
                 <p id="status">
                     {status}
+                    {/* <button onClick={sendEmail}>test</button> */}
                 </p>
 
                 <p>
