@@ -15,17 +15,13 @@ import { useEffect, useState } from 'react';
 function App() {
 
   const [walletAddress, setWallet] = useState("");
-  const [SignIns, setSignIn] = useState("");
-  const [SignOut, setSignOut] = useState("");
+  const [SignIns, setSignIn] = useState(false);
   const [address, setAddress] = useState("");
   const [name, setName] = useState("");
   const [signer, setSigner] = useState(false);
   const [email, setEmail] = useState("");
   const [show, setShow] = useState(false);
-  // const [Tokentime, setTokentime] = useState({});
   const [status, setStatus] = useState("");
-  // const [auctionDetails, setAuctionDetails] = useState([]);
-  // const [timer, setmushi] = useState("");
   const web3 = new Web3(window.ethereum);
   const auctionContract = process.env.REACT_APP_CONTRACT;
   const contractAuctionABI = require('./abi/abi_tender.json');
@@ -43,17 +39,12 @@ function App() {
     setShow(true);
   };
   const signUp = async () => {
-
-    console.log(name);
-    console.log(email);
-    console.log(address);
+    // connectWalletPressed();
     const transactionParameters = {
       to: auctionContract, // Required except during contract publications.
       from: address, // must match user's active address.
       'data': window.contract.methods.SignUp(name, email, window.ethereum.selectedAddress).encodeABI()//make call to NFT smart contract
     };
-    // console.log("wdsededed");
-    //sign the transaction via Metamask
     const txHash = await window.ethereum
       .request({
         method: 'eth_sendTransaction',
@@ -85,9 +76,9 @@ function App() {
 
   useEffect(() => {
     mysignersetter()
-
-  }, [])
+  }, [signer, SignIns])
   const signIn = async () => {
+    // connectWalletPressed();
     try {
       // const all_single = await window.contract.methods.SignIn("0x2B8C026e5a69Af0A8e7D670f45f8E16c0362a6d3").call();
       const transactionParameters = {
@@ -119,6 +110,7 @@ function App() {
     }
   }
   const signOut = async () => {
+    // connectWalletPressed();
     try {
       const transactionParameters = {
         to: auctionContract, // Required except during contract publications.
@@ -176,7 +168,8 @@ function App() {
     const { address, status } = await getCurrentWalletConnected();
     setWallet(address);
     setStatus(status);
-    connectWalletPressed();
+    mysignersetter();
+    // connectWalletPressed();
     addWalletListener();
   }, []);
   return (
@@ -213,7 +206,7 @@ function App() {
           <NavLink to="/">All Tenders</NavLink>
           <NavLink to="/bundle_auction">Vender Requests</NavLink>
           <NavLink to="/Vender_request">Create Vender</NavLink>
-          <button id="walletButton">
+          {/* <button id="walletButton" onClick={connectWalletPressed}>
 
             {walletAddress.length > 0 ? (
               String(walletAddress).substring(0, 4) +
@@ -222,12 +215,15 @@ function App() {
             ) : (
               <span>Connect Wallet</span>
             )}
-          </button>
+          </button> */}
+          {/* {console.log(walletAddress.length, "walletAddress.length")}; */}
+
           {
-            SignIns ? <>
-              <button onClick={signOut}>Sign out</button>
-            </> : signer ? <button onClick={signIn}>Sign in</button> :
-              <button onClick={handleShow}>Sign Up</button>
+            walletAddress.length > 0 ?
+              SignIns ?
+                <button id="walletButton" onClick={signOut}>Sign out</button>
+                : signer ? <button id="walletButton" onClick={signIn}>Sign in</button> :
+                  <button id="walletButton" onClick={handleShow}>Sign Up</button> : <button id="walletButton" onClick={connectWalletPressed}>Connect Wallet</button>
           }
         </div>
       </div>
