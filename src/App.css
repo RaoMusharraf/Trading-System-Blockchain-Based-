@@ -235,3 +235,13 @@ html {
     transform: rotate(360deg);
   }
 }
+
+.signupmodel.modal .modal-content {
+  width: 50%;
+  margin: 0 auto;
+  height: 100% !important;
+}
+
+.mysignup-wrap label {
+  margin-top: 10px;
+}
