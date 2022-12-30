@@ -245,3 +245,11 @@ html {
 .mysignup-wrap label {
   margin-top: 10px;
 }
+
+.myWalletaddress {
+  position: absolute;
+  right: 10px;
+  top: 0;
+  color: white;
+  font-weight: 700;
+}

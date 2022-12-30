@@ -142,9 +142,21 @@ const CreateTender = (props) => {
                         }} />
                 </form>
                 <br />
-                <button id="list" onClick={() => onList(name, quantity, budget, hours, description)}>
+                <button id="list" onClick={async (e) => {
+                    await window.contract.methods.Signer(window.ethereum.selectedAddress).call().then(res => {
+                        console.log(res, 'res');
+                        // setSign(res.InOut);
+                        if (res.InOut) {
+                            onList(name, quantity, budget, hours, description)
+                        } else {
+                            alert("PLEASE LOG IN FIRST !!!!!")
+                        }
+                    });
+
+                }} >List</button>
+                {/* <button id="list" onClick={() => onList(name, quantity, budget, hours, description)}>
                     List
-                </button>
+                </button> */}
                 <p id="status">
                     {status}
                 </p>

@@ -16,7 +16,7 @@ contract Storage {
     Counters.Counter public TotalVender;
     using Strings for uint256;
     address public Contract;
-    uint256[] arrayName;
+
     struct Sign {
         string name;
         string email;
@@ -24,6 +24,7 @@ contract Storage {
         bool Up;
         bool InOut;
     }
+
     struct Vender {
         uint256 Token;
         uint256 Price;
@@ -33,6 +34,7 @@ contract Storage {
         uint256 Delivered;
         string rating;
     }
+
     struct Tender {
         uint256 TokenId;
         string name;
@@ -44,21 +46,25 @@ contract Storage {
         string description;
         address owner;
     }
+
     struct Accept {
         uint256 tokenId;
         address _address;
         bool check;
     }
+
     struct Comm {
         address receiver;
         uint256 price;
         bool done;
     }
+
     struct Days {
         uint256 Delivered;
         uint256 Total;
         uint256 tender;
     }
+
     mapping(address => uint256) public Size;
     mapping(address => mapping(uint256 => bool)) public Pending;
     mapping(uint256 => uint256) public SizeVender;
@@ -84,7 +90,7 @@ contract Storage {
         string memory email,
         address _address
     ) public {
-        Signer[_address] = Sign(name, email, _address, true, false);
+        Signer[_address] = Sign(name, email, _address, true, true);
     }
 
     function SignIn(address _address) public {
@@ -253,20 +259,7 @@ contract Storage {
 
     function RatAge(address _to) public view returns (string memory result) {
         uint256 factor = 10**1;
-        if (accceptedReq[_to] == 0) {
-            uint256 rating = (20 + Requests[_to]);
-            uint256 numerator = (rating * 5);
-            uint256 quotient = numerator / 100;
-            uint256 remainder = ((numerator * factor) / 100) % factor;
-            return
-                string(
-                    abi.encodePacked(
-                        quotient.toString(),
-                        ".",
-                        remainder.toString()
-                    )
-                );
-        } else {
+        if (DaysDetails[_to].Delivered > 0) {
             uint256 rating = (((DaysDetails[_to].Total * 60) /
                 DaysDetails[_to].Delivered) +
                 ((accceptedReq[_to] * 40) / Requests[_to]));
@@ -281,22 +274,19 @@ contract Storage {
                         remainder.toString()
                     )
                 );
+        } else {
+            uint256 rating = (20 + Requests[_to]);
+            uint256 numerator = (rating * 5);
+            uint256 quotient = numerator / 100;
+            uint256 remainder = ((numerator * factor) / 100) % factor;
+            return
+                string(
+                    abi.encodePacked(
+                        quotient.toString(),
+                        ".",
+                        remainder.toString()
+                    )
+                );
         }
     }
-
-    // function calRatting(address _to,uint256 ExactPrice,uint256 Price) public view returns (string memory result) {
-    //     uint256 factor = 10**3;
-    //     if (accceptedReq[_to] == 0) {
-    //         uint256 quotient = (20 + Requests[_to]);
-    //         uint256 remainder = Price % factor;
-    //         return string(abi.encodePacked(quotient.toString(),".",remainder.toString()));
-    //     } else {
-    //         uint256 quotient = (((DaysDetails[_to].Total * 40) /
-    //             DaysDetails[_to].Delivered) +
-    //             ((accceptedReq[_to] * 20) / Requests[_to]) +
-    //             ((ExactPrice * 40) / Price));
-    //         uint256 remainder = Price % factor;
-    //         return string(abi.encodePacked(quotient.toString(),".",remainder.toString()));
-    //     }
-    // }
 }

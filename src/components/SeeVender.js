@@ -274,9 +274,18 @@ const AllRequests = (props) => {
                                             <td>{item.Price}</td>
                                             <td>{item.Description}</td>
                                             <td><Countdown date={item.TenderTime * 1000} /></td>
-                                            <td id="button-tds">
+                                            <td id="button-tds"><button id={item.TokenId} onClick={async (e) => {
+                                                await window.contract.methods.Signer(window.ethereum.selectedAddress).call().then(res => {
+                                                    if (res.InOut) {
+                                                        onList(e.target.id)
+                                                    } else {
+                                                        alert("PLEASE LOG IN FIRST !!!!!")
+                                                    }
+                                                });
+                                            }}>Cancel</button></td>
+                                            {/* <td id="button-tds">
                                                 <button id={item.TokenId} onClick={(e) => onList(e.target.id)}>Cancel</button>
-                                            </td>
+                                            </td> */}
                                         </tr>
                                     </>
                                 )

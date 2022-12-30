@@ -285,9 +285,18 @@ const SeeTender = (props) => {
                                                 <td>{item.description}</td>
                                                 <td id="button-tds">
                                                     {
-                                                        Tokentime[item.TokenId] == false ? <button id={item.TokenId} onClick={(e) => handleShow(e.target.id)}>
-                                                            REQUESTS
-                                                        </button> :
+                                                        Tokentime[item.TokenId] == false ? <button id={item.TokenId} onClick={async (e) => {
+                                                            await window.contract.methods.Signer(window.ethereum.selectedAddress).call().then(res => {
+                                                                console.log(res, 'res');
+                                                                // setSign(res.InOut);
+                                                                if (res.InOut) {
+                                                                    handleShow(e.target.id)
+                                                                } else {
+                                                                    alert("PLEASE LOG IN FIRST !!!!!")
+                                                                }
+                                                            });
+
+                                                        }} >REQUESTS</button> :
                                                             <button><Countdown date={updt * 1000} onComplete={() => {
                                                                 getData()
                                                             }
@@ -332,8 +341,22 @@ const SeeTender = (props) => {
                                                 <td>{item._address}</td>
                                                 <td>{item.description}</td>
                                                 <td id="button-tds">
-                                                    {
+                                                    {/* {
                                                         DoneP[item.TokenId] == true ? <button id={item.TokenId} onClick={(e) => DonePay(e.target.id)}>PAYMENT</button> : <p>COMPLETE</p>
+                                                    } */}
+                                                    {
+                                                        DoneP[item.TokenId] == true ? <button id={item.TokenId} onClick={async (e) => {
+                                                            await window.contract.methods.Signer(window.ethereum.selectedAddress).call().then(res => {
+                                                                console.log(res, 'res');
+                                                                // setSign(res.InOut);
+                                                                if (res.InOut) {
+                                                                    DonePay(e.target.id)
+                                                                } else {
+                                                                    alert("PLEASE LOG IN FIRST !!!!!")
+                                                                }
+                                                            });
+
+                                                        }} >PAYMENT</button> : <p>COMPLETE</p>
                                                     }
                                                 </td>
 

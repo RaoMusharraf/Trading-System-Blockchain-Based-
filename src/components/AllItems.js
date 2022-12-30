@@ -7,28 +7,20 @@ import Countdown from 'react-countdown';
 const SeeTender = (props) => {
 
     const [Tokentime, setTokentime] = useState({})
-    const [walletAddress, setWallet] = useState("");
     const [status, setStatus] = useState("");
     const [auctionDetails, setAuctionDetails] = useState([]);
-    const [timer, setmushi] = useState("");
     const web3 = new Web3(window.ethereum);
 
     const contractAuctionABI = require('../abi/abi_tender.json');
     const auctionContract = process.env.REACT_APP_CONTRACT;
+    window.contract = new web3.eth.Contract(contractAuctionABI, auctionContract);
     let navigate = useNavigate();
-
-    // function timeout(delay) {
-    //     return new Promise(res => setTimeout(res, delay));
-    // }
     useEffect(async () => {
         getData();
     }, []);
 
     const getData = async () => {
-        console.log("get DATA function call");
-
         try {
-            window.contract = await new web3.eth.Contract(contractAuctionABI, auctionContract);
             const all_single = await window.contract.methods.AllTender().call();
             const clonedArr = [...all_single].sort((a, b) => b.TokenId - a.TokenId);
             console.log(clonedArr, "ssss");
@@ -39,8 +31,6 @@ const SeeTender = (props) => {
     };
     const getTime = async () => {
 
-        console.log(auctionDetails);
-        window.contract = await new web3.eth.Contract(contractAuctionABI, auctionContract);
         auctionDetails.map(async (item, index) => {
             let all_s = await window.contract.methods.CheckTime(item.TokenId).call();
             console.log(all_s);
