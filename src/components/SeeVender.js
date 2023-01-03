@@ -184,7 +184,7 @@ const AllRequests = (props) => {
                                 <th scope="col">DESCRIPTION</th>
                                 <th scope="col">PRICE</th>
                                 <th scope="col">DELIVERED</th>
-                                <th scope="col">REMANING!</th>
+                                <th scope="col">STATUS</th>
                             </tr>
                         </thead>
                         <tbody id="tenders">
@@ -223,7 +223,7 @@ const AllRequests = (props) => {
                                 <th scope="col">ADDRESS</th>
                                 <th scope="col">PRICE</th>
                                 <th scope="col">DESCRIPTION</th>
-                                <th scope="col"></th>
+                                <th scope="col">STATUS</th>
                             </tr>
                         </thead>
                         <tbody id="tenders">
@@ -260,7 +260,7 @@ const AllRequests = (props) => {
                                 <th scope="col">PRICE</th>
                                 <th scope="col">DESCRIPTION</th>
                                 <th scope="col">END</th>
-                                <th scope="col">CANCEL!</th>
+                                <th scope="col">CANCEL</th>
                             </tr>
                         </thead>
                         <tbody id="tenders">

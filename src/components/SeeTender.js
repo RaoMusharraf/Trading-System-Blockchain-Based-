@@ -324,7 +324,7 @@ const SeeTender = (props) => {
                                     <th scope="col">END</th>
                                     <th scope="col">ADDRESS</th>
                                     <th scope="col">DESCRIPTION</th>
-                                    <th scope="col">PAYMENT!</th>
+                                    <th scope="col">STATUS</th>
 
                                 </tr>
                             </thead>
@@ -378,7 +378,7 @@ const SeeTender = (props) => {
                                     <th scope="col">DELIVERED</th>
                                     <th scope="col">DESCRIPTION</th>
                                     <th scope="col">OWNER</th>
-                                    <th scope="col">SHIPPED!</th>
+                                    <th scope="col">STATUS</th>
                                 </tr>
                             </thead>
                             <tbody id="tenders">

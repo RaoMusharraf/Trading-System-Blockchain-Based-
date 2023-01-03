@@ -58,7 +58,7 @@ const SeeTender = (props) => {
                         <th scope="col">ADDRESS</th>
                         <th scope="col">DESCRIPTION</th>
                         <th scope="col">OWNER</th>
-                        <th scope="col">APPLY!</th>
+                        <th scope="col">STATUS</th>
                     </tr>
                 </thead>
                 <tbody id="tenders">
