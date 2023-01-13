@@ -2,8 +2,7 @@
 First clone the repository and then run the below commands
 
 Run this command in the Project Folder
-command : npm install
-command : npm start
+command : npm install,npm start
 
 ---FLOW---
 
